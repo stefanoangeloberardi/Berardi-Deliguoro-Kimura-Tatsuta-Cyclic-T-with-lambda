@@ -1,0 +1,494 @@
+% lmcs, 2018.5.2, 2019.9.9, 2020.2.10
+
+
+
+\newif\ifdraft \draftfalse
+\drafttrue % put % for lipics
+
+\long\def\Stefano#1{{{\color{red}{SB: #1}}}}
+\long\def\Makoto#1{{{\color{blue}{MT: #1}}}}
+
+\ifdraft
+
+\documentclass{article}
+\usepackage{mystyle}
+\A4page
+
+\else
+
+\documentclass{lmcs}
+\usepackage{hyperref}
+%\usepackage{amsmath}heoremstyle{plain}\newtheorem{satz}[thm]{Satz} %\crefname{satz}{Satz}{S\"atze}
+
+\fi
+
+\usepackage{mymath,proof,latexsym}
+\usepackage{xcolor}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+
+\newenvironment{proof}[1][Proof]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{example}[1][Example]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{remark}[1][Remark]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+
+\begin{document}
+\sloppy 
+\hbadness=10000
+\vbadness=10000
+
+\input{macro}
+\input{title}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%AGGIUNGO TEOREMA LEMMA PROPOSIZIONE COROLLARIO PROVA% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+\section{Definition of $\CTlambda$}
+
+We define pseudo-terms of $\CTlambda$: the well-formed terms of $\CTlambda$ will be a proper
+subset.
+
+\begin{definition}[pseudo-terms $\CTlambda$]
+\mbox{}
+\begin{enumerate}
+
+\item
+The types of $\CTlambda$ are all types we can define with $\N$ and $\rightarrow$.
+
+\item
+The pseudo-terms of $\CTlambda$ 
+are all possibly infinite trees we can define with $x^T$ ($T$ type), $\lambda x^T.t$, 
+$\ap(t,u)$, $0$, $S(t)$ (successor of $t$), $\cond x.(f,g)$, $\nameIn(f,x)$ with $x \not \in \FV(f)$.
+
+\item
+The scope of the binder $\lambda x^T.t$ is $t$.
+The scope of the binder $\cond x.(f,g)$ is $g$ ($f$ is \emph{not} in the scope of $\cond x.(f,g)$).
+
+\end{enumerate}
+When $t = S^n(0)$ we say that $t$ is a numeral.
+\end{definition}
+
+As an example we have the term $t = \cond x. (0,(\lambda y.t)(0))$. We say that a tree is regular if
+it has finitely many subtrees. $t$ is an infinite regular tree,
+with subtrees $t$, $0$, $(\lambda y.t)(0)$, $\lambda y.t$.
+
+The typing rules are the usual ones but for $\cond$ and $\nameIn$. 
+
+Assume $\Gamma$, $\Delta$ are sequents of length $n$, $m$respectively. Suppose
+$f:\{1, \ldots, n\} \rightarrow \Delta$ is any injection.
+
+\begin{enumerate}
+\item
+Structural rule $\struct(f)$.
+If $t: \Gamma \vdash T$ then $t:\Delta \vdash T$
+
+\item
+If $t:\Gamma \vdash T$ and $\Gamma'$ is a renaming of $\Gamma$ then
+$t:\Gamma' \vdash T$
+
+\item
+If $x \not \in \Gamma$ and $f:\Gamma \vdash\N \rightarrow T$
+then $f(x) : \Gamma, x:\N \vdash T$.
+
+\item
+If $x:A \in \Gamma$ then $x:\Gamma \vdash A$.
+
+\item
+If $\Gamma \vdash f:A \rightarrow B$ and $a:\Gamma \vdash A$ then $f(a) : \Gamma \vdash B$.
+
+\item
+If $\Gamma, x:A \vdash b: B$ then $\lambda x:A.b : \Gamma \vdash A \rightarrow B$.
+
+\item
+$0:\Gamma \vdash \N$
+
+\item
+If $t:\Gamma \vdash \N$ then $S(t):\Gamma \vdash \N$.
+
+\item
+$\cond$. If $ f :\Gamma, x:T \vdash T$, $x \not \in \FV(f)$ and  $g : \Gamma, x:T \vdash T$
+then $\cond x.(f,g) : \Gamma \vdash \N \rightarrow T$.
+\end{enumerate}
+
+$\nameIn$ is a particular case of $\ap$, when we replace $x:\N$ with some 
+$a:\Gamma \vdash \N$  then we replace $\nameIn$ with $\ap$.
+
+As an example if $t = \cond x. (0,(\lambda x.t)(0))$ is as above, then $t:\N \rightarrow \N$.  
+
+Our goal is to provide a set of well-formed term for $\CTlambda$ and interpret them as total functionals. 
+Our first step is to provide reduction rules for $\CTlambda$.
+
+
+\begin{definition}[reduction rules for $\CTlambda$]
+\mbox{}
+\begin{enumerate}
+\item
+$\beta$: $(\lambda x^A.b)(a) \reduces_\beta b[a/x]$ and $\cond x.(f,g)(0) \reduces_\cond f$,
+$\cond x.(f,g)(S(t)) \reduces_\cond g[t/x]$.
+
+\item
+$\reduces$ is the context and transitive closure of $\reduces_\beta$ and $\reduces_\cond$,
+in which we forbid reductions in proper subterms of any $\cond x.(f,g)$. 
+
+\end{enumerate}
+
+When $t \reduces u$ we say that $t$ \emph{safely reduces} to $u$.
+We call \emph{unsafe} a reduction inside any $\cond x.(f,g)$.
+\end{definition}
+
+As an example if $t = \cond x. (0, (\lambda x.t)(0) )$ is as above, then $t$ is normal, because
+all redexes in $t$ are of the form  $(\lambda x.t)(0)$ and inside a $\cond$. 
+
+The reason for forbiding
+reductions inside $\cond x.(f,g)$ is that thorugh $\cond$ we will-express fixed-point equations.
+Therefore reductions for $\cond$ can easily loop and they are ``unsafe". For this reason, we allow 
+the minimum possible reductions concerning $\cond x.(f,g)$, those of the form
+$\cond x.(f,g)(0) \reduces_\cond f$ and
+$\cond x.(f,g)(S(t)) \reduces_\cond g[t/x]$ for maximal $\cond$-expression, and no reduction
+inside the arguments $f$, $g$ of $\cond$.
+
+As an example, if $n$ is any numeral, then 
+$t(n) = \cond x. (0, (\lambda x.t)(0) )(2) : \N$ has infinitely many $\beta$-redexes inside 
+$\cond$, therefore infinitely many unsafe reductions are possible. There are only finitely many safe reduction
+from $t(n)$ instead: $t(n)$ reduces to to $t(n-1)$ for $n$ times, until we get $t(0)$, then $0$ and we stop. 
+
+Indeed, we have $t(0) = \cond x. (0, (\lambda x.t)(0) )(0) = 0$, therefore 
+$t(1) = \cond x. (0, (\lambda x.t)(0) )(1) = (\lambda x.t)(0)(0) = t(0) = 0$,
+then $t(2) =  \cond x. (0, (\lambda x.t)(0) )(2) = (\lambda x.t)(0)(1) = t(1) = 0$, and so forth.
+
+We define the well-formed terms of $\CTlambda$: for them we will prove
+strong normalization, church-rosser for terms of type $\N$, and the fact that every term of type
+$\N$ is a numeral. 
+As a consequence, well-formed terms $\CTlambda$ will be interpreted as total functionals. 
+
+The first step in defining well-formed terms is defining a correspondence between atoms in the
+proof that $t$ is well-typed. We need first the notion of list of types and atomic types for a term.
+
+\begin{definition}[Integer maps]
+\begin{enumerate}
+\item
+The type list of $t$ is $\vec{C} = \vec{A},\vec{B}$. 
+
+\item
+An atom index of $t$ is any $j \in \{1, \ldots, n+m\}$ such that $C_j = \N$.
+
+\item
+We define $\ins(a,x)=x+1$ if $x \ge a+1$, and $\ins(a,x)=x$ if $x\ge a$.
+
+\end{enumerate}
+\end{definition}
+
+We now define the atom correspondence in $\CTlambda$.
+
+
+
+\begin{definition}[Atom correspondence in  $\CTlambda$]
+Assume $\vec{A} = A_1, \ldots, A_n$, $\vec{B}=B_1, \ldots, B_m$
+and $t:\vec{x}:\vec{A} \vdash \vec{B} \rightarrow \N$ is a pseudo-term.
+
+\begin{enumerate}
+\item
+The type list of $t$ is $\vec{C} = \vec{A},\vec{B}$. 
+An atom index of $t$ is any $j \in \{1, \ldots, n+m\}$ such that $C_j = \N$.
+
+\item
+For each atom index $k$ in $t$, each immediate subterms $t'$ of $t$ 
+each atom index $k'$ in $t'$ we define the relation: ``$k',t'$ the successor of $k,t$". We require:
+\begin{enumerate}
+\item
+if $t$ is obtained by a rule $\struct(f)$ then $k = f(k')$  if $k' \le n$ and $k = k' - n + m$ if $k \ge n+1$.
+\item
+$k' = \ins(n,k)$ if $t=f(a)$, $a:\N$ and $t'=f$. 
+\item
+$k = k'$ in all other cases.
+% in all other cases: $S$, $\lambda$, $\nameIn$, $\cond$, and $\ap$ if different from the previous case.
+\end{enumerate}
+\end{enumerate}
+\end{definition}
+
+From the atom correspondence we define the global trace condition and the notion of well-formed term.
+
+\begin{definition}[Global trace condition and well-formed terms in  $\CTlambda$]
+\begin{enumerate}
+\item
+A path $\pi$ in $t$ is any list $t_0, \ldots, t_n$ of subterms of $t$ 
+such that $t_0 = t$ and each $t_{i+1}$ is an immediate subterm of $t_i$. 
+
+\item
+Assume $\pi =t_0, \ldots, t_n$ is a branch of $t$. A trace of $\pi$ consists of an integer list 
+$k_m, \ldots, k_n$ such that for each $i=m,\ldots, n$:
+$k_i$ is an atom index of $t_i$, and if $i+1 \le n$ then $k_{i+1},t_{i+1}$ is the successor of $k_i, t_i$.
+
+\item
+Assume $\tau = k_m, \ldots, k_n$ is a trace of $\pi =t_0, \ldots, t_n$ and $i=m,\ldots, n$.
+$\tau$ is progressing in $i$ if $t_i=\cond x.(f,g)$ for some $f$, $g$,
+and $k_i$ is the index of the first argument the $\cond$-rule, otherwise $\tau$ is not progressing in $i$.
+
+\item
+$t$ satisfies the global trace condition if for all infinite paths $\pi$ in $t$ 
+there is some infinitely progressing path $\tau$ in $\pi$.
+
+\item
+Well-formed terms are all terms which are regular trees (having finitely many subtrees), 
+and satisfying the global trace condition.
+
+\end{enumerate}
+\end{definition}
+
+
+\section{Examples of terms of $\CTlambda$}
+
+\subsection{The sum map}
+As a first example of term of  $\CTlambda$ we can provide a well-formed term computing the sum on $\N$.
+\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
+
+
+\subsection{The iterator}
+A second example. We define a term $\It$ of  $\CTlambda$ computing the iteration of maps on $\N$.
+We define a normal term $\It:(\N \rightarrow \N), \N,\N \rightarrow \N$ such that
+$\It(f,n,a)=f^n(a)$ for all $n \in \N$. 
+We have to to solve the equations $\It(f,a,0) = a$ and $\It(f,a,S(t)) = f(\It(f,a,t))$.
+We solve them with $\It = \lambda f, a,x. i[a,f,x]$
+with $ i[a,f,x] = (\cond x. (a, f( i[a,f,x]) ))(x)$.
+
+The term is well-typed and regular by definition. We check the global trace condition. 
+We mark the last unnamed argument $\N$ of $\It$. The mark moves to $x$ in $ i[a,f,x]$.
+ Through a $\nameIn$-rule the mark moves to the unique unnamed argument $\N$ of  
+$ \cond x. (a, f( i[a,f,x]) )$.
+The mark either moves to the name $x$ in the context of $a$ and there it stops, or 
+it progresses and moves to $x$ in the context of $f(i[f,a,x])$, then in the context of $i[f,a,x]:\N$.
+%??????????????? 10:30 24/03/24
+Now we loop: if the path continues forever, then after infinitely many step the mark from which we started 
+progresses infinitely many times, each time it crosses a $\cond$-rule.
+
+
+
+\subsection{The interval map}
+A third example. We simulate interval with two variables $\nil:\alpha$ and 
+$\cons:\N,\alpha \rightarrow \alpha$. We recursively define a notation for maps by $[]=\nil$
+and $[a,\vec{a}] = \cons(a,[\vec{a}])$. We add no elimination rules for lists, though,
+only the variables $\nil$ and $\cons$.
+
+We will define a term $\Interval$ with one argument $f:\N \rightarrow \N)$ and three argument
+$a,x,y:\N$, such that 
+$$
+\Interval(f,a,n,m) = [f^n(a), f^{n+1}(a), \ldots, f^{n+m}(a)]
+$$ 
+for all $n,m \in \N$. 
+We have to to solve the recursive equations 
+$$
+\Interval(f,a,x,0) = \cons(f^n(a), \nil) 
+\ \ \ \ \ \ 
+\Interval(f,a,x,S(t)) = \cons(f^n(a), \Interval(f,a,x,t) )
+$$ 
+We solve them with $\Interval = \lambda f,a.v$,
+where $v = \lambda x.\cond p. (\ \cons(w, \nil),  \  \cons(w, v(S(x),p)) \ )$ and $w=\It(f,a,x)$.
+
+The term is well-typed and regular by definition. We check the global trace condition.
+We mark the last unnamed argument $\N$ of $\Interval$.
+The mark moves to the unique unnamed argument $\N$ of  
+$v:\N,\N \rightarrow \N$. 
+We unfold $v$ to $\lambda x.\cond p. 
+(\ \cons(w, \nil),  \  \cons(w, v(S(x),p)) \ )$
+The mark progresses and moves to $p^\N$ in the context of the body of the $\lambda$-abstraction,
+then in the context of $\cons(w, \nil)$ or of $\cons(w, v(S(x),p))$,
+then in the context of $\nil$ and stops, or in the context of $w=\It(f,a,x):\N$, 
+for which we already checked the global trace condition, or in the context of $v(S(x),p)):\alpha$. 
+
+Then moves from the named argument $p$ of $v(S(x)):\N \rightarrow \N$ to the 
+unnamed argument $\N$ of $v(S(x))$, and eventually to the last argument of $v$. 
+From $v$ we loop: after infinitely many step either we reached some $w$ and we find 
+some infinite progressing trace inside it, or the
+mark from which we started progresses infinitely many times through $v$. In both cases we have the
+global trace condition.
+
+We have infinitely many nested $\beta$-reduction $(\lambda x. \ldots)(S(x))$.
+We can remove all of them in a single step, obtaining a sub-term
+$w[S(x)/x]\ldots[S(x)/x]$ ($n$ times)
+inside the $\beta$-redex number $n$. The result is $w[S^n(x)] = \It(f,a,S^n(x))$.
+The nested substitution produce new reductions $\It(f,a,S^n(x))$ for all $n \in \N$.
+This is a non-regular term: we have infinitely many pairwise different 
+sub-terms $x,S(x),S(S(x)), S(S(S(x))), \ldots$.
+We need infinitely many steps to normalize all $\It(f,a,S^n(x))$ to $f^n(i[f,a,x])$, 
+even if we allow to reduce all redexes at the same time.
+Also the normal form is not regular: it contains all terms $f^n(i[f,a,x])$ for $n \in \N$, hence
+infinitely many pairwise different terms. These infinite sub-terms are of a particulary simple form, though. 
+They are obtained by the repeating $n$ times the assignment $z:=f(z)$, then applying $z:=i[f,a,x]$ once
+to the result.
+
+Apparently, $\Interval$ 
+is some term of $\CTlambda$ which cannot be normalized in finite time, not even if we allow
+infinite parallel reductions without any "safety" restriction. The normal form is produced \emph{only in the limit}
+and it is \emph{not regular}. If we allow to reduce infinitely many nested $\beta$-redexes in one step, also
+the intermediate steps of the infinite reduction of $\Interval$ are not regular.
+
+
+\section{Weak normalization for closed terms of$\CTlambda$ of type $\N$}
+\label{section-weak-normalization}
+In this section we prove that every closed term of$\CTlambda$
+ (that is, well-typed, regular and with the global trace condition) normalizes with finitely many "safe" steps
+to some numeral $n \in \N$.
+
+\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
+
+\section{Uniqueness of normal form for closed terms of $\CTlambda$ of type $\N$}
+In this section we prove a weak form of confluence: normal form for
+all closed terms of $\CTlambda$ of type $\N$ is unique.
+
+By the weak normalization result proved in \S \ref{section-weak-normalization},
+we will deduce: for all for all closed terms $t$ of $\CTlambda$ of type $\N$, 
+there is some $n \in \N$ such that there is a safe reduction $t \reduces n$, and all normal form of $t$
+are equal to $n$.
+
+We define a notion $\sim$ of equivalence for well-typed terms with the same type.
+Assume $t, u : A$ are \emph{closed} terms of $\CTlambda$.
+ (that is, well-typed, regular and with the global trace condition). 
+
+We define an equivalence $\sim_0$ for closed terms,
+by induction on the type $A$ of $t$, $u$.
+
+\begin{enumerate}
+\item
+Assume $A = \N$. Then $t \sim_0 u$ if and only if for all normal $t',u':\N$, if $t \reduces t'$
+and $u \reduces u'$ then $t'=u'$.
+\item
+Assume $A = B \rightarrow C$. Then $t \sim_0 u$ if and only if for all closed $b,c:B$ if
+$b \sim_0 c$ then $t(b) \sim_0 u(c)$.
+\end{enumerate}
+
+We will prove that for all closed terms $t$ of $\CTlambda$ we have $t \sim_0 t$.
+If $A=\N$ this means that the normal form of all closed terms of $\CTlambda$ of type $\N$ is unique,
+which is our goal.
+
+We first define $t \sim u$ for \emph{any} terms of $\CTlambda$ with the same type.
+ $t \sim u$ if and only if for any two substitution 
+$\sigma = [\vec{t} / \vec{x}]$ and $\tau = [\vec{u} / \vec{x}]$,
+if $\vec{t} \sim_0 \vec{u}$ and $\sigma(t)$, $\sigma(u)$ are closed then $\sigma(t) \sim_0 \sigma(u)$.
+
+We will prove that  for all terms $t$ of $\CTlambda$ we have $t \sim t$. In the case of closed terms $t$
+we can choose $\sigma=\tau=$ the empty sbustitution and we obtain $t \sim_0 t$, which is our goal.
+
+Assume that $t:\N$ is a closed term $t$ of $\CTlambda$ and $n \in \N$. 
+\begin{enumerate}
+\item
+We say that $n$ is a value of $t$ if $t \reduces n$ (if $t$ safely reduces to $n$). 
+\item
+We say that $t$ is confluent if $t \sim_0 t$.
+\end{enumerate}
+Assume $\vec{x}:\vec{A}$ and $t[\vec{x}]: \vec{D} \rightarrow \N$. Assume 
+$\vec{a}:\vec{A},\vec{d}:\vec{D}$ 
+and $\vec{b}:\vec{A},\vec{e}:\vec{D}$ are vectors of closed terms of $\CTlambda$. We say that 
+these four vectors are a counterexample to $t$ if $\vec{a},\vec{d} \sim_0 \vec{b},\vec{e}$
+and $\neg (t[\vec{a}](\vec{d}) \sim_0  t[\vec{b}](\vec{e}))$.
+
+We have $t \sim t$ if and only if there is no counter-example for $t$.
+
+
+By the weak normalization result proved in \S \ref{section-weak-normalization}, all 
+closed term $t$ of $\CTlambda$ of type $\N$ have a value. If $t$ is confluent, then the value is unique.
+For confluent closed term $t$ of $\CTlambda$ of type $\N$, "safe" reduction preserves the value. Indeed,
+if $t \reduces u$ then $u$ is a closed term of $\CTlambda$ of type $\N$, therefore $u$ has a value
+$m$, which is also a value of $t$. By confluence of $t$ we conclude that $n=m$.
+
+If $t$ is as above, with value $n$, and $t \reduces S(u)$, then $n>0$, 
+$u$ is a confluent closed term $t$ of $\CTlambda$ of type $\N$, and the value of $u$ is $n-1$.
+Indeed,if $u \reduces u'$ and $u'$ is normal, then $t \reduces S(u')$, therefore $S(u')=n$ 
+by confluence of $t$, and we conclude that $n>0$ and $u'=n-1$. Thus, the normal form of $u$ is unique.
+
+We will prove the following.
+
+\begin{theorem}
+Assume $t$ is any well-typed term such that $\neg (t \sim t)$. Then there is some infinite path 
+$\pi=\{t_i | i \in \N\}$ of $t$ with some infinite sequence $\sigma= \{\sigma_i| i \in \N\}$, with
+each $\sigma_i$ counter-example for $t_i$, and with the value of $\sigma$ compatible with the
+trace conditions of $\pi$.
+\end{theorem}
+
+As a corollary from the theorem we will conclude: 
+if $t$ satisfies the global trace condition, then there is no such $\sigma$, therefore $t \sim t$, 
+as we wished to show.
+
+We prove that for any term $ (t \sim t)$ with counter-example $\vec{a},\vec{d} \sim_0 \vec{b},\vec{e}$
+and $\neg (t[\vec{a}](\vec{d}) \sim_0  t[\vec{b}](\vec{e}))$ we can find some immediate
+subterm $t'$ and with a counter-example $\vec{a'},\vec{d'} \sim_0 \vec{b'},\vec{e'}$
+and $\neg (t'[\vec{a'}](\vec{d'}) \sim_0  t'[\vec{b'}](\vec{e'}))$, \emph{compatible with trace
+condition}.
+
+
+%21:09 20/03/2024
+
+%
+%\[
+%	\infer[(\Case\ E)]{Ex \prove \N x}{
+%		\infer[(=L)]{x=0 \prove \N x}{
+%		\infer[(Wk)]{x=0 \prove \N 0}{
+%		\infer[(\N\ R)]{\prove \N 0}{}
+%		}}
+%		&
+%		\infer[(=L)]{x=sx',Ox' \prove \N x}{
+%		\infer[(\N\ R)]{x=sx',Ox' \prove \N sx'}{
+%		\infer[(Wk)]{x=sx',Ox' \prove \N x'}{
+%		\infer[(\Subst)]{Ox' \prove \N x'}{
+%		Ox \prove \N x
+%		}}}}
+%	}
+%\]
+%
+
+\section{appendix}
+
+\begin{verbatim}
+
+To: kmr@is.sci.toho-u.ac.jp (Daisuke Kimura)
+Re: proof of Weak Normalization to an integer for CT-lambda
+Fri, 22 Mar 2024 08:25:57 +0100 
+
+    By the way, I re-checked the weak curry-howard proof, now i think that the proof 
+does not require the property p-->q, a-->b ==> p[a/x]-->q[b/x] and can be completed 
+with the notion of safe reduction.
+but in fact it would be more interesting to prove full church-rosser for Circular T-lambda, 
+as anupam does for his circular T.
+
+    About strong normalization, we can prove it for "safe" reductions, those inside no cond. 
+More in general, we know that we can have infinite reduction sequences, because we can 
+have infinitely many redexes. However, for any infinite reduction sequence sigma, I conjecture 
+we can prove a kind of stabilization of the term. After some reduction step, the term only 
+changes inside some cond nested k times. 
+
+    Namely, I conjecture that
+
+"for any cyclic lambda term t, any infinite reduction sequence (sigma(n)|n in N) with sigma(0)=t, 
+any k in N, there is a n0 in N such that for all n>=n0, the terms sigma(n) and sigma(n0)  
+coincide on all branches with at most k times cond."
+
+    Best, Stefano
+
+\end{verbatim}
+
+
+We say that a node is in the $k,\cond$-level if it has less than $k$ nodes $\cond$ in its branch.
+
+We say that an infinite reduction sequence is is fair for nodes of $k,\cond$-level in the following case:
+for all $i\in \N$, all $k>0$, there is some  $j \ge i$ such that at step $j$ either all nodes in the 
+$k,\cond$-level are normal, or one of them is reduced at step $j$.
+
+\emph{Conjecture}. An infinite reduction sequence $\sigma$ 
+is normalizing in the limit if and only if for all $k \in \N$,
+$k > 0$, $\sigma$ is fair for the task of reducing nodes in the $k,\cond$-level.
+
+
+
+\end{document}
