@@ -276,7 +276,7 @@ progresses infinitely many times, each time it crosses a $\cond$-rule.
 
 
 
-\subsection{The interval map}
+\subsection{The Interval Map}
 A third example. We simulate interval with two variables $\nil:\alpha$ and 
 $\cons:\N,\alpha \rightarrow \alpha$. We recursively define a notation for maps by $[]=\nil$
 and $[a,\vec{a}] = \cons(a,[\vec{a}])$. We add no elimination rules for lists, though,
@@ -295,35 +295,37 @@ $$
 \Interval(f,a,x,S(t)) = \cons(f^n(a), \Interval(f,a,x,t) )
 $$ 
 We solve them with $\Interval = \lambda f,a.v$,
-where $v = \lambda x.\cond p. (\ \cons(w, \nil),  \  \cons(w, v(S(x),p)) \ )$ and $w=\It(f,a,x)$.
+where $v:\N,\N\rightarrow \N$, 
+$v = \lambda x.\cond y. (\ \cons(w, \nil),  \  \cons(w, v(S(x),y)) \ )$ and $w=\It(f,a,x)$.
 
 The term is well-typed and regular by definition. We check the global trace condition.
 We mark the last unnamed argument $\N$ of $\Interval$.
-The mark moves to the unique unnamed argument $\N$ of  
+The mark moves to the last unnamed argument $\N$ of  
 $v:\N,\N \rightarrow \N$. 
-We unfold $v$ to $\lambda x.\cond p. 
-(\ \cons(w, \nil),  \  \cons(w, v(S(x),p)) \ )$
-The mark progresses and moves to $p^\N$ in the context of the body of the $\lambda$-abstraction,
-then in the context of $\cons(w, \nil)$ or of $\cons(w, v(S(x),p))$,
+We unfold $v$ to $\lambda x.\cond y. 
+(\ \cons(w, \nil),  \  \cons(w, v(S(x),y)) \ )$
+The mark progresses and moves to the name $y$ in the context of the body of the $\lambda$-abstraction,
+then to $y$ in the context of $\cons(w, \nil)$ or of $\cons(w, v(S(x),y))$,
 then in the context of $\nil$ and stops, or in the context of $w=\It(f,a,x):\N$, 
-for which we already checked the global trace condition, or in the context of $v(S(x),p)):\alpha$. 
+for which we already checked the global trace condition, or in the context of $v(S(x),y)):\alpha$. 
 
-Then moves from the named argument $p$ of $v(S(x)):\N \rightarrow \N$ to the 
-unnamed argument $\N$ of $v(S(x))$, and eventually to the last argument of $v$. 
+Then the mark moves from the named argument $y$ of $v(S(x)):\N \rightarrow \N$ to the unique 
+unnamed argument $\N$ of $v(S(x))$, and eventually to the last argument of $v:\N,\N\rightarrow \N$. 
 From $v$ we loop: after infinitely many step either we reached some $w$ and we find 
 some infinite progressing trace inside it, or the
 mark from which we started progresses infinitely many times through $v$. In both cases we have the
 global trace condition.
 
 We have infinitely many nested $\beta$-reduction $(\lambda x. \ldots)(S(x))$.
-We can remove all of them in a single step, obtaining a sub-term
-$w[S(x)/x]\ldots[S(x)/x]$ ($n$ times)
-inside the $\beta$-redex number $n$. The result is $w[S^n(x)] = \It(f,a,S^n(x))$.
-The nested substitution produce new reductions $\It(f,a,S^n(x))$ for all $n \in \N$.
+We can remove all of them in a single step. Inside the $\beta$-redex number $n$ we obtain a sub-term
+$w[S(x)/x]\ldots[S(x)/x]$ (substitution repeated $n$ times).
+The result is $w[S^n(x)] = \It(f,a,S^n(x))$.
+The nested substitution produce new $\beta$-reductions 
+$\It(f,a,S^n(x)) = (\lambda x.i[f,a,x])(S^n(x))$ for all $n \in \N$.
 This is a non-regular term: we have infinitely many pairwise different 
 sub-terms $x,S(x),S(S(x)), S(S(S(x))), \ldots$.
 We need infinitely many steps to normalize all $\It(f,a,S^n(x))$ to $f^n(i[f,a,x])$, 
-even if we allow to reduce all redexes at the same time.
+even if we allow to reduce all $\beta,\cond$-redexes at the same time.
 Also the normal form is not regular: it contains all terms $f^n(i[f,a,x])$ for $n \in \N$, hence
 infinitely many pairwise different terms. These infinite sub-terms are of a particulary simple form, though. 
 They are obtained by the repeating $n$ times the assignment $z:=f(z)$, then applying $z:=i[f,a,x]$ once
