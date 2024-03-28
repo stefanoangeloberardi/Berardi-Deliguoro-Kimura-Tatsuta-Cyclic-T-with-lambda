@@ -94,7 +94,7 @@
 \def\Univ{{\rm univ}}
 \def\Infinite{{\rm Infinite}}
 \def\S{{\bf S}}
-\def\N{{\bf N}}
+\def \N {{N}} %\def\N{{\bf N}} %
 \def\Ind{{\rm Ind}}
 \def\LKID{{\bf LKID}}
 \def\PA{{\bf PA}}
@@ -286,15 +286,37 @@
 
 %Macro for the work on Cyclic System T with lambda
 %22/03/2024
-\newcommand{\ap}               { {\tt ap} }
-\newcommand{\cond}           { {\tt cond} }
-\newcommand{\reduces}      { {\mapsto} }
-\newcommand{\CTlambda}   { { {\tt CT} \mbox{-} \lambda} }
-\newcommand{\nameIn}       { {\tt name\mbox{-}in} }
+\newcommand{\ap}                { {\tt ap} }
+\newcommand{\cond}            { {\tt cond} }
+\newcommand{\reduces}       { {\mapsto} }
+\newcommand{\CTlambda}    { { {\tt CT} \mbox{-} \lambda} }
+%\newcommand{\nameIn}       { {\tt name\mbox{-}in} }
+\newcommand{\etaRule}       { {\eta\mbox{-}\tt rule} }
 \newcommand{\ins}               { {\tt ins} }
 \newcommand{\struct}          { {\tt struct} }
-\newcommand{\It}                 { {\tt It} }
+\newcommand{\Iter}              { {\tt It} }
+\newcommand{\iter}               { {\tt it} }
 \newcommand{\Interval}       { {\tt I} }
+\newcommand{\interval}        { {\tt i} }
+\newcommand{\Succ}             { {\tt S} }
 \newcommand{\nil}                { {\tt nil} }
-\newcommand{\cons}            { {\tt cons} }
+\newcommand{\cons}             { {\tt cons} }
+\newcommand{\outline}  [1]   { {\contour{black}{\textcolor{white}{#1}}}  }
+\newcommand{\systemT}       { {\outline{\tt T}} }
+\newcommand{\LAMBDA}       { {\outline{$\Lambda$}} }
+\newcommand{\Nat}               { {\outline{\tt N}} }
+\newcommand{\Rec}               { {\tt Rec} }
+\newcommand{\rec}                { {\tt rec} }
+\newcommand{\exch}             { {\tt exch} }
+\newcommand{\composed}     { {\mbox{\tiny $\circ$}} }
+\newcommand{\WTyped}        { {\tt Wtyped} }
+\newcommand{\safe}              { {\tiny \tt safe} }
+\newcommand{\GlobalTraceCondition}  { {\tt GlTrCon} }
+\newcommand{\Sum}              { {\tt Sum} }
+
+
+
+
+
+
 
