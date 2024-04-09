@@ -7,6 +7,7 @@
 
 \long\def\Stefano#1{{{\color{red}{SB: #1}}}}
 \long\def\Makoto#1{{{\color{blue}{MT: #1}}}}
+\long\def\Daisuke#1{{{\color{green}{DK: #1}}}}
 
 \ifdraft
 
@@ -18,7 +19,7 @@
 
 \documentclass{lmcs}
 \usepackage{hyperref}
-%\usepackage{amsmath}heoremstyle{plain}\newtheorem{satz}[thm]{Satz} %\crefname{satz}{Satz}{\Succ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           atze}
+%\usepackage{amsmath}heoremstyle{plain}\newtheorem{satz}[thm]{Satz} %\crefname{satz}{Satz}{\Succ    atze}
 
 \fi
 
@@ -354,12 +355,40 @@ and satisfy the global trace condition.
 \section{Examples of terms of $\CTlambda$}
 
 \subsection{The sum map}
-As a first example of term of  $\CTlambda$ we can provide a term $\Sum$ computing the sum on $\N$.
+\Daisuke{Add sum (start)}
+As a first example of term of  $\CTlambda$ we can provide a term $\Sum$ computing the sum on $\N$,
+which is an infinite term defined by $\Sum = \lambda x:\N.\cond z.(x,\Succ(\Sum(x)(z)))$.
+This term is well-typed by the following circular derivation with a back edge from the $(\dagger)$ above to the $(\dagger)$ below.
+The only infinite path contains a progressing trace, a sequence of $\N$'s marked by underlines. 
+\[
+\infer{
+  \vdash \Sum:\N \rightarrow \underline{\N} \rightarrow \N\ (\dagger)
+}{
+  \infer[(\cond)]{
+    x:\N \vdash \cond z.(x,\Succ(\Sum(x)(z))): \underline{\N} \rightarrow \N
+  }{
+    \infer{
+      x:\N \vdash x:\N
+    }{}
+    &
+    \infer{
+      x:\N,z:\underline{\N} \vdash \Succ(\Sum(x)(z)): \N
+    }{
+      \infer[(\eta)]{
+        x:\N,z:\underline{\N} \vdash \Sum(x)(z): \N
+      }{
+        \infer[(\eta)]{
+          x:\N \vdash \Sum(x): \underline{\N} \rightarrow \N
+        }{
+          \vdash \Sum: \N \rightarrow \underline{\N} \rightarrow \N\ (\dagger)
+        }
+      }
+    }
+  }
+}
+\]
 
-\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
-\\
-(Here we should insert the content of the board checking that $\Sum \in \CTlambda$)
-\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
+\Daisuke{Add sum (end)}
 \\
 
 
@@ -445,18 +474,130 @@ and it is \emph{not regular}. If we allow to reduce infinitely many nested $\bet
 the intermediate steps of the infinite reduction of $\Interval$ are not regular.
 
 
-\section{Weak normalization for closed terms of$\CTlambda$ of type $\N$}
+\section{Subject reduction for terms of $\CTlambda$ of type $\N$}
+\Daisuke{SR start}
+\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
+\\
+\emph{(Here we should fill this part)}
+\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
+\Daisuke{SR end}
+
+
+\section{Weak normalization for closed terms of $\CTlambda$ of type $\N$}
 \label{section-weak-normalization}
-In this section we prove that every closed term of$\CTlambda$
+\Daisuke{WN start}
+In this section we prove that every closed term of $\CTlambda$
  (that is, well-typed, regular and with the global trace condition) normalizes with finitely many "safe" steps
 to some numeral $n \in \N$.
 
-\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
-\\
-\emph{(Here we should insert our notes for the proof of weak normalization)}
-\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
-\\
+\begin{definition}[Values and total on values]
+  We define values and total terms on values by induction on types. 
+  \begin{enumerate}
+  \item
+    A closed term $t:\N$ is total on values
+    if and only if $t \safeReduces^* n$ for some $n\in \N$.
+    A closed term $t:\N$ is a value if and only if $t \in \N$.
+  \item
+    A closed term $t:A\rightarrow B$ is total on values
+    if and only if, $t(a)$ is total on values for any closed value $a:A$.
+    A closed term $t:A\rightarrow B$ is a value if and only if $t$ is total.
+  \item
+    A term $t[\vec{x}]:C$, whose all free variables are $\vec{x}:\vec{A}$, is
+    total on values, if and only if
+    $t[\vec{a}]$ is total for any closed values $\vec{a}$ of type $\vec{A}$.
+  \end{enumerate}
+\end{definition}
 
+\begin{lemma}\label{lem:total_value}
+  \begin{enumerate}
+  \item\label{lem:total_value1}
+    Let $t:A$ be a closed term and $t \safeReduces u$.
+    If $u$ is total on values, then so is $t$.
+  \item\label{lem:total_value2}
+    Let $t[\vec{x}]:\vec{A}\rightarrow\N$ be a term,
+    whose all free variables are $\vec{x}:\vec{B}$,
+    and $\vec{u}:\vec{B}$ and $\vec{a}:\vec{A}$ be closed values.
+    If $t[\vec{u}]\vec{a}:\N$ is total on values, then $t[\vec{x}]$ is total on values. 
+  \end{enumerate}
+\end{lemma}
+\begin{proof}
+  The claim \ref{lem:total_value1} is shown by induction on $A$. 
+  We first show the base case, namely $A$ is $\N$.
+  By the assumption and the subject reduction property, $u$ has type $A$ and closed total on values.
+  Then we have $t \safeReduces u \safeReduces^* n$ for some $n\in\N$. 
+  Hence $t:\N$ is total on values.
+  We show the induction case, namely $A$ is $A_1\rightarrow A_2$.
+  Take arbitrary closed value $a:A_1$. Then we have $t(a) \safeReduces u(a)$ and 
+  $u(a):A_2$ is total on values by the assumption and the subject reduction property.
+  Hence, by the induction hypothesis, $t(a)$ is total on values. 
+  We obtain that $t:A_1\rightarrow A_2$ is total on values. 
+  
+  The claim \ref{lem:total_value2} is shown by induction on $|\vec{A}|$.
+  The base case $|\vec{A}| = 0$ is immediately shown by the definition.
+  We show the induction case. Let $\vec{A} = A_0\vec{A'}$.
+  Take arbitrary closed values $\vec{u}:\vec{B}$, $\vec{a'}:\vec{A'}$, and $a_0:A_0$. 
+  By the assumption, we have $t[\vec{u}]a_0\vec{a'}:\N$ is closed total on values. 
+  Then $t[\vec{u}]a_0:\vec{A'}\rightarrow\N$ is total on values by the induction hypothesis.
+  Hence $t[\vec{u}]:\vec{A}\rightarrow\N$ is total on values,
+  and so is $t[\vec{x}]$ as we expected.
+\end{proof}
+
+Let $\Pi$ be a proof and $e$ be a node of $\Pi$.
+We write $\Pi(e)$ for $t:\Gamma\vdash A$ at the node $e$ in $\Pi$. 
+
+\begin{theorem}
+  If $t$ is not total on values, then there is no $\Gamma$ and $A$ such that $t: \Gamma\vdash A$. 
+\end{theorem}
+\begin{proof}
+  Assume that $t$ is not total on values
+  and $t: \vec{x}:\vec{D}\vdash\vec{A}\rightarrow\N$ has a proof $\Pi$ (we show a contradiction).
+  By \ref{lem:total_value2} of Lemma~\ref{lem:total_value},
+  there exist closed values $\vec{a}:\vec{A}$ and $\vec{d}:\vec{D}$ such that
+  $t[\vec{d}]\vec{a}$ is not total on values. 
+  We inductively construct $(e_i,\vec{d_i},\vec{a_i})$ for each natural number $i$,
+  such that
+  \begin{itemize}
+  \item[(a)]
+    $e_i$ is a node of $\Pi$, where $t_i: \vec{x_i}:\vec{D_i}\vdash\vec{A_i}\rightarrow\N$ is
+    at the node $e_i$ in $\Pi$, and $e_{i+1}$ is a child node of $e_i$ in $\Pi$; 
+  \item[(b)]
+    $t_i$ is not total on values;
+  \item[(c)]
+    $\vec{d_i}:\vec{D_i}$ and $\vec{a_i}:\vec{A_i}$ are closed values
+    such that $t_i[\vec{d_i}]\vec{a_i}$ is not total on values;
+  \item[(d)]
+    there is a trace compatible connection from
+    ($\vec{d_i};\vec{a_i}$) to ($\vec{d_{i+1}};\vec{a_{i+1}}$), for any $i\ge 0$, in $\Pi$.
+    \Daisuke{mynote:write this more clearly}
+  \end{itemize}
+  
+  We first define $(e_0,\vec{d_0},\vec{a_0})$ by $(r,\vec{d},\vec{a})$,
+  where $r$ is the root node of $\Pi$. Then we have $t_0 = t$, $(b)$ and $(c)$. 
+  Next, assume that $(e_i,\vec{d_i},\vec{a_i})$ is already constructed.
+  Then we define $(e_{i+1},\vec{d_{i+1}},\vec{a_{i+1}})$ by the case analysis of
+  the last rule for the node $e_{i+1}$ in $\Pi$. 
+
+  Case of $\Struct(f)$, namely
+  $\Pi(e_i) = t[y_{f(1)}/x_1,\ldots,y_{f(n)}/x_n]:\Delta\vdash \vec{A_i}\rightarrow\N$
+  is obtained from $t:\Gamma\vdash A$, where
+  $\Gamma = x_1:C_1,\ldots,x_n:C_n$, $\Delta = y_1:B_1,\ldots,y_m:B_m$, 
+  $f:\{1,\ldots,n\}\to\{1,\ldots,m\}$ is an injection, and $C_i=B_{f(i)}$ for all $1\le i\le n$.
+  By the induction hypothesis and $(b)$,
+  $t[y_{f(1)}/x_1,\ldots,y_{f(n)}/x_n][d_{i,f(1)}/y_{f(1)},\ldots,d_{i,f(n)}/y_{f(n)}]\vec{a_i}:\N$ is not total on values, where $\vec{d_i} = d_{i,1}\ldots d_{i,m}$.
+  Then define $e_{i+1}$ as the unique parent node of $e_i$, and
+  also define $\vec{d_{i+1}}$ and $\vec{a_{i+1}}$ by $d_{i,f(1)}\ldots d_{i,f(n)}$
+  and $\vec{a_i}$, respectively. 
+  We obtain $(a)$, $(b)$, and $(c)$ for $i+1$, as expected.
+  We also have $(d)$ since the connection, determined by $f$, from
+  $(d_{i,1}\ldots d_{i,m};\vec{a_i})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (d_{i,f(1)},\ldots d_{i,f(n)};\vec{a_i})$
+  is trace compatible. 
+
+  
+  
+\end{proof}
+
+
+\Daisuke{WN end}
 
 \section{Uniqueness of normal form for closed terms of $\CTlambda$ of type $\N$}
 In this section we prove a weak form of confluence: normal form for
