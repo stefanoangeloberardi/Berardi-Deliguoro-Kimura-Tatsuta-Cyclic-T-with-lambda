@@ -489,6 +489,10 @@ the intermediate steps of the infinite reduction of $\Interval$ are not regular.
 In this section we prove that every closed term of $\CTlambda$
  (that is, well-typed, regular and with the global trace condition) normalizes with finitely many "safe" steps
 to some numeral $n \in \N$.
+In the following, we explicitly write $t[x_1,\ldots,x_n]$,
+where each $x_i$ may apper as a free variable in $t$, 
+and, under this notation, also write $t[a_1,\ldots,a_n]$ instead of $t[a_1/x_1,\ldots,a_n/x_n]$. 
+
 
 \begin{definition}[Values and total on values]
   We define values and total terms on values by induction on types. 
@@ -557,27 +561,30 @@ We write $\Pi(e)$ for $t:\Gamma\vdash A$ at the node $e$ in $\Pi$.
   We inductively construct $(e_i,\vec{d_i},\vec{a_i})$ for each natural number $i$,
   such that
   \begin{itemize}
-  \item[(a)]
+  \item[(i)]
     $e_i$ is a node of $\Pi$, where $t_i: \vec{x_i}:\vec{D_i}\vdash\vec{A_i}\rightarrow\N$ is
     at the node $e_i$ in $\Pi$, and $e_{i+1}$ is a child node of $e_i$ in $\Pi$; 
-  \item[(b)]
+  \item[(ii)]
     $t_i$ is not total on values;
-  \item[(c)]
+  \item[(iii)]
     $\vec{d_i}:\vec{D_i}$ and $\vec{a_i}:\vec{A_i}$ are closed values
     such that $t_i[\vec{d_i}]\vec{a_i}$ is not total on values;
-  \item[(d)]
+  \item[(iv)]
     there is a trace compatible connection from
     ($\vec{d_i};\vec{a_i}$) to ($\vec{d_{i+1}};\vec{a_{i+1}}$), for any $i\ge 0$, in $\Pi$.
+    Moreover, if $i$ is a progress point, namely $t_i$ is of the form $\cond x.(f,g)$ and $t_{i+1}$ is $g$,
+    then $\vec{a_i} = \Succ(m')\vec{a'}$, $\vec{d_{i+1}} = \vec{d_i}m'$, and
+    a trace passes from $\Succ(m')$ to $m'$. 
     \Daisuke{mynote:write this more clearly}
   \end{itemize}
   
   We first define $(e_0,\vec{d_0},\vec{a_0})$ by $(r,\vec{d},\vec{a})$,
-  where $r$ is the root node of $\Pi$. Then we have $t_0 = t$, $(b)$ and $(c)$. 
+  where $r$ is the root node of $\Pi$. Then we have $t_0 = t$, (ii) and (iii). 
   Next, assume that $(e_i,\vec{d_i},\vec{a_i})$ is already constructed.
   Then we define $(e_{i+1},\vec{d_{i+1}},\vec{a_{i+1}})$ by the case analysis of
   the last rule for the node $e_{i+1}$ in $\Pi$. 
 
-  Case of $\Struct(f)$, namely
+  The case of $\Struct(f)$, namely
   $\Pi(e_i) = t[y_{f(1)}/x_1,\ldots,y_{f(n)}/x_n]:\Delta\vdash \vec{A_i}\rightarrow\N$
   is obtained from $t:\Gamma\vdash A$, where
   $\Gamma = x_1:C_1,\ldots,x_n:C_n$, $\Delta = y_1:B_1,\ldots,y_m:B_m$, 
@@ -587,14 +594,116 @@ We write $\Pi(e)$ for $t:\Gamma\vdash A$ at the node $e$ in $\Pi$.
   Then define $e_{i+1}$ as the unique parent node of $e_i$, and
   also define $\vec{d_{i+1}}$ and $\vec{a_{i+1}}$ by $d_{i,f(1)}\ldots d_{i,f(n)}$
   and $\vec{a_i}$, respectively. 
-  We obtain $(a)$, $(b)$, and $(c)$ for $i+1$, as expected.
-  We also have $(d)$ since the connection, determined by $f$, from
+  We obtain (i), (ii), and (iii) for $i+1$, as expected.
+  We also have (iv) since the connection, determined by $f$, from
   $(d_{i,1}\ldots d_{i,m};\vec{a_i})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (d_{i,f(1)},\ldots d_{i,f(n)};\vec{a_i})$
   is trace compatible. 
 
+  The case of $\eta$-rule, namely 
+  $\Pi(e_i) = f[\vec{x}](x): \Gamma,x:N\vdash \vec{A}\rightarrow\N$ is obtained from
+  $f[\vec{x}]:\Gamma\vdash N\rightarrow \vec{A} \rightarrow \N$, where
+  $x\not\in\Gamma$.
+  By the induction hypothesis, $f[\vec{d'}]d\vec{a_i}:\N$ is not total on values,
+  where $\vec{d_i} = \vec{d'}d$.
+  Define $e_{i+1}$ as the unique parent node of $e_i$, and
+  also define $\vec{d_{i+1}}$ by $\vec{d'}$ and define $\vec{a_{i+1}}$ by $d\vec{a_i}$. 
+  We obtain (i), (ii), and (iii) for $i+1$, as expected.
+  We also have (iv) since the connection from
+  $(\vec{d_i};\vec{a_i}) = (\vec{d'}d;\vec{a_i})$ to
+  $(d_{i+1};\vec{a_{i+1}}) = (\vec{d'};d\vec{a_i})$
+  is trace compatible. 
+
+  The case of $0$-rule, namely $\Pi(e_i) = 0:\Gamma\vdash \N$, is not the case since $t_i = 0$ is total on values.
   
+  The case of $\Succ$-rule, namely $\Pi(e_i) = \Succ(t_{i+1}):\Gamma\vdash \N$ is obtained from
+  $t_{i+1}:\Gamma\vdash \N$．
+  By the induction hypothesis, $\vec{a_i}$ is empty, and 
+  $\Succ(t_{i+1}[\vec{d_i}]):\N$ is not total on values.
+  Then, by the definition, $t_{i+1}[\vec{d_i}]$ is not total on values. 
+  Define $e_{i+1}$ as the unique parent node of $e_i$, and
+  also define $\vec{d_{i+1}}$ and $\vec{a_{i+1}}$ by $d_i$ and empty, respectively. 
+  We obtain (i), (ii), (iii), and (iv) for $i+1$, as expected.
+
+  The case of $\ap$-rule, namely 
+  $\Pi(e_i) = t[\vec{x}](u[\vec{x}]):\Gamma\vdash \vec{A}\rightarrow\N$ is obtained from
+  $t[\vec{x}]:\Gamma\vdash B \rightarrow \vec{A}\rightarrow\N$ and $u[\vec{x}]:\Gamma\vdash B$．
+  By the induction hypothesis, $t[\vec{d_i}](u[\vec{d_i}])\vec{a_i}:\N$ is not total on values.
+  We first consider the subcase that $u[\vec{d_i}]:B$ is total on values.
+  We define a value $a':B$ by $n\in\Nat$ such that $u[\vec{d_i}] \safeReduces^* n$ if $B=\N$,
+  by $u[\vec{d_i}]$ otherwise.
+  Then define $e_{i+1}$ by the parent node whose term is $t[\vec{x}]$,
+  and define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = a'\vec{a_i}$. 
+  Using Lemma~\ref{lem:total_value}, we obtain (i), (ii), (iii) for $i+1$, as expected. 
+  We also have (iv) since the connection from 
+  $(\vec{d_i};\vec{a_i})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (\vec{d_i};a'\vec{a_i})$ is
+  trace compatible. 
+  Next we consider the subcase that $u[\vec{d_i}]:B$ is not total on values.
+  Then there is a sequence of values $\vec{a'}$ such that $u[\vec{d_i}]\vec{a'}:\N$ is not total on values.
+  Define $e_{i+1}$ by the parent node whose term is $u[\vec{x}]$,
+  and define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = \vec{a'}$. 
+  We obtain (i), (ii), (iii) for $i+1$, as expected.
+  We also have (iv) since the connection from 
+  $(\vec{d_i};\vec{a_i})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (\vec{d_i};\vec{a'})$ is
+  trace compatible. 
+  
+  The case of $\lambda$-rule, namely
+  $\Pi(e_i) = \lambda x.(t_{i+1}[\vec{x},x]):\Gamma\vdash A \rightarrow \vec{A} \rightarrow \N$ is obtained from
+  $t_{i+1}[\vec{x},x]:\Gamma,x:A\vdash \vec{A}\rightarrow\N$．
+  By the induction hypothesis, $(\lambda x.(t_{i+1}[\vec{d_i},x]))a\vec{a'}:\N$ is not total on values,
+  where $\vec{a_i} = a\vec{a'}$.
+  Then, by Lemma~\ref{lem:total_value}, $t_{i+1}[\vec{d_i},a]\vec{a'}$ is not total on values. 
+  Define $e_{i+1}$ as the unique parent node of $e_i$, and
+  also define $\vec{d_{i+1}} = \vec{d_i}a$ and $\vec{a_{i+1}} = \vec{a'}$. 
+  We obtain (i), (ii), (iii) for $i+1$, as expected.
+  We also have (iv) since the connection from 
+  $(\vec{d_i};\vec{a_i}) = (\vec{d_i};a\vec{a'})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (\vec{d_i}a;\vec{a'})$ is
+  trace compatible. 
+  
+  The case of $\cond$-rule, namely
+  $\Pi(e_i) = \cond x.(f[\vec{x}],g[\vec{x},x]):\Gamma\vdash \N\rightarrow\vec{A}\rightarrow\N$
+  is obtained from 
+  $f[\vec{x}]:\Gamma\vdash \vec{A}\rightarrow\N$
+  and
+  $g[\vec{x},x]:\Gamma,x:\N\vdash \vec{A}\rightarrow\N$. 
+  By the induction hypothesis, $\cond x.(f[\vec{d_i}],g[\vec{d_i},x])m\vec{a'}:\N$ is not total on values,
+  where $\vec{a_i} = m\vec{a'}$ and $m \in \Nat$.
+  We first consider the subcase $m=0$.
+  Define $e_{i+1}$ by the parent node whose term is $f[\vec{x}]$,
+  and define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = \vec{a'}$. 
+  We obtain (i), (ii), (iii) for $i+1$, as expected. 
+  We also have (iv) since the connection from 
+  $(\vec{d_i};\vec{a_i})=(\vec{d_i};0\vec{a'})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (\vec{d_i};\vec{a'})$
+  is trace compatible. 
+  Next we consider the subcase $m=\Succ(m')$. 
+  Define $e_{i+1}$ by the parent node whose term is $g[\vec{x},x]$,
+  and define $\vec{d_{i+1}} = \vec{d_i}m'$ and $\vec{a_{i+1}} = \vec{a'}$. 
+  We obtain (i), (ii), (iii) for $i+1$, as expected.
+  We also have (iv) since the connection from 
+  $(\vec{d_i};\vec{a_i})=(\vec{d_i};\Succ(m')\vec{a'})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (\vec{d_i}m';\vec{a'})$
+  is trace compatible. 
+
+  Hence, by the above construction, we have an infinite path $\vec{e} = (e_0,e_1,\ldots)$ in $\Pi$.
+  Since $\Pi$ satisfies the global trace condition, $\vec{e}$ contains a progressing trace
+  $(k_{m},k_{m+1},\ldots)$, where, for each $m\le i$, $k_i$ is an atom index of $t_i$, 
+  and $k_{i+1},t_{i+1}$ is the successor of $k_i,t_i$. 
+  Let $n_i$ be an numeral in $\vec{d_i},\vec{a_i}$ at index $k_i$ for each $m\le i$.
+  Then the sequence $(n_m,n_{m+1},\ldots$ decreases at each progressing point.
+  This means that it decreases infinitely many times
+  since $(k_{m},k_{m+1},\ldots)$ has infinitely many progressing point.
+  Finally we have a contradiction. 
   
 \end{proof}
+
+By this theorem, we have the following corollaries. 
+
+\begin{corollary}
+  $t: \Gamma\vdash A$ implies $t$ is total on values.
+\end{corollary}
+
+\begin{corollary}
+  For any closed $t:\N$, there is $n\in\Nat$ such that $t\safeReduces^* n$. 
+\end{corollary}
+
 
 
 \Daisuke{WN end}
