@@ -32,9 +32,17 @@ cyclic proofs
 \begin{abstract}
 We explore the possibility of having a circular syntax
 directly for $\lambda$-abstraction, instead of interpreting
- $\lambda$-abstraction through combinators. 
-The use of binders instead of combinators for defining terms 
-could be more familiar for researchers in the field of Type Thepry
+ $\lambda$-abstraction through combinators and circular syntax afterwards.
+We introduce circular syntax as a case fixed point operator.
+Our motivation for using binders instead of combinators is that this way of introducing circular syntax 
+could be more familiar for researchers in the field of Type Theory.
+
+We prove the usual results for the new syntax: 
+every closed term of type $\N$ reduces to some numeral,
+and we have strong normalization for reductions outside all fixed points, 
+strong normalization for fair reductions, Church-Rosser property
+and the equivalence with G\"{o}del system $\systemT$. 
+Terms with cyclic syntaxt are much shorter than the equivalent terms of $\systemT$. 
 \end{abstract}
 
 \iffalse

@@ -60,24 +60,27 @@ We will introduce $\LAMBDA$, a set of infinite terms whose types are: the atomic
 possibly type variables, 
 and all types $A \rightarrow B$ for any types $A$, $B$. 
 The terms of $\LAMBDA$  are possibly infinite trees representing expressions defined with 
-$0$,$\Succ $,$\ap$, variables, the binder $\lambda$ for defining maps, 
-the binder $\cond$ for arithmetic conditional. 
-If we have no type variables, the trees in $\LAMBDA$ represent partial functionals on $\N$.
+$0$,$\Succ $,$\ap$ (application), variables,  $\lambda$ (the binder for defining maps), 
+and $\cond$, a fixed point binder operator for the arithmetic conditional (test on zero). 
+If we have no type variables, the the trees in $\LAMBDA$ represent partial functionals on $\N$, 
+provided we add reduction rules.
 
-Then will consider a subset $\CTlambda$ of $\LAMBDA$ which we call the circular version of 
+In this paper will consider a subset $\CTlambda$ of $\LAMBDA$ which we call the circular version of 
 G\"{o}del system $\systemT$. Differently from all previous circular version of $\systemT$, our system
-uses binder instead of combinators.
+uses binder instead of combinators. Our goal is providing a circular syntaxt more familiar to research
+in the field of Type Theory.
 
 $\CTlambda$ consists of all  trees in $\LAMBDA$ which are well-typed,
 satisfy a condition called global trace condition, and are regular (they only have finitely many sub-trees).
-We will prove that the trees in $\CTlambda$ whose only atomic type is $\N$
+We will prove the usual results for the new syntax, in particular 
+that the trees in $\CTlambda$ whose only atomic type is $\N$
 represent exactly the total computable functionals on $\N$ definable in G\"{o}del system $\systemT$
 using $\N$ as only atomic type.
 
 
 
 \section{ The set of infinite $\lambda$-terms}
-We define the set $\LAMBDA$ of infinite terms, well-typed terms and a notion of reduction for them.
+We define the set $\LAMBDA$ of infinite terms, well-typed terms and a reduction relation for them.
 
 
 \begin{definition}[Types and infinite terms in $\LAMBDA$]
@@ -91,6 +94,7 @@ The types of $\LAMBDA$ are all types we can define with $\N$ and $\rightarrow$.
 The terms of $\LAMBDA$ 
 are all possibly infinite trees we can define with $x$ (variable name), $\lambda x:T.t$ (binder, abstraction), 
 $\ap(t,u)$, $0$, $\Succ (t)$ (successor of $t$), $\cond x.(f,g)$ (binder, arithmetical conditional).
+As usual, we abbreviate $\ap(t,u)$ with $t(u)$.
 
 \end{enumerate}
 When $t = \Succ ^n(0)$ for some natural number $n$
@@ -100,36 +104,41 @@ we say that $t$ is a numeral. We write $\Nat$ for the set of numeral.
 
 $\Nat$ is yet another representation of the set of natural numbers.
 All numeral are finite terms of $\Lambda$. 
-All finite simply typed $\lambda$-terms we can define with the rules above are finite terms of $\LAMBDA$.
-The term $t = \cond x.(0,t)$ is in $\LAMBDA$ and it is infinite. Its unique infinite branch is $t,t,t,\ldots$.
+All finite well-typed typed $\lambda$-terms we can define with the rules above are finite terms of $\LAMBDA$.
+The term $t = \cond x.(0,t)$ is in $\LAMBDA$. $t$ is an infinite tree (it includes itself as a subtree). 
+The unique infinite branch is $t,t,t,\ldots$. The subterms of $t$ are $0$ and $t$, therefore $t$
+is a regular tree.
 
-We define context and inherited context.
+We define context and inherited context for any term of $\LAMBDA$.
 
-\begin{definition}[Contexts of $\LAMBDA$]
+\begin{definition}[Inherited Contexts of $\LAMBDA$]
 A context is any finite list $\Gamma = x_1:A_1, \ldots, x_n:A_n$ of pairwise distinct variables
 and types. Given any context $\Gamma$, any $t \in \Lambda$, any subterm $u$ of $t$
-we define an inherited context for $u$, of the form $\Gamma,\Delta$ for some $\Delta$.
+we define a unique inherited context for $u$, of the form $\Gamma,\Delta$ for some $\Delta$.
 
 \begin{enumerate}
 
 \item
-$t$ inherited the context $\Gamma$.
+$t$ has inherited context $\Gamma$.
 
 \item
-Any binder on $x$ subtracts the variable $x$ from the context: 
-if $t = \lambda x:T.u, \cond x.(f,g)$ has context $\Gamma,\Delta$, 
-then $u$ and $g$ have context $\Gamma, \Delta, x:T$.
+Any binder on $x$ subtracts the variable $x$ from the context of its \emph{last} argument:
+if $t = \lambda x:T.u, \cond x.(f,g)$ has inherited context $\Gamma,\Delta$, 
+then $u$ and $g$ have context $\Gamma, \Delta, x:T$, while $f$ has  inherited context 
+$\Gamma,\Delta$ (because $f$ is \emph{not} the last argument of \cond x.(f,g)).
 
 \item
 In any other case the context of a term and an immediate subterm are the same:
-If $\cond x.(f,g)$ has context $\Gamma, \Delta$, then $f$ has context $\Gamma, \Delta$.
-
+If $t=\Succ(u), f(a)$ has inherited context $\Gamma, \Delta$,
+ then $u,f,a$ have  inherited context $\Gamma, \Delta$.
 \end{enumerate}
+We abbreviate \emph{`` inherited context''} with \emph{context}.
 \end{definition}
 
 
-We define the statement: \emph{``$t$ has context $\Gamma$ and type $A$''}, 
-written $\Gamma \vdash t:A$, and of proof $\Pi$ of $\Gamma \vdash t:A$.
+ Below we define the statement: \emph{``$t$ has context $\Gamma$ and type $A$''}, 
+written $\Gamma \vdash t:A$, and the statement 
+\emph{``$\Pi$ is a proof of $\Gamma \vdash t:A$}.
 %14:26 27/03/2024
 
 %The scope of the binder $\lambda x:T.t$ is $t$.
@@ -137,19 +146,22 @@ written $\Gamma \vdash t:A$, and of proof $\Pi$ of $\Gamma \vdash t:A$.
 
 
 The typing rules are the usual ones but for the conditional binder $\cond$, and for a fresh rule $\etaRule$. 
-$\etaRule$ corresponds to an $\eta$-expansion but introducing a global variable name. 
+$\etaRule$ corresponds to an $\eta$-expansion and it introduces a global variable name. 
+$\etaRule$ is but a particular case of $\ap$ rule. We prefer to use a separate name for $\etaRule$ 
+because of the special role  this rule has in this paper.
 
-We have a single structural rule merging Weakening, permutation and variable renaming. 
+We have a single structural rule  $\struct_f$, which can be used for:
+ weakening, variable permutation and variable renaming. 
 
-\begin{definition}[Well-typed terms of $\LAMBDA$]
+\begin{definition}[Typing rules of $\LAMBDA$]
 Assume $\Gamma = x_1:A_1, \ldots, x_n:A_n$, 
 $\Delta = y_1:B_1, \ldots, y_n:B_m$ are sequents of length $n$, $m$ respectively. Suppose
 $f:\{1, \ldots, n\} \rightarrow \{1, \ldots, m\}$ is any injection, compatible with types
-in $\Gamma$, $\Delta$: $A_i = B_{f(i)}$ for all $1 \le i \le n$.
+in $\Gamma$, $\Delta$: we assume $A_i = B_{f(i)}$ for all $1 \le i \le n$.
 
 \begin{enumerate}
 \item
-Structural rule $\struct(f)$.
+Structural rule $\struct_f$.
 If $t: \Gamma \vdash T$ then $t[ y_{f(1)}/x_1, \ldots,  y_{f(n)}/x_n]:\Delta \vdash T$
 
 \item
@@ -158,7 +170,7 @@ If $x \not \in \Gamma$ and $f:\Gamma \vdash\N \rightarrow T$
 then $f(x) : \Gamma, x:\N \vdash T$.
 
 \item
-Var-rule.
+$\var$-rule.
 If $x:A \in \Gamma$ then $x:\Gamma \vdash A$.
 
 \item
@@ -182,32 +194,48 @@ $\cond$-rule.
 $\cond$. If $ f :\Gamma, x:T \vdash T$, $x \not \in \FV(f)$ and  $g : \Gamma, x:T \vdash T$
 then $\cond x.(f,g) : \Gamma \vdash \N \rightarrow T$.
 \end{enumerate}
+\end{definition}
 
+Rules are syntax-directed (each term is the consequence of at most one rule) provided we reserve
+the $\etaRule$ in the case of a term $f(x)$, for $x$ variable, and the $\ap$ rule 
+ in the case of a term $f(a)$, for $a$ \emph{not} a variable.
+
+A proof $\Pi$ that a term $t$ is well-typed has the identical tree structure of $t$.
+In particular, $\Pi$ is infinite when $t$ is.
+
+\begin{definition}[Well-typed term of $\LAMBDA$]
 We write $\Pi: \Gamma \vdash t:A$, and we say that $\Pi$ is a proof of $\Gamma \vdash t:A$ if
 $\Pi$ is an assignment of one sequent $\Delta \vdash B$ to each
-subterm $u$ of $t$, in such a way that $u$ is the consequence of some rule and 
-$\Gamma \vdash A$ is assigned to $t$. 
-
+subterm $u$ of $t$, in such a way that:
+\begin{enumerate}
+\item 
+$\Pi(t) = \Gamma \vdash A$
+\item
+For all subterms $u$ of $t$, if $u_1, \ldots, u_n$ are immediate subterms of $u$,
+then the sequent $\Pi(u)$ is the consequence of $\Pi(u_1), \ldots, \Pi(u_n)$ under some rule.
+\end{enumerate}
+We introduce the type judgment for a term.
 \begin{enumerate}
 \item
-$\Gamma \vdash t:A$ is true if and only if it has some proof.
+$\Gamma \vdash t:A$ is true if and only if $\Pi:\Gamma \vdash t:A$ for some $\Pi$.
 \item
-$t \in \LAMBDA$ is well-typed if it has some proof. 
+$t \in \LAMBDA$ is well-typed if $\Gamma \vdash t:A$ for some $\Gamma, A$. 
 \item
 $\WTyped$ is the set of well-typed $t \in \LAMBDA$.
 \end{enumerate}
-We write $\vdash t:A$ for $\emptyset \vdash t:A$.
+We abbreviate $\emptyset \vdash  t:A$ with $\vdash t:A$.
 \end{definition}
 
+Rules are syntext-directed, therefore a well-typed term $t$ has exactly one proof $\Pi$, up to
+application of the rule $\struct_f$. $\Pi$ is computable from $t$.
 
-
-$\etaRule$ is a particular case of $\ap$. When we substitute $x:\N$ with some 
-$\Gamma \vdash a:\N$  then we replace $\etaRule$ with $\ap$-rule.
+As we said, $\etaRule$ is a particular case of $\ap$. When we substitute $x:\N$ with some 
+$\Gamma \vdash a:\N$ which is not a variable,  then we replace $\etaRule$ with $\ap$-rule.
 
 An example: if $t = \cond x. (0,t)$, then $\vdash t:\N \rightarrow \N$.  
 
-Our goal is to provide a set of well-formed term for $\LAMBDA$ and interpret them as partial functionals,
-and total functionals if we add more conditions. 
+Our goal is to provide a set of well-formed term for $\LAMBDA$ and interpret them as partial functionals.
+Some terms, those satisfying the global trace condition (to be introduced later) will be total functionals.
 Our first step is to provide reduction rules for $\LAMBDA$.
 
 %18:14 27/03/2024
@@ -228,68 +256,139 @@ $\reduces$ is the context and transitive closure of $\reduces_\beta$ and $\reduc
 
 \item
 We say that $t \reduces_\safe u$, or that $t$ reduces safely to $u$,  if we never reduce in proper subterms of 
-any $\cond x.(f,g)$. We call \emph{unsafe} a reduction inside any $\cond x.(f,g)$.
+any $\cond x.(f,g)$. 
+%We call \emph{unsafe} a reduction inside any $\cond x.(f,g)$.
 
 \item
 A term is safe-normal if all its redexes (if any) are inside some $\cond x.(f,g)$.
 \end{enumerate}
 \end{definition}
 
-As example. If $u = \cond x. (0, (\lambda x.u)(n_0) )$ is as above, then $u$ is safe-normal, because
-all redexes in $u$ are of the form  $(\lambda x.u)(n_0)$ and inside a $\cond$. However,
-there are infinitely many $\beta$-redexes inside $u$.
+As example. If $u = \cond x. (0, (\lambda x.u)(z) )$ is as above, then $u$ is safe-normal, because
+all redexes in $u$ are of the form  $(\lambda x.u)(z)$ and inside a $\cond$. 
+However, the tree form of $u$ has the following branch:
+$$
+u, \ \ \ 
+(\lambda x.u)(z), \ \ \ 
+\lambda x.u, \ \ \ 
+u, \ \ \ \ldots
+$$
+This branch is cyclic, infinite,
+and it includes infinitely many $\beta$-redexes.
 
 The reason for forbiding
 reductions inside $\cond x.(f,g)$ is that thorugh $\cond$ we will-express fixed-point equations.
 Therefore reductions for $\cond$ are in fact unfolding of the definition of a fixed point. 
-As unfolding of a fixed point, they can can easily loop, and they are ``unsafe". For this reason, we allow 
-the minimum possible reductions concerning $\cond x.(f,g)$, those of the form
+As unfolding of a fixed point, they can can easily loop, and they are ``unsafe". 
+For this reason, we first consider reductions
 $\cond x.(f,g)(0) \reduces_\cond f$ and
-$\cond x.(f,g)(\Succ (t)) \reduces_\cond g[t/x]$ for maximal $\cond$-expression, and no reduction
+$\cond x.(f,g)(\Succ (t)) \reduces_\cond g[t/x]$ for maximal $\cond$-expression only, and no reduction
 inside the arguments $f$, $g$ of $\cond$.
+In a second moment, 
+by adding a restriction of \emph{fairness} we will be able to recover strong normalization also for 
+``unsafe" reductions.
 
-An example. If $n$ is any numeral and $u = \cond x. (0, (\lambda x.u)(z) )$, then 
-$u(n): \N$ has infinitely many $\beta$-redexes inside 
+Some examples of reduction.
+\begin{enumerate}
+\item
+An example of reduction of a term $v(n)$ to a normal form. 
+If $n$ is any numeral and $v = \cond x. (0, (\lambda x.v(x)) )$, then 
+$v(n): \N$ has infinitely many $\beta$-redexes inside 
 $\cond$, therefore infinitely many unsafe reductions are possible. There are only finitely many safe reduction
-from $u(n)$ instead: $u(n)$ reduces to $\lambda x.u)(z)(n-1)$, then to $u(n-1)$, 
-then $u(n-1)$ reduces to $u(n-2)$ and so forth.
-After $n+n$ reductions we get $u(0)$. With one last reduction we get $0$ and we stop. 
+from $v(n)$ instead: $v(n)$ $\cond$-reduces to $(\lambda x.v(x))(n-1)$, 
+this latter $\beta$-reduces to $v(n-1)$, 
+then we loop: $v(n-1)$ reduces to $v(n-2)$ in one $\cond$-step and one $\beta$-step and so forth.
+After $n$ $\cond$-reductions and 
+$n$ $\beta$-reductions we get $v(0)$. With one last $\cond$-reduction we get $0$ and we stop. 
+\item
+The term $v(n)$ above is also an example of a strongly normalizing term.
+There is the unique reduction sequence from $v(n)$, because we cannot $\cond$-reduce $\lambda x.v(x)$
+before assigning either $0$ or $\Succ(u)$ to $x$. 
+Thus, all reductions sequences from $v(n)$ terminate in $2n+1$ steps to the normal form $0$.
+\end{enumerate}
 
 
 \section{The trace of the $\lambda$-terms}
 %19:34 27/03/2024
-We define a notion of trace for possibly infinite $\lambda$-terms, describing how an input of type $\N$
+Total $\lambda$-terms will be well-typed terms satisfying a condition call \emph{global trace condition}.
+In order to define the global trace condition, 
+we define a notion of trace for possibly infinite $\lambda$-terms, describing how an input of type $\N$
 is used when computing an output.
 The first step toward a trace is defining a correspondence between atoms in the
-proof that $t$ is well-typed. We need first the notion of list of types and atomic types for a term.
+proof that $t$ is well-typed. We need first the notion of \emph{list of argument
+ types} and index of atomic types for a term.
 
-\begin{definition}[Integer maps]
+First, an example.
+Assume $t : \{x_1:A_1, x_2:A_2\} \vdash B_3 \rightarrow \N$. Then the list of argument types of $t$
+is $A_1, A_2, B_3$. Remark that for an open term $t$ we list as ``argument types'' also the
+types of the free variables. We motivate our terminology:
+in a sense, $t$ is an abbreviation of the closed term $t' = \lambda  
+x_1:A_1, x_2:A_2.t: (  A_1,A_2,B_3 \rightarrow \N )$, and the argument types of $t'$ are
+in fact $A_1, A_2, B_3$. 
+The index of an atomic argument of $t$ is any $j \in \{1,2,3\}$ such that $A_j=\N$
+or $B_j=\N$ respectively.
+
+\begin{definition}[List of argument types of a term]
+Assume that $\vec{A} = A_1, \ldots, A_n$, $\vec{B}=B_{n+1}, \ldots, B_{n+m}$, 
+$\Gamma = \{\vec{x}:\vec{A}\}$,
+and $t: \Gamma \vdash \vec{B} \rightarrow \N$.
+
 \begin{enumerate}
 \item
-The type list of $t$ is $\vec{C} = \vec{A},\vec{B}$. 
+The \emph{list of argument types} of $t$ is $\vec{C} = \vec{A},\vec{B}$, 
+the list of types of free variables and arguments of the type $ \vec{B} \rightarrow \N$ of $t$. 
 
 \item
-An atom index of $t$ is any $j \in \{1, \ldots, n+m\}$ such that $C_j = \N$.
-
-\item
-We define $\ins(a,x)=x+1$ if $x \ge a+1$, and $\ins(a,x)=x$ if $x\ge a$.
+An \emph{index of an atomic argument} 
+of $t$ is any $j \in \{1, \ldots, n+m\}$ such that $C_j = \N$.
 
 \end{enumerate}
 \end{definition}
 
-We now define the atom correspondence in $\CTlambda$.
+We now define the atom correspondence in a proof $\Pi: t:\Gamma \vdash A$
+of  $\LAMBDA$.
 
+\subsection{An example of atom correspondence in a proof of well-typing}
 
+\begin{Eg}\label{eg:1}\rm
+An example of a cyclic proof is given in Figure \ref{fig:5}.
+\begin{figure*}[t]
+\[
+\infer[(\lor L)]{Ex \lor Ox \prove \N x}{
+	\infer[(\Case\ E)]{(a)\ Ex \prove \N x}{
+		\infer[(=L)]{x=0 \prove \N x}{
+		\infer[(Wk)]{x=0 \prove \N 0}{
+		\infer[(\N\ R)]{\prove \N 0}{}
+		}}
+		&
+		\infer[(=L)]{x=sx',Ox' \prove \N x}{
+		\infer[(\N\ R)]{x=sx',Ox' \prove \N sx'}{
+		\infer[(Wk)]{x=sx',Ox' \prove \N x'}{
+		\infer[(\Subst)]{Ox' \prove \N x'}{
+		(b)\ Ox \prove \N x
+		}}}}
+	}
+	&
+	\infer[(\Case\ O)]{(b)\ Ox \prove \N x}{
+	\infer[(=L)]{x=sx',Ex' \prove \N x}{
+	\infer[(\N\ R)]{x=sx',Ex' \prove \N sx'}{
+	\infer[(Wk)]{x=sx',Ex' \prove \N x'}{
+	\infer[(\Subst)]{Ex' \prove \N x'}{
+	(a)\ Ex \prove \N x
+	}}}}}
+}
+\]
+\caption{Cyclic Proof}\label{fig:5}
+\end{figure*}
+\end{Eg}
+%13:21 15/04/2024
 
-\begin{definition}[Atom correspondence in  $\CTlambda$]
-Assume $\vec{A} = A_1, \ldots, A_n$, $\vec{B}=B_1, \ldots, B_m$
-and $t:\vec{x}:\vec{A} \vdash \vec{B} \rightarrow \N$ is a pseudo-term.
-
+\begin{definition}[Atom correspondence in a proof of  $\LAMBDA$]
+Assume $\vec{A} = A_1, \ldots, A_n$, $\vec{B}=B_1, \ldots, B_m$, $\Gamma = \vec{x}:\vec{A}$,
+and $t: \vdash \vec{B} \rightarrow \N$.
+We define an injection $$\ins:\N,\N \rightarrow\N$$
+by $\ins(a,x)=x+1$ if $x \ge a+1$, and $\ins(a,x)=x$ if $x\le a$.
 \begin{enumerate}
-\item
-The type list of $t$ is $\vec{C} = \vec{A},\vec{B}$. 
-An atom index of $t$ is any $j \in \{1, \ldots, n+m\}$ such that $C_j = \N$.
-
 \item
 For each atom index $k$ in $t$, each immediate subterms $t'$ of $t$ 
 each atom index $k'$ in $t'$ we define the relation: ``$k',t'$ the successor of $k,t$". We require:
@@ -297,13 +396,16 @@ each atom index $k'$ in $t'$ we define the relation: ``$k',t'$ the successor of 
 \item
 if $t$ is obtained by a rule $\struct(f)$ then $k = f(k')$  if $k' \le n$ and $k = k' - n + m$ if $k \ge n+1$.
 \item
-$k' = \ins(n,k)$ if $t=f(a)$, $a:\N$ and $t'=f$. 
+$k' = \ins(n,k)$ if $t=f(a)$, $a:\N$ is \emph{not} a variable and $t'=f$. 
 \item
-$k = k'$ in all other cases.
-% in all other cases: $\Succ $, $\lambda$, $\etaRule$, $\cond$, and $\ap$ if different from the previous case.
+$k = k'$ in all other cases, which are: $\Succ $, $\lambda$, $\etaRule$, $\cond$.
 \end{enumerate}
 \end{enumerate}
 \end{definition}
+
+The correspondence on atoms in a proof $\Pi:\Gamma\vdash $ defines a graph $\Graph(\Pi)$ 
+whose nodes are all pairs $(k,u)$, with $u$ subterm of $t$ and $k$ index of some atomic argument of  $u$.
+We define a trace as a (finite or infinite) path in the graph $\Graph(\Pi)$.
 
 \begin{definition}[Trace for well-typed terms in $\LAMBDA$]
 \begin{enumerate}
@@ -312,9 +414,16 @@ A path $\pi$ in $t$ is any list $t_0, \ldots, t_n$ of subterms of $t$
 such that $t_0 = t$ and each $t_{i+1}$ is an immediate subterm of $t_i$. 
 
 \item
-Assume $\pi =t_0, \ldots, t_n$ is a branch of $t$. A trace of $\pi$ consists of an integer list 
-$k_m, \ldots, k_n$ such that for each $i=m,\ldots, n$:
-$k_i$ is an atom index of $t_i$, and if $i+1 \le n$ then $k_{i+1},t_{i+1}$ is the successor of $k_i, t_i$.
+Assume $\pi =t_0, \ldots, t_n$ is a branch of $t$. 
+A \emph{trace} of $\pi$ consists of a list 
+$(k_m,t_m), \ldots, (k_n,t_n)$ such that for each $i=m,\ldots, n$:
+$k_i$ is an atom index of $t_i$, and if $i+1 \le n$ then $k_{i+1},t_{i+1}$ is the successor of $k_i, t_i$
+in $\Pi$.
+
+\item
+An infinite path and an infinite trace in $\Pi$ 
+are the union of a family of paths and a family of traces in $\Pi$ which are increasing
+by the prefix order.
 \end{enumerate}
 \end{definition}
 
