@@ -348,27 +348,44 @@ of $t$ is any $j \in \{1, \ldots, n+m\}$ such that $C_j = \N$.
 We now define the atom correspondence between arguments of type $\N$ of subterms of $t$
 in a proof $\Pi: t:\Gamma \vdash A$ of  $\LAMBDA$. Two arguments of type $\N$ are in
 correspondence if and only if they receive the same global input: local input are ignored.
+Usually two corresponding argument types have the same index, but for a few special cases
+we discuss through examples. We draw in the same color two arguments of type $\N$ which are in correspondence. 
 
-We define a correspondence between arguments 
 \begin{Eg}\label{eg:1}\rm
-An example of  atom correspondence for application is given below, where we draw in the same
-color two arguments of type $\N$ which are in correspondence.
+Below we give an example of  atom correspondence for some instance of the rule $\struct$.
+\[
+\infer[(\struct)]
+{  x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N}, x_3:\bfColor{green}{\N}
+					\prove t : \bfColor{orange}{\N} \rightarrow \N}
+	  {   x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N} 
+					\prove t : \bfColor{orange}{\N} \rightarrow \N}
+\]
+\end{Eg}
+%20:13 15/04/2024
+\begin{Eg}\label{eg:2}\rm
+Below we give an example of  atom correspondence for the rule $\ap$.
+We draw in the same color two arguments of type $\N$ which are in correspondence. 
+We assume that $a$ is \emph{not} a variable.
 \[
 \infer[(\ap)]
-{  x_1:{\color{red}{\N}}, x_2:{\bf \color{blue}{\N}}
-					\prove f(a) : {\color{yellow}{\N}} \rightarrow \N}
+{  x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N}
+					\prove f(a) : \bfColor{orange}{\N} \rightarrow \N}
     {
-	  {   x_1:{\color{red}{\N}}, x_2:{\color{blue}{\N}}
-					\prove f :  {\color{green}{\N}}, {\color{yellow}{\N}} \rightarrow \N}
-      {\ \ \ \ \   x_1:{\color{red}{\N}}, x_2:{\color{blue}{\N}}
+	  {   x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N}
+					\prove f : \bfColor{green}{\N}, \bfColor{orange}{\N} \rightarrow \N}
+      {\ \ \ \ \   x_1: \bfColor{red}{\N}, x_2: \bfColor{blue}{\N}
 					\prove a : \N}
 	}
 \]
 \end{Eg}
-Remark that the first argument of $f$ is in correspondence with no argument in the rule $\ap$
-(it can be in correspondence with argument higher in the proof). The reason is that in the term $f(a)$,
-the first argument of $f$ receives a value from the local value $a$.
+Remark that the first argument of $f$ (in \bfColor{green}{green}) 
+is in correspondence with no argument in the rule $\ap$.
+The reason is that in the term $f(a)$,
+the first argument of $f$ receives a value from the value $a$ which is local to the term $f(a)$.
+However, the first argument of $f$ can be in correspondence with some argument higher in the proof. 
 %13:21 15/04/2024
+
+
 
 \begin{definition}[Atom correspondence in a proof of  $\LAMBDA$]
 Assume $\vec{A} = A_1, \ldots, A_n$, $\vec{B}=B_1, \ldots, B_m$, $\Gamma = \vec{x}:\vec{A}$,
