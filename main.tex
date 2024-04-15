@@ -345,42 +345,29 @@ of $t$ is any $j \in \{1, \ldots, n+m\}$ such that $C_j = \N$.
 \end{enumerate}
 \end{definition}
 
-We now define the atom correspondence in a proof $\Pi: t:\Gamma \vdash A$
-of  $\LAMBDA$.
+We now define the atom correspondence between arguments of type $\N$ of subterms of $t$
+in a proof $\Pi: t:\Gamma \vdash A$ of  $\LAMBDA$. Two arguments of type $\N$ are in
+correspondence if and only if they receive the same global input: local input are ignored.
 
-\subsection{An example of atom correspondence in a proof of well-typing}
-
+We define a correspondence between arguments 
 \begin{Eg}\label{eg:1}\rm
-An example of a cyclic proof is given in Figure \ref{fig:5}.
-\begin{figure*}[t]
+An example of  atom correspondence for application is given below, where we draw in the same
+color two arguments of type $\N$ which are in correspondence.
 \[
-\infer[(\lor L)]{Ex \lor Ox \prove \N x}{
-	\infer[(\Case\ E)]{(a)\ Ex \prove \N x}{
-		\infer[(=L)]{x=0 \prove \N x}{
-		\infer[(Wk)]{x=0 \prove \N 0}{
-		\infer[(\N\ R)]{\prove \N 0}{}
-		}}
-		&
-		\infer[(=L)]{x=sx',Ox' \prove \N x}{
-		\infer[(\N\ R)]{x=sx',Ox' \prove \N sx'}{
-		\infer[(Wk)]{x=sx',Ox' \prove \N x'}{
-		\infer[(\Subst)]{Ox' \prove \N x'}{
-		(b)\ Ox \prove \N x
-		}}}}
+\infer[(\ap)]
+{  x_1:{\color{red}{\N}}, x_2:{\bf \color{blue}{\N}}
+					\prove f(a) : {\color{yellow}{\N}} \rightarrow \N}
+    {
+	  {   x_1:{\color{red}{\N}}, x_2:{\color{blue}{\N}}
+					\prove f :  {\color{green}{\N}}, {\color{yellow}{\N}} \rightarrow \N}
+      {\ \ \ \ \   x_1:{\color{red}{\N}}, x_2:{\color{blue}{\N}}
+					\prove a : \N}
 	}
-	&
-	\infer[(\Case\ O)]{(b)\ Ox \prove \N x}{
-	\infer[(=L)]{x=sx',Ex' \prove \N x}{
-	\infer[(\N\ R)]{x=sx',Ex' \prove \N sx'}{
-	\infer[(Wk)]{x=sx',Ex' \prove \N x'}{
-	\infer[(\Subst)]{Ex' \prove \N x'}{
-	(a)\ Ex \prove \N x
-	}}}}}
-}
 \]
-\caption{Cyclic Proof}\label{fig:5}
-\end{figure*}
 \end{Eg}
+Remark that the first argument of $f$ is in correspondence with no argument in the rule $\ap$
+(it can be in correspondence with argument higher in the proof). The reason is that in the term $f(a)$,
+the first argument of $f$ receives a value from the local value $a$.
 %13:21 15/04/2024
 
 \begin{definition}[Atom correspondence in a proof of  $\LAMBDA$]
