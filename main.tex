@@ -584,7 +584,7 @@ We write $\Pi(e)$ for $t:\Gamma\vdash A$ at the node $e$ in $\Pi$.
   Then we define $(e_{i+1},\vec{d_{i+1}},\vec{a_{i+1}})$ by the case analysis of
   the last rule for the node $e_{i+1}$ in $\Pi$. 
 
-  The case of $\Struct(f)$, namely
+  The case of $\struct(f)$, namely
   $\Pi(e_i) = t[y_{f(1)}/x_1,\ldots,y_{f(n)}/x_n]:\Delta\vdash \vec{A_i}\rightarrow\N$
   is obtained from $t:\Gamma\vdash A$, where
   $\Gamma = x_1:C_1,\ldots,x_n:C_n$, $\Delta = y_1:B_1,\ldots,y_m:B_m$, 
@@ -616,7 +616,7 @@ We write $\Pi(e)$ for $t:\Gamma\vdash A$ at the node $e$ in $\Pi$.
   The case of $0$-rule, namely $\Pi(e_i) = 0:\Gamma\vdash \N$, is not the case since $t_i = 0$ is total on values.
   
   The case of $\Succ$-rule, namely $\Pi(e_i) = \Succ(t_{i+1}):\Gamma\vdash \N$ is obtained from
-  $t_{i+1}:\Gamma\vdash \N$．
+  $t_{i+1}:\Gamma\vdash \N$.
   By the induction hypothesis, $\vec{a_i}$ is empty, and 
   $\Succ(t_{i+1}[\vec{d_i}]):\N$ is not total on values.
   Then, by the definition, $t_{i+1}[\vec{d_i}]$ is not total on values. 
@@ -626,7 +626,8 @@ We write $\Pi(e)$ for $t:\Gamma\vdash A$ at the node $e$ in $\Pi$.
 
   The case of $\ap$-rule, namely 
   $\Pi(e_i) = t[\vec{x}](u[\vec{x}]):\Gamma\vdash \vec{A}\rightarrow\N$ is obtained from
-  $t[\vec{x}]:\Gamma\vdash B \rightarrow \vec{A}\rightarrow\N$ and $u[\vec{x}]:\Gamma\vdash B$．
+  $t[\vec{x}]:\Gamma\vdash B \rightarrow \vec{A}\rightarrow\N$ 
+and $u[\vec{x}]:\Gamma\vdash B$.
   By the induction hypothesis, $t[\vec{d_i}](u[\vec{d_i}])\vec{a_i}:\N$ is not total on values.
   We first consider the subcase that $u[\vec{d_i}]:B$ is total on values.
   We define a value $a':B$ by $n\in\Nat$ such that $u[\vec{d_i}] \safeReduces^* n$ if $B=\N$,
@@ -648,7 +649,7 @@ We write $\Pi(e)$ for $t:\Gamma\vdash A$ at the node $e$ in $\Pi$.
   
   The case of $\lambda$-rule, namely
   $\Pi(e_i) = \lambda x.(t_{i+1}[\vec{x},x]):\Gamma\vdash A \rightarrow \vec{A} \rightarrow \N$ is obtained from
-  $t_{i+1}[\vec{x},x]:\Gamma,x:A\vdash \vec{A}\rightarrow\N$．
+  $t_{i+1}[\vec{x},x]:\Gamma,x:A\vdash \vec{A}\rightarrow\N$.
   By the induction hypothesis, $(\lambda x.(t_{i+1}[\vec{d_i},x]))a\vec{a'}:\N$ is not total on values,
   where $\vec{a_i} = a\vec{a'}$.
   Then, by Lemma~\ref{lem:total_value}, $t_{i+1}[\vec{d_i},a]\vec{a'}$ is not total on values. 
