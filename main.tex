@@ -5,6 +5,7 @@
 \newif\ifdraft \draftfalse
 \drafttrue % put % for lipics
 
+
 \long\def\Stefano#1{{{\color{red}{SB: #1}}}}
 \long\def\Makoto#1{{{\color{blue}{MT: #1}}}}
 \long\def\Daisuke#1{{{\color{green}{DK: #1}}}}
@@ -56,65 +57,136 @@
 
 
 \section{Introduction}
-We will introduce $\LAMBDA$, a set of infinite terms whose types are: the atomic type $\N$, 
-possibly type variables, 
-and all types $A \rightarrow B$ for any types $A$, $B$. 
+We will introduce $\LAMBDA$, a set of infinite $\lambda$-terms whose types are: the atomic type $\N$, 
+possibly type variables $\alpha, \beta, \ldots$, and all types $A \rightarrow B$ for any types $A$, $B$. 
 The terms of $\LAMBDA$  are possibly infinite trees representing expressions defined with 
-$0$,$\Succ $,$\ap$ (application), variables,  $\lambda$ (the binder for defining maps), 
+$0$,$\Succ $,$\ap$ (application), 
+variables,  $\lambda$ (the binder for defining maps), 
 and $\cond$, a fixed point binder operator for the arithmetic conditional (test on zero). 
 If we have no type variables, the the trees in $\LAMBDA$ represent partial functionals on $\N$, 
 provided we add reduction rules.
 
-In this paper will consider a subset $\CTlambda$ of $\LAMBDA$ which we call the circular version of 
-G\"{o}del system $\systemT$. Differently from all previous circular version of $\systemT$, our system
-uses binder instead of combinators. Our goal is providing a circular syntaxt more familiar to research
-in the field of Type Theory.
+In this paper will consider the subsets $\CTlambda \subset \GTC, \Reg \subset \WTyped$,
+with $\WTyped$ the set of well-typed terms of $\LAMBDA$. 
+$\GTC$ is the subset of well-typed circular 
+$\lambda$-terms satisfying a condition called the global trace condition, 
+and they denote total functionals. $\Reg$ is the subset of terms which are regular trees (having finitely
+many subtrees), and therefore are possibly infinite terms which are finitely presented.
+$\CTlambda$ is $\GTC \cap \Reg$, that is, it consists of all well-typed circular 
+$\lambda$-terms satisfying satisfying the global trace condition and which are
+regural trees. We will prove that $\CTlambda$ is a decidable subset of $\Reg$.
+$\CTlambda$ is a new circular version of G\"{o}del system $\systemT$. 
+Differently from all previous circular version of $\systemT$, our system $\CTlambda$
+uses binders instead of combinators. 
+Our goal is providing a circular syntax more familiar to researchers working in the field of Type Theory.
 
-$\CTlambda$ consists of all  trees in $\LAMBDA$ which are well-typed,
-satisfy a condition called global trace condition, and are regular (they only have finitely many sub-trees).
-We will prove the usual results for the new syntax, in particular 
-that the trees in $\CTlambda$ whose only atomic type is $\N$
-represent exactly the total computable functionals on $\N$ definable in G\"{o}del system $\systemT$
+We will prove the expected results for the circular syntax $\CTlambda$:
+strong normalization for reductions not inside any fixed point and Church-Rosser. 
+We will prove normalization in the limit if we use reductions which are ``fair'':
+they can reduction \emph{inside} fixed points, but they never forget entirely 
+to reduce \emph{outside} all fixed points.
+Besides, we will prove that the closed terms $\CTlambda$ (those without free \emph{term} variables)
+represent exactly the total computable functionals definable in G\"{o}del system $\systemT$
 using $\N$ as only atomic type.
 
-
+%14:57 17/04/2024
 
 \section{ The set of infinite $\lambda$-terms}
-We define the set $\LAMBDA$ of infinite terms, well-typed terms and a reduction relation for them.
+We define the set $\LAMBDA$ of infinite terms, the subset $\WTyped$
+of well-typed terms and a reduction relation for them.
 
+We write $\Nat$ for the set of natural numbers: 
+all $n \in \Nat$ are represented in $\LAMBDA$ by expressions we call numerals.
 
-\begin{definition}[Types and infinite terms in $\LAMBDA$]
+\begin{definition}[Terms of $\LAMBDA$]
 \mbox{}
 \begin{enumerate}
-
-\item
-The types of $\LAMBDA$ are all types we can define with $\N$ and $\rightarrow$.
 
 \item
 The terms of $\LAMBDA$ 
 are all possibly infinite trees we can define with $x$ (variable name), $\lambda x:T.t$ (binder, abstraction), 
 $\ap(t,u)$, $0$, $\Succ (t)$ (successor of $t$), $\cond x.(f,g)$ (binder, arithmetical conditional).
-As usual, we abbreviate $\ap(t,u)$ with $t(u)$.
+As usual, we abbreviate $\ap(t,u)$ with $t(u)$. 
+
+\item
+$t$ is an immediate subterm of $\Succ(t)$, $f$, $g$ are  immediate subterm of $\cond x.(f,g)$
+and $t$, $u$ are  immediate subterm of $t(u)$. The subterm relation is the reflexive and transitive
+closure of the immediate subterm relation.
+
+\item
+We write $\SubTerm(t)$ for the set of subterms of $t$. 
+
+\item
+We write $\Tree(t)$ for the tree of all chains
+$(t_1, \ldots, t_n)$, with $t_1=t$ and $t_{i+1}$ immediate subterm of $t_i$ for all $(i+1) \le n$.
+subterm 
+
+\item
+When $t = \Succ ^n(0)$ for some natural number $n \in \Nat$
+we say that $t$ is a numeral. We write $\Num$ for the set of numeral.
 
 \end{enumerate}
-When $t = \Succ ^n(0)$ for some natural number $n$
-we say that $t$ is a numeral. We write $\Nat$ for the set of numeral.
+We use two different names for the operation $\ap(t,u)$: 
+we call it $\ap$ when $u$ is not a variable and $\etaRule$ when $u$ is a variable. 
+\end{definition}
+
+$\Num$ is the representation inside $\LAMBDA$ of the set $\Nat$ of natural numbers.
+All numeral are finite terms of $\Lambda$. 
+All finite well-typed typed $\lambda$-terms 
+we can define with the rules above are finite terms of $\LAMBDA$.
+The term $t = \cond x.(0,t)$ is in $\LAMBDA$. 
+The set $\SubTerm(t)=\{t,0\}$ of subterms  of $t$ is finite, therefore $t$ is a regular term.
+However, $\Tree(t)$ is an infinite tree (it includes itself as a subtree). 
+The finite branches of $\Tree(t)$ are all $(t,t,t,\ldots,0)$, the unique infinite branch of $\Tree(t)$
+is $(t,t,t,\ldots)$. 
+
+In order to define the type of a an infinite term, we first 
+define the context for any term of $\LAMBDA$.
+
+
+\begin{definition}[Types and Contexts of $\LAMBDA$]
+\mbox{}
+\begin{enumerate}
+
+\item
+The types of $\LAMBDA$ are all types we can define with $\N$, an infinite list 
+$\alpha,\beta,\ldots$ of type variables and $\rightarrow$.
+We call them simple types, \emph{types} for short. 
+
+\item 
+$\Type$ is the set of simples types.
+
+\item
+A  context of $\LAMBDA$ is any finite list $\Gamma = (x_1:A_1, \ldots, x_n:A_n)$ 
+of pairwise distinct variables, each assigned to some type $A_1, \ldots, A_n \in \Type$. 
+We write $\FV(\Gamma) = \{x_1, \ldots, x_n\}$.
+
+\item
+If $\Gamma = (x_1:A_1, \ldots, x_n:A_n)$ ,
+$\Gamma' = (x'_1:A'_1, \ldots, x'_n:A'_{n'})$ are context of $\LAMBDA$, then we
+write $\Gamma \sqsubseteq \Gamma'$ if $\Gamma$ is a sub-list of $\Gamma'$, that is,
+if there is a (unique) increasing map $f:\{1,\ldots,n\} \rightarrow \{1,\ldots,n'\}$
+such that $x_{i}=x'_{f(i)}$ and $A_{i}=A'_{f(i)}$ for all $i \in \{1,\ldots,n\}$.
+
+\item
+If $\Gamma$ is a context of $\LAMBDA$, then $\Gamma\setminus\{x\}$ is the context obtained
+by removing $x_i:A_i$ from $\Gamma$ if $x_i=x$. If $x \not \in \FV(\Gamma)$ then
+ $\Gamma\setminus\{x\} = \Gamma$.
+
+\end{enumerate}
 \end{definition}
 
 
-$\Nat$ is yet another representation of the set of natural numbers.
-All numeral are finite terms of $\Lambda$. 
-All finite well-typed typed $\lambda$-terms we can define with the rules above are finite terms of $\LAMBDA$.
-The term $t = \cond x.(0,t)$ is in $\LAMBDA$. $t$ is an infinite tree (it includes itself as a subtree). 
-The unique infinite branch is $t,t,t,\ldots$. The subterms of $t$ are $0$ and $t$, therefore $t$
-is a regular tree.
+%12:38 17/04/2024
+%15:37 17/04/2024
 
-We define context and inherited context for any term of $\LAMBDA$.
+From the context for a term we can define a context for each subterm of the term.
 
 \begin{definition}[Inherited Contexts of $\LAMBDA$]
-A context is any finite list $\Gamma = x_1:A_1, \ldots, x_n:A_n$ of pairwise distinct variables
-and types. Given any context $\Gamma$, any $t \in \Lambda$, any subterm $u$ of $t$
-we define a unique inherited context for $u$, of the form $\Gamma,\Delta$ for some $\Delta$.
+
+Given any context $\Gamma$, any $t \in \Lambda$ and any subterm $u \in \SubTerm(t)$,
+we define a unique inherited context for $u$, of the form $\Gamma',\Delta$ for some 
+$\Gamma'\sqsubseteq \Gamma$ and some $\Delta$.
 
 \begin{enumerate}
 
@@ -123,96 +195,119 @@ $t$ has inherited context $\Gamma$.
 
 \item
 Any binder on $x$ subtracts the variable $x$ from the context of its \emph{last} argument:
-if $t = \lambda x:T.u, \cond x.(f,g)$ has inherited context $\Gamma,\Delta$, 
-then $u$ and $g$ have context $\Gamma, \Delta, x:T$, while $f$ has  inherited context 
-$\Gamma,\Delta$ (because $f$ is \emph{not} the last argument of \cond x.(f,g)).
+if $t = \lambda x:T.u, \cond x.(f,g)$ has inherited context $\Gamma',\Delta$, 
+then $u$ and $g$ have context $(\Gamma', \Delta) \setminus \{x\}, x:T$, 
+while $f$ has  inherited context 
+$\Gamma',\Delta$.
 
 \item
-In any other case the context of a term and an immediate subterm are the same:
-If $t=\Succ(u), f(a)$ has inherited context $\Gamma, \Delta$,
- then $u,f,a$ have  inherited context $\Gamma, \Delta$.
+In any other case the context of a term and of the immediate subterm are the same:
+ff $t=\Succ(u), f(a)$ have inherited context $\Gamma', \Delta$,
+ then $u,f,a$ have  inherited context $\Gamma', \Delta$.
 \end{enumerate}
-We abbreviate \emph{`` inherited context''} with \emph{context}.
+We abbreviate \emph{`` inherited context from $\Gamma$''} with \emph{context}.
 \end{definition}
 
 
- Below we define the statement: \emph{``$t$ has context $\Gamma$ and type $A$''}, 
-written $\Gamma \vdash t:A$, and the statement 
-\emph{``$\Pi$ is a proof of $\Gamma \vdash t:A$}.
-%14:26 27/03/2024
 
 %The scope of the binder $\lambda x:T.t$ is $t$.
 %The scope of the binder $\cond x.(f,g)$ is $g$ ($f$ is \emph{not} in the scope of $\cond x.(f,g)$).
 
+We define typing rules for terms of $\LAMBDA$ and the subset $\WTyped$ of well-typed terms.
+The typing rules are the usual ones but for the conditional binder $\cond$, and for a fresh rule $\etaRule$
+for typing the application $t(x)$ of a term  to a variable $x$ of type $\N$. 
+$\etaRule$ corresponds to an $\eta$-expansion and it introduces a global variable name $x:T$
+for the first argument of $t$. 
+As we said, $\etaRule$ is but a particular case of $\ap$ rule. 
+We prefer to use a separate name for $\etaRule$ because of the special role  this rule has in this paper.
 
-The typing rules are the usual ones but for the conditional binder $\cond$, and for a fresh rule $\etaRule$. 
-$\etaRule$ corresponds to an $\eta$-expansion and it introduces a global variable name. 
-$\etaRule$ is but a particular case of $\ap$ rule. We prefer to use a separate name for $\etaRule$ 
-because of the special role  this rule has in this paper.
+%We have a single structural rule  $\struct_f$, which can be used for:
+% weakening, variable permutation and variable renaming. 
+We have a a single structural rule $\weak$ for extending a context $\Gamma$ to a context 
+$\Gamma \sqsupseteq \Gamma'$. 
+Variable permutation and variable renaming are conditionally derivable for the typing rules,
+and therefore are not included as rules.
 
-We have a single structural rule  $\struct_f$, which can be used for:
- weakening, variable permutation and variable renaming. 
 
 \begin{definition}[Typing rules of $\LAMBDA$]
-Assume $\Gamma = x_1:A_1, \ldots, x_n:A_n$, 
-$\Delta = y_1:B_1, \ldots, y_n:B_m$ are sequents of length $n$, $m$ respectively. Suppose
-$f:\{1, \ldots, n\} \rightarrow \{1, \ldots, m\}$ is any injection, compatible with types
-in $\Gamma$, $\Delta$: we assume $A_i = B_{f(i)}$ for all $1 \le i \le n$.
+Assume $\Gamma = x_1:A_1, \ldots, x_n:A_n$ is a context.
+%$\Delta = y_1:B_1, \ldots, y_n:B_m$ are sequents of length $n$, $m$ respectively. Suppose
+%$f:\{1, \ldots, n\} \rightarrow \{1, \ldots, m\}$ is any injection, compatible with types
+%in $\Gamma$, $\Delta$: we assume $A_i = B_{f(i)}$ for all $1 \le i \le n$.
 
 \begin{enumerate}
+%\item
+%$\struct_f$-rule.
+%If $t: \Gamma \vdash T$ then $t[ y_{f(1)}/x_1, \ldots,  y_{f(n)}/x_n]:\Delta \vdash T$
 \item
-Structural rule $\struct_f$.
-If $t: \Gamma \vdash T$ then $t[ y_{f(1)}/x_1, \ldots,  y_{f(n)}/x_n]:\Delta \vdash T$
+$\weak$-rule (Weakening).
+If $\Gamma,\Delta \vdash t:T$, $\Gamma \sqsubseteq \Gamma'$
+then $\Gamma' \vdash t: T$
 
 \item
 $\etaRule$.
-If $x \not \in \Gamma$ and $f:\Gamma \vdash\N \rightarrow T$
-then $f(x) : \Gamma, x:\N \vdash T$.
+If $x \not \in \FV(\Gamma)$ is a variable and $\Gamma \vdash f: \N \rightarrow T$
+then $\Gamma, x:\N \vdash f(x) :  T$.
 
 \item
 $\var$-rule.
-If $x:A \in \Gamma$ then $x:\Gamma \vdash A$.
+If $x:A \in \Gamma$ then $\Gamma \vdash x:A$.
 
 \item
 $\ap$-rule.
-If $\Gamma \vdash f:A \rightarrow B$ and $a:\Gamma \vdash A$ then $f(a) : \Gamma \vdash B$.
+If $\Gamma \vdash f:A \rightarrow B$ and $\Gamma \vdash a:A$
+and $a$ is not a variable then $\Gamma \vdash f(a) : B$.
 
 \item
 $\lambda$-rule.
-If $\Gamma, x:A \vdash b: B$ then $\lambda x:A.b : \Gamma \vdash A \rightarrow B$.
+If $\Gamma, x:A \vdash b: B$
+then $ \Gamma \vdash \lambda x:A.b :A \rightarrow B$.
 
 \item
 $0$-rule.
-$0:\Gamma \vdash \N$
+$\Gamma \vdash 0: \N$
 
 \item
 $\Succ$-rule.
-If $t:\Gamma \vdash \N$ then $\Succ (t):\Gamma \vdash \N$.
+If $\Gamma \vdash t:\N$ then $\Gamma \vdash \Succ (t):\N$.
 
 \item
 $\cond$-rule.
-$\cond$. If $ f :\Gamma, x:T \vdash T$, $x \not \in \FV(f)$ and  $g : \Gamma, x:T \vdash T$
-then $\cond x.(f,g) : \Gamma \vdash \N \rightarrow T$.
+If $\Gamma \vdash  f :T$ and  $\Gamma, x:T \vdash g : T$ 
+then $\Gamma \vdash \cond x.(f,g) : \N \rightarrow T$.
 \end{enumerate}
+We abbreviate $\emptyset \vdash  t:A$ with $\vdash t:A$.
 \end{definition}
 
-Rules are syntax-directed (each term is the consequence of at most one rule) provided we reserve
-the $\etaRule$ in the case of a term $f(x)$, for $x$ variable, and the $\ap$ rule 
- in the case of a term $f(a)$, for $a$ \emph{not} a variable.
-
-A proof $\Pi$ that a term $t$ is well-typed has the identical tree structure of $t$.
-In particular, $\Pi$ is infinite when $t$ is.
+From the typing rules we define the proofs that a term is well-typed.
 
 \begin{definition}[Well-typed term of $\LAMBDA$]
 We write $\Pi: \Gamma \vdash t:A$, and we say that $\Pi$ is a proof of $\Gamma \vdash t:A$ if
-$\Pi$ is an assignment of one sequent $\Delta \vdash B$ to each
-subterm $u$ of $t$, in such a way that:
+$\Pi:\SubTerm(t) \rightarrow \Type$ is an assignment of one type $B=\Pi(\pi)$ to each
+subterm chain $\pi \in \SubTerm(t)$, in such a way that:
 \begin{enumerate}
 \item 
-$\Pi(t) = \Gamma \vdash A$
+$\Pi(\nil) = A$
 \item
-For all subterms $u$ of $t$, if $u_1, \ldots, u_n$ are immediate subterms of $u$,
-then the sequent $\Pi(u)$ is the consequence of $\Pi(u_1), \ldots, \Pi(u_n)$ under some rule.
+Assume $\pi$ is a subterm chain from $t$ to $u$, if $u_1, \ldots, u_n$ are the immediate subterms of $u$,
+$\Gamma_1, \ldots, \Gamma_n, \Gamma$ are  the inherited contexts, and $B=\Pi(\pi)$, 
+$B=\Pi(\pi \conc u_1)$, \ldots, $B=\Pi(\pi \conc u_n)$.
+then for some $\Gamma' \sqsubseteq \Gamma$ we have
+\[
+\infer[(\weak)]
+{ \Gamma \prove u : B }
+{
+ \infer[(\typingRule)]
+{  \Gamma' \prove u : B  }
+    {
+      {   \Gamma_1 \prove u_1:B_1}
+       { \ldots }
+	  {   \Gamma_n \prove u_1:B_n}
+    }
+}
+\]
+for some $\typingRule \in \{0,\Succ,\var,\ap,\lambda,\cond\}$ 
+(for some non-weakening rule $\typingRule$).
 \end{enumerate}
 We introduce the type judgment for a term.
 \begin{enumerate}
@@ -223,11 +318,29 @@ $t \in \LAMBDA$ is well-typed if $\Gamma \vdash t:A$ for some $\Gamma, A$.
 \item
 $\WTyped$ is the set of well-typed $t \in \LAMBDA$.
 \end{enumerate}
-We abbreviate $\emptyset \vdash  t:A$ with $\vdash t:A$.
+%A proof $\Pi:\Gamma \vdash  t :T$ is canonical if all $\weak$-rules
+%\begin{enumerate}
+%\item
+% either follow some $\lambda$-rule for a term $\lambda x:T.b$, and they introduce $x:T$ in the context,
+%\item
+%or follow some $\cond$-rule for a term $\cond x.(f,g)$, and and they introduce $x:\N$ in the context,
+%\end{enumerate}
 \end{definition}
 
-Rules are syntext-directed, therefore a well-typed term $t$ has exactly one proof $\Pi$, up to
-application of the rule $\struct_f$. $\Pi$ is computable from $t$.
+\begin{enumerate}
+\item
+Some term in $\LAMBDA$ has no type, like $0(0)$. Some terms have more than one type.
+For instance if $t=\cond x.(t,t)(0)$ we can prove $x:\N \vdash t:A$ for all types $A \in \Type$. 
+A term with two types has the leftmost branch infinite, as it is the case for $t$ above.
+\item
+We will consider terms, those satisfying the global trace condition, for which typing when it exists it is unique. 
+We will prove that  
+term with the global trace condition has the leftmost branch finite and therefore has a unique tye.
+\end{enumerate}
+
+%Any proof $\Pi':\Gamma \vdash  t :T$ can be turned into a canonical proof 
+%$\Pi':\Gamma \vdash  t :T$. Canonical proofs when they exists are unique 
+%and they can be computed from $\Gamma \vdash t:T$.
 
 As we said, $\etaRule$ is a particular case of $\ap$. When we substitute $x:\N$ with some 
 $\Gamma \vdash a:\N$ which is not a variable,  then we replace $\etaRule$ with $\ap$-rule.
@@ -245,18 +358,18 @@ Our first step is to provide reduction rules for $\LAMBDA$.
 \begin{enumerate}
 
 \item
-$\beta$: $(\lambda x:A.b)(a) \reduces_\beta b[a/x]$
+$\reduces_\beta$: $(\lambda x:A.b)(a) \reduces_\beta b[a/x]$
 
 \item 
-$\cond x.(f,g)(0) \reduces_\cond f$ and
+$\reduces_\cond$: $\cond x.(f,g)(0) \reduces_\cond f$ and
 $\cond x.(f,g)(\Succ (t)) \reduces_\cond g[t/x]$.
 
 \item
 $\reduces$ is the context and transitive closure of $\reduces_\beta$ and $\reduces_\cond$
 
 \item
-We say that $t \reduces_\safe u$, or that $t$ reduces safely to $u$,  if we never reduce in proper subterms of 
-any $\cond x.(f,g)$. 
+We say that $t \reduces_\safe u$, or that $t$ reduces safely to $u$,  
+if we never reduce in proper subterms of any $\cond x.(f,g)$. 
 %We call \emph{unsafe} a reduction inside any $\cond x.(f,g)$.
 
 \item
@@ -279,14 +392,14 @@ and it includes infinitely many $\beta$-redexes.
 The reason for forbiding
 reductions inside $\cond x.(f,g)$ is that thorugh $\cond$ we will-express fixed-point equations.
 Therefore reductions for $\cond$ are in fact unfolding of the definition of a fixed point. 
-As unfolding of a fixed point, they can can easily loop, and they are ``unsafe". 
-For this reason, we first consider reductions
+Therefore reductions for $\cond$ can can easily loop, and they are ``unsafe". 
+For this reason, we first consider the minimum possible of reductions
 $\cond x.(f,g)(0) \reduces_\cond f$ and
-$\cond x.(f,g)(\Succ (t)) \reduces_\cond g[t/x]$ for maximal $\cond$-expression only, and no reduction
-inside the arguments $f$, $g$ of $\cond$.
+$\cond x.(f,g)(\Succ (t)) \reduces_\cond g[t/x]$: those on maximal $\cond$-expression.
+We consider no reduction inside the arguments $f$, $g$ of $\cond$.
 In a second moment, 
-by adding a restriction of \emph{fairness} we will be able to recover strong normalization also for 
-``unsafe" reductions.
+by adding a restriction of \emph{fairness} on reduction strategies,
+we will be able to recover strong normalization also for most ``unsafe" reductions.
 
 Some examples of reduction.
 \begin{enumerate}
@@ -310,7 +423,9 @@ Thus, all reductions sequences from $v(n)$ terminate in $2n+1$ steps to the norm
 
 \section{The trace of the $\lambda$-terms}
 %19:34 27/03/2024
-Total $\lambda$-terms will be well-typed terms satisfying a condition call \emph{global trace condition}.
+Total $\lambda$-terms will be well-typed terms $\Gamma \vdash t:A$ 
+satisfying a condition call \emph{global trace condition} for the canonical proof 
+$\Pi:\Gamma \vdash t:A$.
 In order to define the global trace condition, 
 we define a notion of trace for possibly infinite $\lambda$-terms, describing how an input of type $\N$
 is used when computing an output.
@@ -320,7 +435,8 @@ proof that $t$ is well-typed. We need first the notion of \emph{list of argument
 
 First, an example.
 Assume $t : \{x_1:A_1, x_2:A_2\} \vdash B_3 \rightarrow \N$. Then the list of argument types of $t$
-is $A_1, A_2, B_3$. Remark that for an open term $t$ we list as ``argument types'' also the
+is $A_1, A_2, B_3$, $A_1,A_2$ are named arguments with names $x_1, x_2$, and $B_3$ is an unnamed
+argument. Remark that for an open term $t$ we list as ``argument types'' also the
 types of the free variables. We motivate our terminology:
 in a sense, $t$ is an abbreviation of the closed term $t' = \lambda  
 x_1:A_1, x_2:A_2.t: (  A_1,A_2,B_3 \rightarrow \N )$, and the argument types of $t'$ are
@@ -339,6 +455,10 @@ The \emph{list of argument types} of $t$ is $\vec{C} = \vec{A},\vec{B}$,
 the list of types of free variables and arguments of the type $ \vec{B} \rightarrow \N$ of $t$. 
 
 \item
+$A_1, \ldots, A_n$ are named arguments with names $x_1, \ldots, x_n$, and 
+$B_{n+1}, \ldots, B_{n+m}$ are unnamed arguments.
+
+\item
 An \emph{index of an atomic argument} 
 of $t$ is any $j \in \{1, \ldots, n+m\}$ such that $C_j = \N$.
 
@@ -346,25 +466,34 @@ of $t$ is any $j \in \{1, \ldots, n+m\}$ such that $C_j = \N$.
 \end{definition}
 
 We now define the atom correspondence between arguments of type $\N$ of subterms of $t$
-in a proof $\Pi: t:\Gamma \vdash A$ of  $\LAMBDA$. Two arguments of type $\N$ are in
-correspondence if and only if they receive the same global input: local input are ignored.
-Usually two corresponding argument types have the same index, but for a few special cases
-we discuss through examples. We draw in the same color two arguments of type $\N$ which are in correspondence. 
+in a proof $\Pi: t:\Gamma \vdash A$ of  $\LAMBDA$. 
+The definition of  atom correspondence for a syntax including binders is the main contribution of this paper. 
 
-\begin{Eg}\label{eg:1}\rm
-Below we give an example of  atom correspondence for some instance of the rule $\struct$.
+Two arguments of type $\N$ are in
+correspondence if and only if they receive the same global input: local input are ignored.
+In many cases two corresponding argument types have the same index, but if we insert or remove
+free variables or arguments the index may change.
+Before providing the general definition, we discuss these special cases through examples. 
+
+We draw in the same color two arguments of type $\N$ which are in correspondence. 
+
+\subsection{Some correspondence examples}
+\begin{Eg}\label{eg:0}\rm
+An example of  atom correspondence for some instance of the weakening rule.
 \[
-\infer[(\struct)]
-{  x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N}, x_3:\bfColor{green}{\N}
+\infer[(\weak)]
+{  x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N}, x_3:\bfColor{oldgold}{\N}
 					\prove t : \bfColor{orange}{\N} \rightarrow \N}
 	  {   x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N} 
 					\prove t : \bfColor{orange}{\N} \rightarrow \N}
 \]
 \end{Eg}
+Remark that the type $\N$ of the variable $x_3$ (colored in \bfColor{oldgold}{old gold}) , 
+introduced by weakening, is in correspondence with no type in the rule $\weak$.
+
 %20:13 15/04/2024
-\begin{Eg}\label{eg:2}\rm
-Below we give an example of  atom correspondence for the rule $\ap$.
-We draw in the same color two arguments of type $\N$ which are in correspondence. 
+\begin{Eg}\label{eg:1}\rm
+An example of  atom correspondence for the rule $\ap$.
 We assume that $a$ is \emph{not} a variable.
 \[
 \infer[(\ap)]
@@ -372,40 +501,99 @@ We assume that $a$ is \emph{not} a variable.
 					\prove f(a) : \bfColor{orange}{\N} \rightarrow \N}
     {
 	  {   x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N}
-					\prove f : \bfColor{green}{\N}, \bfColor{orange}{\N} \rightarrow \N}
+					\prove f : \bfColor{oldgold}{\N}, \bfColor{orange}{\N} \rightarrow \N}
       {\ \ \ \ \   x_1: \bfColor{red}{\N}, x_2: \bfColor{blue}{\N}
 					\prove a : \N}
 	}
 \]
 \end{Eg}
-Remark that the first argument of $f$ (in \bfColor{green}{green}) 
+Remark that the first argument of $f$ (colored in \bfColor{oldgold}{old gold}) 
 is in correspondence with no argument in the rule $\ap$.
 The reason is that in the term $f(a)$,
 the first argument of $f$ receives a value from the value $a$ which is local to the term $f(a)$.
 However, the first argument of $f$ can be in correspondence with some argument higher in the proof. 
 %13:21 15/04/2024
 
+\begin{Eg}\label{eg:2}\rm
+An example of  atom correspondence for the rule $\cond$.
+\[
+\infer[(\cond)]
+{  x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N}
+					\prove \cond x.(f,g) : \bfColor{oldgold}{\N} \rightarrow \N}
+    {
+      {   x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N}
+					\prove f : \N}
+	  {   x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N}, x:\bfColor{oldgold}{\N} 
+					\prove g : \N}
+    }
+\]
+\end{Eg}
+Remark that the first argument of $f$ (colored in \bfColor{oldgold}{old gold}) 
+is in correspondence the type of the free variable $x$ in the premise for $g$,
+but it is in correspondence with no argument in the  in the premise for $f$.
 
+\subsection{A formal definition of atom correspondence}
+We define an injection $$\ins:\N,\N \rightarrow\N$$
+by $\ins(a,x)=x+1$ if $x \ge a+1$, and $\ins(a,x)=x$ if $x\le a$.
+The role of $\ins$ is inserting one space for a new index of argument type.
 
 \begin{definition}[Atom correspondence in a proof of  $\LAMBDA$]
 Assume $\vec{A} = A_1, \ldots, A_n$, $\vec{B}=B_1, \ldots, B_m$, $\Gamma = \vec{x}:\vec{A}$,
-and $t: \vdash \vec{B} \rightarrow \N$.
-We define an injection $$\ins:\N,\N \rightarrow\N$$
-by $\ins(a,x)=x+1$ if $x \ge a+1$, and $\ins(a,x)=x$ if $x\le a$.
-\begin{enumerate}
-\item
+and $\Gamma \vdash t:\vec{B} \rightarrow \N$.
+
 For each atom index $k$ in $t$, each immediate subterms $t'$ of $t$ 
 each atom index $k'$ in $t'$ we define the relation: ``$k',t'$ the successor of $k,t$". We require:
 \begin{enumerate}
 \item
-if $t$ is obtained by a rule $\struct(f)$ then $k = f(k')$  if $k' \le n$ and $k = k' - n + m$ if $k \ge n+1$.
+if $t$ is obtained by a rule $\weak$ from $t'$ 
+then $k = \ins(a,k)$.
 \item
-$k' = \ins(n,k)$ if $t=f(a)$, $a:\N$ is \emph{not} a variable and $t'=f$. 
+if $t=f(a)$ and $a$ is not a variable and $t'=f$ 
+then $k' = \ins(n,k)$. If $t'=a$ then $k'=k$ and $k' \le n$.
 \item
-$k = k'$ in all other cases, which are: $\Succ $, $\lambda$, $\etaRule$, $\cond$.
+if $t=\cond x(f,g)$ and $t'=f$ 
+then $k' = \ins(n,k)$. If $t'ga$ then $k'=k$.
 \end{enumerate}
-\end{enumerate}
+We require $k = k'$ in all other cases, 
+which are: $\Succ $, $\lambda$, $\etaRule$.
 \end{definition}
+
+If we move up in a $\etaRule$ the type of one free variable corresponds to the type of one argument.
+In a $\lambda$-rule it is the other way round. The index of two corresponding argument types
+is the same for both rules. 
+Below we include some examples. 
+We draw in the same color two arguments of type $\N$ which are in correspondence. 
+
+
+\begin{Eg}\label{eg:3}\rm
+Atom correspondence for $\etaRule$.
+We assume that $x$ is  a variable.
+\[
+\infer[(\ap)]
+{  x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N}, x:\bfColor{oldgold}{\N}
+					\prove f(x) : \bfColor{orange}{\N} \rightarrow \N}
+	  {   x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N}
+					\prove f : \bfColor{oldgold}{\N}, \bfColor{orange}{\N} \rightarrow \N}
+\]
+\end{Eg}
+Remark that the first argument of $f$ (colored in \bfColor{oldgold}{old gold}) 
+in the premise is in correspondence with the last variable type in the conclusion of the rule.
+
+\begin{Eg}\label{eg:4}\rm
+Atom correspondence for  $\lambda$-rule.
+We assume that $x$ is  a variable.
+\[
+\infer[(\ap)]
+{  x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N}
+					\prove \lambda x: \N.b : \bfColor{oldgold}{\N} \rightarrow \N}
+	  {   x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N}, x:\bfColor{oldgold}{\N}
+					\prove b : \N}
+\]
+\end{Eg}
+Remark that the first argument of $\lambda x: \N.b$ (colored in \bfColor{oldgold}{old gold}) 
+in the conclusion is in correspondence with the last variable type in the premise of the rule.
+\\
+
 
 The correspondence on atoms in a proof $\Pi:\Gamma\vdash $ defines a graph $\Graph(\Pi)$ 
 whose nodes are all pairs $(k,u)$, with $u$ subterm of $t$ and $k$ index of some atomic argument of  $u$.
@@ -418,20 +606,20 @@ A path $\pi$ in $t$ is any list $t_0, \ldots, t_n$ of subterms of $t$
 such that $t_0 = t$ and each $t_{i+1}$ is an immediate subterm of $t_i$. 
 
 \item
-Assume $\pi =t_0, \ldots, t_n$ is a branch of $t$. 
-A \emph{trace} of $\pi$ consists of a list 
-$(k_m,t_m), \ldots, (k_n,t_n)$ such that for each $i=m,\ldots, n$:
-$k_i$ is an atom index of $t_i$, and if $i+1 \le n$ then $k_{i+1},t_{i+1}$ is the successor of $k_i, t_i$
-in $\Pi$.
-
+Assume $\pi =t_0, \ldots, t_n, \ldots$ is a branch of $t$, finite or infinite. 
+A finite or infinite \emph{trace} $\tau$ of $\pi$ is a list 
+$\tau = (k_m,t_m), \ldots, (k_n,t_n), \ldots$ such that for each $i=m,\ldots, n,\ldots$:
+\begin{enumerate}
 \item
-An infinite path and an infinite trace in $\Pi$ 
-are the union of a family of paths and a family of traces in $\Pi$ which are increasing
-by the prefix order.
+$k_i$ is the index of an atomic type of $t_i$
+\item
+if $i+1$ is an index of $\tau$ then $k_{i+1},t_{i+1}$ is in correspondence with $k_i, t_i$ in $\Pi$.
+\end{enumerate}
+
 \end{enumerate}
 \end{definition}
 
-
+%20:50 15/04/2024
 
 \section{The circular system $\CTlambda$}
 We define a subset $\CTlambda$ of the set $\WTyped$ of well-typed term,
@@ -451,7 +639,8 @@ with subtrees: $t$, $0$.
 \item
 Assume $\tau = k_m, \ldots, k_n$ is a trace of $\pi =t_0, \ldots, t_n$ and $i=m,\ldots, n$.
 $\tau$ is progressing in $i$ if $t_i=\cond x.(f,g)$ for some $f$, $g$,
-and $k_i$ is the index of the first argument the $\cond$-rule, otherwise $\tau$ is not progressing in $i$.
+and $k_i$ is the index of the first \emph{unnamed} argument the $\cond$-rule, 
+otherwise $\tau$ is not progressing in $i$.
 
 \item
 $t$ satisfies the global trace condition if for all infinite paths $\pi$ in $t$ 
@@ -468,32 +657,40 @@ and satisfy the global trace condition.
 \section{Examples of terms of $\CTlambda$}
 
 \subsection{The sum map}
-\Daisuke{Add sum (start)}
+%\Daisuke{Add sum (start)}
 As a first example of term of  $\CTlambda$ we can provide a term $\Sum$ computing the sum on $\N$,
 which is an infinite term defined by $\Sum = \lambda x:\N.\cond z.(x,\Succ(\Sum(x)(z)))$.
+This term is regular with subterms 
+$$
+\Sum, \  \  \ \cond z.(x,\Succ(\Sum(x)(z))), 
+\  \  \ x, \  \  \ \Succ(\Sum(x)(z)),  \  \  \ \Sum(x)(z), \  \  \ \Sum(x)
+$$
 This term is well-typed by the following circular derivation with a back edge from the $(\dagger)$ above to the $(\dagger)$ below.
-The only infinite path contains a progressing trace, a sequence of $\N$'s marked by underlines. 
+The only infinite path contains a progressing trace, a sequence of $\N$'s colored in 
+\bfColor{oldgold}{old gold}. 
 \[
-\infer{
-  \vdash \Sum:\N \rightarrow \underline{\N} \rightarrow \N\ (\dagger)
+\infer[\lambda]{
+  \vdash \Sum:\N \rightarrow \bfColor{oldgold}{\N} \rightarrow \N\ 
+(\bfColor{oldgold}{\dagger})
 }{
-  \infer[(\cond)]{
-    x:\N \vdash \cond z.(x,\Succ(\Sum(x)(z))): \underline{\N} \rightarrow \N
+  \infer[\cond]{
+    x:\N \vdash \cond z.(x,\Succ(\Sum(x)(z))): \bfColor{oldgold}{\N} \rightarrow \N
   }{
-    \infer{
+    \infer[\var]{
       x:\N \vdash x:\N
     }{}
     &
-    \infer{
-      x:\N,z:\underline{\N} \vdash \Succ(\Sum(x)(z)): \N
+    \infer[\Succ]{
+      x:\N,z:\bfColor{oldgold}{\N} \vdash \Succ(\Sum(x)(z)): \N
     }{
-      \infer[(\eta)]{
-        x:\N,z:\underline{\N} \vdash \Sum(x)(z): \N
+      \infer[\eta]{
+        x:\N,z:\bfColor{oldgold}{\N} \vdash \Sum(x)(z): \N
       }{
-        \infer[(\eta)]{
-          x:\N \vdash \Sum(x): \underline{\N} \rightarrow \N
+        \infer[\eta]{
+          x:\N \vdash \Sum(x): \bfColor{oldgold}{\N} \rightarrow \N
         }{
-          \vdash \Sum: \N \rightarrow \underline{\N} \rightarrow \N\ (\dagger)
+          \vdash \Sum: \N \rightarrow \bfColor{oldgold}{\N} \rightarrow \N\ 
+(\bfColor{oldgold}{\dagger})
         }
       }
     }
@@ -501,24 +698,24 @@ The only infinite path contains a progressing trace, a sequence of $\N$'s marked
 }
 \]
 
-\Daisuke{Add sum (end)}
-\\
+%\Daisuke{Add sum (end)}\\
 
+%10:43 16/04/2024
 
 \subsection{The Iterator}
 A second example. We define a term $\Iter$ of  $\CTlambda$ computing the iteration of maps on $\N$.
 We define a normal term $\Iter:(\N \rightarrow \N), \N,\N \rightarrow \N$ such that
-$\Iter(f,n,a)=f^n(a)$ for all $n \in \N$. 
+$\Iter(f,a,n)=f^n(a)$ for all $n \in \N$. 
 We have to to solve the equations $\Iter(f,a,0) = a$ and $\Iter(f,a,\Succ (t)) = f(\Iter(f,a,t))$.
-We solve them with $\Iter = \lambda f, a, x. i[a,f,x]$
-with $ i[a,f,x] = (\cond x. (a, f( i[a,f,x]) ))(x)$.
+We solve them with $\Iter = \lambda f, a, x.I$
+with $I = (\cond x. (a, f(I) ))(x)$.
 
 The term is well-typed and regular by definition. We check the global trace condition. 
-We mark the last unnamed argument $\N$ of $\Iter$. The mark moves to $x$ in $ i[a,f,x]$.
+We mark the last unnamed argument $\N$ of $\Iter$. The mark moves to $x$ in $I$.
  Through a $\etaRule$-rule the mark moves to the unique unnamed argument $\N$ of  
-$ \cond x. (a, f( i[a,f,x]) )$.
+$ \cond x. (a, f(I) )$.
 The mark either moves to the name $x$ in the context of $a$ and there it stops, or 
-it progresses and moves to $x$ in the context of $f(i[f,a,x])$, then in the context of $i[f,a,x]:\N$.
+it progresses and moves to $x$ in the context of $f(I)$, then in the context of $I:\N$.
 %??????????????? 10:30 24/03/24
 Now we loop: if the path continues forever, then after infinitely many step the mark from which we started 
 progresses infinitely many times, each time it crosses a $\cond$-rule.
@@ -552,125 +749,169 @@ We mark the last unnamed argument $\N$ of $\Interval$.
 The mark moves to the last unnamed argument $\N$ of  
 $v:\N,\N \rightarrow \N$. 
 We unfold $v$ to $\lambda x.\cond y. 
-(\ \cons(w, \nil),  \  \cons(w, v(\Succ (x),y)) \ )$
+(\ [w],  \  [w] @ v(\Succ (x),y)) \ )$
 The mark progresses and moves to the name $y$ in the context of the body of the $\lambda$-abstraction,
-then to $y$ in the context of $\cons(w, \nil)$ or of $\cons(w, v(\Succ (x),y))$,
+then to $y$ in the context of $[w]$ or of $ [w] @ v(\Succ (x),y))$,
 then in the context of $\nil$ and stops, or in the context of $w=\Iter(f,a,x):\N$, 
-for which we already checked the global trace condition, or in the context of $v(\Succ (x),y)):\alpha$. 
+for which we already checked the global trace condition, or in the context of $v(\Succ (x),y)):\N$. 
 
-Then the mark moves from the named argument $y$ of $v(\Succ (x)):\N \rightarrow \N$ to the unique 
-unnamed argument $\N$ of $v(\Succ (x))$, and eventually to the last argument of $v:\N,\N\rightarrow \N$. 
-From $v$ we loop: after infinitely many step either we reached some $w$ and we find 
-some infinite progressing trace inside it, or the
-mark from which we started progresses infinitely many times through $v$. In both cases we have the
-global trace condition.
+Then the mark moves from the named argument $y$ of $v(\Succ (x),y):\N$ to the unique 
+unnamed argument $\N$ of $v(\Succ (x))$, 
+and eventually to the second argument of $v:\N,\N\rightarrow \N$. 
+From $v$ we loop: after infinitely many step either we reached some $w=\Iter(f,a,x)$ 
+and we find some infinite progressing trace inside it, or the
+mark from which we started progresses infinitely many times through the $\cond$-rule inside $v$. 
+In both cases we have the global trace condition.
 
 We have infinitely many nested $\beta$-reduction $(\lambda x. \ldots)(\Succ (x))$.
-We can remove all of them in a single step. Inside the $\beta$-redex number $n$ we obtain a sub-term
-$w[\Succ (x)/x]\ldots[\Succ (x)/x]$ (substitution repeated $n$ times).
-The result is $w[\Succ ^n(x)] = \Iter(f,a,\Succ ^n(x))$.
+We can remove all of them in a single step. Inside the $\beta$-redex number $k$ we obtain a sub-term
+$w[\Succ (x)/x]\ldots[\Succ (x)/x]$ (substitution repeated $k$ times).
+The result is $w[\Succ ^k(x)] = \Iter(f,a,\Succ ^k(x))$.
 The nested substitution produce new $\beta$-reductions 
-$\Iter(f,a,\Succ ^n(x)) = (\lambda x.i[f,a,x])(\Succ ^n(x))$ for all $n \in \N$.
+$\Iter(f,a,\Succ ^k(x)) = (\lambda x.I)(\Succ ^k(x))$ for all $k \in \N$.
 This is a non-regular term: we have infinitely many pairwise different 
-sub-terms $x,\Succ (x),\Succ (\Succ (x)), \Succ (\Succ (\Succ (x))), \ldots$.
-We need infinitely many steps to normalize all $\Iter(f,a,\Succ ^n(x))$ to $f^n(i[f,a,x])$, 
+sub-terms $x,\Succ (x),\Succ^2(x), \Succ^3(x), \ldots$.
+We need infinitely many steps to normalize all $\Iter(f,a,\Succ^k(x))$ to $f^k(I)$, 
 even if we allow to reduce all $\beta,\cond$-redexes at the same time.
-Also the normal form is not regular: it contains all terms $f^n(i[f,a,x])$ for $n \in \N$, hence
+Also the normal form is not regular: it contains all terms $f^k(I)$ for $k \in \N$, hence
 infinitely many pairwise different terms. These infinite sub-terms are of a particulary simple form, though. 
-They are obtained by the repeating $n$ times the assignment $z:=f(z)$, then applying $z:=i[f,a,x]$ once
+They are obtained by the repeating $k$ times the assignment $z:=f(z)$, then applying $z:=I$ once
 to the result.
 
-Apparently, $\Interval$ 
+Apparently, $\Interval$  
 is some term of $\CTlambda$ which cannot be normalized in finite time, not even if we allow
-infinite parallel reductions without any "safety" restriction. The normal form is produced \emph{only in the limit}
+infinite parallel reductions without any "safety" restriction. 
+The normal form is produced \emph{only in the limit}
 and it is \emph{not regular}. If we allow to reduce infinitely many nested $\beta$-redexes in one step, also
 the intermediate steps of the infinite reduction of $\Interval$ are not regular.
 
 
 \section{Subject reduction for terms of $\CTlambda$ of type $\N$}
-\Daisuke{SR start}
+%\Daisuke{SR start}
 \ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
 \\
 \emph{(Here we should fill this part)}
 \ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
-\Daisuke{SR end}
+%\Daisuke{SR end}
 
+%15:12 16/04/2024
+
+\section{Subject reduction for terms of $\CTlambda$ of type $\N$}
+%\Daisuke{SR start}
+\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
+\\
+\emph{(Here we should fill this part)}
+\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
+%\Daisuke{SR end}
+
+%15:12 16/04/2024
 
 \section{Weak normalization for closed terms of $\CTlambda$ of type $\N$}
 \label{section-weak-normalization}
-\Daisuke{WN start}
+%\Daisuke{WN start}
 In this section we prove that every closed term of $\CTlambda$
  (that is, well-typed, regular and with the global trace condition) normalizes with finitely many "safe" steps
 to some numeral $n \in \N$.
 In the following, we explicitly write $t[x_1,\ldots,x_n]$,
-where each $x_i$ may apper as a free variable in $t$, 
+when each free variable in $t$ is some $x_i$, 
 and, under this notation, also write $t[a_1,\ldots,a_n]$ instead of $t[a_1/x_1,\ldots,a_n/x_n]$. 
+We recall that we denote with $\Nat$ the set of all numerals, namely all terms of the form
+$\Succ^n(0)$ for some $n\in \N$.
 
+We define total terms $t$ of type $\N$, 
+the closed terms of type $\N$ evaluating in at least one reduction path to a numeral, and 
+we define values, which are numerals (hence closed term). If $t:A \rightarrow B$ is a closed term, then
+total terms and values coincide, both are the terms mapping values to total terms. Values are always
+closed terms.
+An open term is total if all substitutions of free variables with values produce a closed total term.
+This is the formal definition:
 
-\begin{definition}[Values and total on values]
-  We define values and total terms on values by induction on types. 
+\begin{definition}[Values and total]
+  We define values and closed total terms on values by induction on types. 
   \begin{enumerate}
   \item
-    A closed term $t:\N$ is total on values
-    if and only if $t \safeReduces^* n$ for some $n\in \N$.
-    A closed term $t:\N$ is a value if and only if $t \in \N$.
+    A closed term $t:\N$ is closed total
+    if and only if $t \safeReduces^* u$ for some $u\in \Nat$.
   \item
-    A closed term $t:A\rightarrow B$ is total on values
-    if and only if, $t(a)$ is total on values for any closed value $a:A$.
-    A closed term $t:A\rightarrow B$ is a value if and only if $t$ is total.
+    A closed term $t:\N$ is a value if and only if $t \in \Nat$.
+  \item
+    A closed term $t:A\rightarrow B$ is total
+    if and only if $t(a)$ is total for any value $a:A$.
+   \item
+    Closed terms and values of type  $t:A\rightarrow B$ coincide.
   \item
     A term $t[\vec{x}]:C$, whose all free variables are $\vec{x}:\vec{A}$, is
-    total on values, if and only if
-    $t[\vec{a}]$ is total for any closed values $\vec{a}$ of type $\vec{A}$.
+    total if and only if $t[\vec{a}]$ is total for any values $\vec{a}$ of type $\vec{A}$.
   \end{enumerate}
 \end{definition}
+
+Closed total terms are closed by safe reductions.
 
 \begin{lemma}\label{lem:total_value}
   \begin{enumerate}
   \item\label{lem:total_value1}
     Let $t:A$ be a closed term and $t \safeReduces u$.
-    If $u$ is total on values, then so is $t$.
+    If $u$ is total, then so is $t$.
   \item\label{lem:total_value2}
     Let $t[\vec{x}]:\vec{A}\rightarrow\N$ be a term,
     whose all free variables are $\vec{x}:\vec{B}$,
     and $\vec{u}:\vec{B}$ and $\vec{a}:\vec{A}$ be closed values.
-    If $t[\vec{u}]\vec{a}:\N$ is total on values, then $t[\vec{x}]$ is total on values. 
+    If $t[\vec{u}]\vec{a}:\N$ is total, then $t[\vec{x}]$ is total. 
   \end{enumerate}
 \end{lemma}
 \begin{proof}
-  The claim \ref{lem:total_value1} is shown by induction on $A$. 
-  We first show the base case, namely $A$ is $\N$.
-  By the assumption and the subject reduction property, $u$ has type $A$ and closed total on values.
+\begin{enumerate}
+
+\item
+  \emph{The claim \ref{lem:total_value1}} is shown by induction on $A$. 
+\begin{enumerate}
+\item
+  We first show the \emph{base case}, namely when $A$ is $\N$.
+  By the assumption and the subject reduction property, $u$ has type $A$ and is closed total.
   Then we have $t \safeReduces u \safeReduces^* n$ for some $n\in\N$. 
-  Hence $t:\N$ is total on values.
-  We show the induction case, namely $A$ is $A_1\rightarrow A_2$.
+  Hence $t:\N$ is total.
+\item
+  We show the \emph{induction case}, namely when $A$ is $A_1\rightarrow A_2$.
   Take arbitrary closed value $a:A_1$. Then we have $t(a) \safeReduces u(a)$ and 
-  $u(a):A_2$ is total on values by the assumption and the subject reduction property.
-  Hence, by the induction hypothesis, $t(a)$ is total on values. 
-  We obtain that $t:A_1\rightarrow A_2$ is total on values. 
-  
+  $u(a):A_2$ is total by the assumption and the subject reduction property.
+  Hence by the induction hypothesis $t(a)$ is total. 
+  We obtain that $t:A_1\rightarrow A_2$ is total. 
+\end{enumerate}
+
+\item  
   The claim \ref{lem:total_value2} is shown by induction on $|\vec{A}|$.
-  The base case $|\vec{A}| = 0$ is immediately shown by the definition.
-  We show the induction case. Let $\vec{A} = A_0\vec{A'}$.
-  Take arbitrary closed values $\vec{u}:\vec{B}$, $\vec{a'}:\vec{A'}$, and $a_0:A_0$. 
-  By the assumption, we have $t[\vec{u}]a_0\vec{a'}:\N$ is closed total on values. 
-  Then $t[\vec{u}]a_0:\vec{A'}\rightarrow\N$ is total on values by the induction hypothesis.
-  Hence $t[\vec{u}]:\vec{A}\rightarrow\N$ is total on values,
-  and so is $t[\vec{x}]$ as we expected.
+\begin{enumerate}
+\item
+  The \emph{base case} $|\vec{A}| = 0$ is immediately shown by the definition.
+\item
+  We show the \emph{induction case}. Let $\vec{A} = A_0\vec{A'}$.
+  Take arbitrary values $\vec{u}:\vec{B}$, $\vec{a'}:\vec{A'}$, and $a_0:A_0$. 
+  By the assumption, we have $t[\vec{u}]a_0\vec{a'}:\N$ is closed total for all values $\vec{a'}$. 
+  Then $t[\vec{u}]a_0:\vec{A'}\rightarrow\N$ is total 
+  by the induction hypothesis on $\vec{A'}\rightarrow \N$.
+  By definition $t[\vec{u}]:\vec{A}\rightarrow\N$ is closed total,
+  and so by definition $t[\vec{x}]$ is total, as we expected.
+\end{enumerate}
+
+\end{enumerate}
 \end{proof}
 
 Let $\Pi$ be a proof and $e$ be a node of $\Pi$.
 We write $\Pi(e)$ for $t:\Gamma\vdash A$ at the node $e$ in $\Pi$. 
 
 \begin{theorem}
-  If $t$ is not total on values, then there is no $\Gamma$ and $A$ such that $t: \Gamma\vdash A$. 
+  Assume $\Pi:\Gamma\vdash t:A$.
+  If $t$ is not total, then there is some infinite path in $\Pi$ with no infinite progressing trace. 
 \end{theorem}
+
+%19:01 16/04/2024
+
 \begin{proof}
-  Assume that $t$ is not total on values
+  Assume that $t$ is not total
   and $t: \vec{x}:\vec{D}\vdash\vec{A}\rightarrow\N$ has a proof $\Pi$ (we show a contradiction).
   By \ref{lem:total_value2} of Lemma~\ref{lem:total_value},
   there exist closed values $\vec{a}:\vec{A}$ and $\vec{d}:\vec{D}$ such that
-  $t[\vec{d}]\vec{a}$ is not total on values. 
+  $t[\vec{d}]\vec{a}$ is not total. 
   We inductively construct $(e_i,\vec{d_i},\vec{a_i})$ for each natural number $i$,
   such that
   \begin{itemize}
@@ -678,17 +919,17 @@ We write $\Pi(e)$ for $t:\Gamma\vdash A$ at the node $e$ in $\Pi$.
     $e_i$ is a node of $\Pi$, where $t_i: \vec{x_i}:\vec{D_i}\vdash\vec{A_i}\rightarrow\N$ is
     at the node $e_i$ in $\Pi$, and $e_{i+1}$ is a child node of $e_i$ in $\Pi$; 
   \item[(ii)]
-    $t_i$ is not total on values;
+    $t_i$ is not total;
   \item[(iii)]
     $\vec{d_i}:\vec{D_i}$ and $\vec{a_i}:\vec{A_i}$ are closed values
-    such that $t_i[\vec{d_i}]\vec{a_i}$ is not total on values;
+    such that $t_i[\vec{d_i}]\vec{a_i}$ is not total;
   \item[(iv)]
     there is a trace compatible connection from
     ($\vec{d_i};\vec{a_i}$) to ($\vec{d_{i+1}};\vec{a_{i+1}}$), for any $i\ge 0$, in $\Pi$.
     Moreover, if $i$ is a progress point, namely $t_i$ is of the form $\cond x.(f,g)$ and $t_{i+1}$ is $g$,
     then $\vec{a_i} = \Succ(m')\vec{a'}$, $\vec{d_{i+1}} = \vec{d_i}m'$, and
     a trace passes from $\Succ(m')$ to $m'$. 
-    \Daisuke{mynote:write this more clearly}
+    %\Daisuke{mynote:write this more clearly}
   \end{itemize}
   
   We first define $(e_0,\vec{d_0},\vec{a_0})$ by $(r,\vec{d},\vec{a})$,
@@ -697,13 +938,16 @@ We write $\Pi(e)$ for $t:\Gamma\vdash A$ at the node $e$ in $\Pi$.
   Then we define $(e_{i+1},\vec{d_{i+1}},\vec{a_{i+1}})$ by the case analysis of
   the last rule for the node $e_{i+1}$ in $\Pi$. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% APPARENTLY THE CASE $\struct(f)$ CAN BE SIMPLIFIED TO WEAKENING
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   The case of $\struct(f)$, namely
   $\Pi(e_i) = t[y_{f(1)}/x_1,\ldots,y_{f(n)}/x_n]:\Delta\vdash \vec{A_i}\rightarrow\N$
   is obtained from $t:\Gamma\vdash A$, where
   $\Gamma = x_1:C_1,\ldots,x_n:C_n$, $\Delta = y_1:B_1,\ldots,y_m:B_m$, 
   $f:\{1,\ldots,n\}\to\{1,\ldots,m\}$ is an injection, and $C_i=B_{f(i)}$ for all $1\le i\le n$.
   By the induction hypothesis and $(b)$,
-  $t[y_{f(1)}/x_1,\ldots,y_{f(n)}/x_n][d_{i,f(1)}/y_{f(1)},\ldots,d_{i,f(n)}/y_{f(n)}]\vec{a_i}:\N$ is not total on values, where $\vec{d_i} = d_{i,1}\ldots d_{i,m}$.
+  $t[y_{f(1)}/x_1,\ldots,y_{f(n)}/x_n][d_{i,f(1)}/y_{f(1)},\ldots,d_{i,f(n)}/y_{f(n)}]\vec{a_i}:\N$ is not total, where $\vec{d_i} = d_{i,1}\ldots d_{i,m}$.
   Then define $e_{i+1}$ as the unique parent node of $e_i$, and
   also define $\vec{d_{i+1}}$ and $\vec{a_{i+1}}$ by $d_{i,f(1)}\ldots d_{i,f(n)}$
   and $\vec{a_i}$, respectively. 
@@ -711,12 +955,12 @@ We write $\Pi(e)$ for $t:\Gamma\vdash A$ at the node $e$ in $\Pi$.
   We also have (iv) since the connection, determined by $f$, from
   $(d_{i,1}\ldots d_{i,m};\vec{a_i})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (d_{i,f(1)},\ldots d_{i,f(n)};\vec{a_i})$
   is trace compatible. 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   The case of $\eta$-rule, namely 
   $\Pi(e_i) = f[\vec{x}](x): \Gamma,x:N\vdash \vec{A}\rightarrow\N$ is obtained from
   $f[\vec{x}]:\Gamma\vdash N\rightarrow \vec{A} \rightarrow \N$, where
   $x\not\in\Gamma$.
-  By the induction hypothesis, $f[\vec{d'}]d\vec{a_i}:\N$ is not total on values,
+  By the induction hypothesis, $f[\vec{d'}]d\vec{a_i}:\N$ is not total,
   where $\vec{d_i} = \vec{d'}d$.
   Define $e_{i+1}$ as the unique parent node of $e_i$, and
   also define $\vec{d_{i+1}}$ by $\vec{d'}$ and define $\vec{a_{i+1}}$ by $d\vec{a_i}$. 
@@ -726,13 +970,13 @@ We write $\Pi(e)$ for $t:\Gamma\vdash A$ at the node $e$ in $\Pi$.
   $(d_{i+1};\vec{a_{i+1}}) = (\vec{d'};d\vec{a_i})$
   is trace compatible. 
 
-  The case of $0$-rule, namely $\Pi(e_i) = 0:\Gamma\vdash \N$, is not the case since $t_i = 0$ is total on values.
+  The case of $0$-rule, namely $\Pi(e_i) = 0:\Gamma\vdash \N$, is not the case since $t_i = 0$ is total.
   
   The case of $\Succ$-rule, namely $\Pi(e_i) = \Succ(t_{i+1}):\Gamma\vdash \N$ is obtained from
   $t_{i+1}:\Gamma\vdash \N$.
   By the induction hypothesis, $\vec{a_i}$ is empty, and 
-  $\Succ(t_{i+1}[\vec{d_i}]):\N$ is not total on values.
-  Then, by the definition, $t_{i+1}[\vec{d_i}]$ is not total on values. 
+  $\Succ(t_{i+1}[\vec{d_i}]):\N$ is not total.
+  Then, by the definition, $t_{i+1}[\vec{d_i}]$ is not total. 
   Define $e_{i+1}$ as the unique parent node of $e_i$, and
   also define $\vec{d_{i+1}}$ and $\vec{a_{i+1}}$ by $d_i$ and empty, respectively. 
   We obtain (i), (ii), (iii), and (iv) for $i+1$, as expected.
@@ -741,8 +985,8 @@ We write $\Pi(e)$ for $t:\Gamma\vdash A$ at the node $e$ in $\Pi$.
   $\Pi(e_i) = t[\vec{x}](u[\vec{x}]):\Gamma\vdash \vec{A}\rightarrow\N$ is obtained from
   $t[\vec{x}]:\Gamma\vdash B \rightarrow \vec{A}\rightarrow\N$ 
 and $u[\vec{x}]:\Gamma\vdash B$.
-  By the induction hypothesis, $t[\vec{d_i}](u[\vec{d_i}])\vec{a_i}:\N$ is not total on values.
-  We first consider the subcase that $u[\vec{d_i}]:B$ is total on values.
+  By the induction hypothesis, $t[\vec{d_i}](u[\vec{d_i}])\vec{a_i}:\N$ is not total.
+  We first consider the subcase that $u[\vec{d_i}]:B$ is total.
   We define a value $a':B$ by $n\in\Nat$ such that $u[\vec{d_i}] \safeReduces^* n$ if $B=\N$,
   by $u[\vec{d_i}]$ otherwise.
   Then define $e_{i+1}$ by the parent node whose term is $t[\vec{x}]$,
@@ -751,8 +995,8 @@ and $u[\vec{x}]:\Gamma\vdash B$.
   We also have (iv) since the connection from 
   $(\vec{d_i};\vec{a_i})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (\vec{d_i};a'\vec{a_i})$ is
   trace compatible. 
-  Next we consider the subcase that $u[\vec{d_i}]:B$ is not total on values.
-  Then there is a sequence of values $\vec{a'}$ such that $u[\vec{d_i}]\vec{a'}:\N$ is not total on values.
+  Next we consider the subcase that $u[\vec{d_i}]:B$ is not total.
+  Then there is a sequence of values $\vec{a'}$ such that $u[\vec{d_i}]\vec{a'}:\N$ is not total.
   Define $e_{i+1}$ by the parent node whose term is $u[\vec{x}]$,
   and define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = \vec{a'}$. 
   We obtain (i), (ii), (iii) for $i+1$, as expected.
@@ -763,9 +1007,9 @@ and $u[\vec{x}]:\Gamma\vdash B$.
   The case of $\lambda$-rule, namely
   $\Pi(e_i) = \lambda x.(t_{i+1}[\vec{x},x]):\Gamma\vdash A \rightarrow \vec{A} \rightarrow \N$ is obtained from
   $t_{i+1}[\vec{x},x]:\Gamma,x:A\vdash \vec{A}\rightarrow\N$.
-  By the induction hypothesis, $(\lambda x.(t_{i+1}[\vec{d_i},x]))a\vec{a'}:\N$ is not total on values,
+  By the induction hypothesis, $(\lambda x.(t_{i+1}[\vec{d_i},x]))a\vec{a'}:\N$ is not total,
   where $\vec{a_i} = a\vec{a'}$.
-  Then, by Lemma~\ref{lem:total_value}, $t_{i+1}[\vec{d_i},a]\vec{a'}$ is not total on values. 
+  Then, by Lemma~\ref{lem:total_value}, $t_{i+1}[\vec{d_i},a]\vec{a'}$ is not total. 
   Define $e_{i+1}$ as the unique parent node of $e_i$, and
   also define $\vec{d_{i+1}} = \vec{d_i}a$ and $\vec{a_{i+1}} = \vec{a'}$. 
   We obtain (i), (ii), (iii) for $i+1$, as expected.
@@ -779,7 +1023,7 @@ and $u[\vec{x}]:\Gamma\vdash B$.
   $f[\vec{x}]:\Gamma\vdash \vec{A}\rightarrow\N$
   and
   $g[\vec{x},x]:\Gamma,x:\N\vdash \vec{A}\rightarrow\N$. 
-  By the induction hypothesis, $\cond x.(f[\vec{d_i}],g[\vec{d_i},x])m\vec{a'}:\N$ is not total on values,
+  By the induction hypothesis, $\cond x.(f[\vec{d_i}],g[\vec{d_i},x])m\vec{a'}:\N$ is not total,
   where $\vec{a_i} = m\vec{a'}$ and $m \in \Nat$.
   We first consider the subcase $m=0$.
   Define $e_{i+1}$ by the parent node whose term is $f[\vec{x}]$,
@@ -811,7 +1055,7 @@ and $u[\vec{x}]:\Gamma\vdash B$.
 By this theorem, we have the following corollaries. 
 
 \begin{corollary}
-  $t: \Gamma\vdash A$ implies $t$ is total on values.
+  $t: \Gamma\vdash A$ implies $t$ is total.
 \end{corollary}
 
 \begin{corollary}
@@ -820,7 +1064,7 @@ By this theorem, we have the following corollaries.
 
 
 
-\Daisuke{WN end}
+%\Daisuke{WN end}
 
 \section{Uniqueness of normal form for closed terms of $\CTlambda$ of type $\N$}
 In this section we prove a weak form of confluence: normal form for
@@ -958,15 +1202,14 @@ then $\reduces_X$ applied to $t$ produces no undefined sub-term.
 \end{lemma}
 
 \begin{proof}
-We have to prove that there is no path in $t$ made only of redexes.
-Suppose a path in $t$ contains an a redex $r=(\lambda x:T.b)(u)$ or
-$r=(\cond x.(f,g))(t)$, with $t=0$ or $t=\Succ(u)$. 
+We have to prove that there is no path in $t$ only made  of redexes.
+Suppose a path in $t$ is only made  of redexes 
+$r=(\lambda x:T.b)(u)$ or $r=(\cond x.(f,g))(t)$, where $t=0$ or $t=\Succ(u)$. 
 We first check that no trace $\tau$ starting from $r$ can progress in the next sub-term of the path.
-Indeed, $\tau$ can only continue through the left-hand-side of $r$,
-and if $\tau$ progresses, then the left-hand-side must be $\cond x.(f,g)$ and $\tau$
-should move to the variable $x$ bound by $\cond x.(f,g)$. The only way to obtain
-this is  is that $t=x$ and $r$ is obtained by an $\etaRule$,
-and in this case $r$ is no redex.
+Indeed, if $\tau$ progresses, then $r=(\cond x.(f,g))(t)$
+and $\tau$ to the type of the variable $x$ bound by $\cond x.(f,g)$. 
+The only way to obtain this is that $t=x$ and $r$ is obtained by an $\etaRule$,
+and in this case $r$ is no redex, because $x \not = 0, \Succ(u)$.
 
 This implies that in a path $\pi$ only made of redexes any trace $\tau$ 
 cannot progress after its first point, and therefore it cannot infinitely progress and the term has
