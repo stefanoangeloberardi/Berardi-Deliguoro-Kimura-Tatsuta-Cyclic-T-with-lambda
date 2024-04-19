@@ -1,0 +1,87 @@
+In this section we prove that the set of total functionals on $\N$ definable in 
+$\systemT$ and $\CTlambda$ are the same.
+
+The inclusion from $\systemT$ and $\CTlambda$ is easy to prove.
+For any type $T$ we can define a term $\Rec:T,(\N,T \rightarrow T)\rightarrow T$ such that
+$\Rec(a,f,0) = a$ and $\Rec(a,fn+1) = f(n,\Rec(a,f,n))$, for all numeral $n \in \Nat$.
+The definition is $\Rec = \lambda a,f.\rec$. with $\rec = cond x.(a,f(x,\rec(x))) : \N \rightarrow T$.
+
+The opposite inclusion, from $\CTlambda$ to $\systemT$, it has been proved by proof-theory for the
+combinatorial version of circular $\systemT$. For $\CTlambda$, we will define instead an algorithm
+taking an infinite term in  $\CTlambda$, described as a finite circular tree, 
+and returning a term in $\systemT$. Our translation can expand
+more than exponentially the size of the finite circular tree.
+
+Assume $t:T$ is a cyclic term, represented as a cyclic tree with buds $t_1$, \ldots, $t_n$.
+We translate it to a term of $\systemT$. This is a first draft about how to do it.
+ 
+\begin{enumerate}
+
+\item
+We first move all buds to the same type and context, by adding dummy variables and dummy arguments.
+This operation preserves regularity and global trace condition.
+Now $t_1$, \ldots, $t_n$ all have context $\Gamma$ and type $A$.
+
+\item
+We merge all buds into the same term, defined by some $u$ such that $u(i)=t_i$, for $i=1, \ldots, n$,
+and $u(i)=$ some dummy term of type $A$ otherwise. We replace each $t_i$ with $u(i)$, 
+for $i=1, \ldots, n$.
+This operation preserves regularity and global trace condition.
+Now we have $n$ buds, all are the same $u$ with context $\Gamma$ and type $\N \rightarrow A$.
+Each bud $b$ defines a partial bijection between the occurrence of $\N$ in its context and type
+$\Gamma \vdash \N \rightarrow A$, and the occurrences of $\N$ in the context and type
+$\Gamma \vdash \N \rightarrow A$ of its companion. 
+We extend this partial bijection to any total bijection $\tau$, depending on the but $b$.
+
+\item
+We close the partial bijections defined by each bud by composition. The number of partial 
+bijections can grow in an exponential  way.
+
+\item
+Assume we have $m$ occurrences of $\N$ inside the context and type 
+$\Gamma \vdash \N \rightarrow A$ of $u$.
+We fix a permutation $\sigma:\{1, \ldots, m\}$ 
+and we label them by variables $x_1, \ldots, x_n$ of $\systemT$,
+with $x_i$ label of the argument with type $\N$ and number $i$.
+We will define a translation $t^\sigma \in \systemT$ of  $t \in \CTlambda$.
+
+\item
+All traces move from $u$ to any of the occurrences of $u$ inside $u$. 
+Some traces of some $\N$
+in $\Gamma \vdash \N \rightarrow A$ disappear, some other are moved to some other $\N$,
+in an injective way. Two traces never merge.
+We label each trace in the bud $u$ with the name $x_i$ of the corresponding trace, if any.
+All those corresponding to no trace are labeled at random using the remaining variable names.
+
+At least one trace progresses, otherwise by repeating infinitely many times this step we would get a
+path with no progressing trace. The same is true for any combination of one or more movements
+from $u$ to $u$. 
+
+%After $m$ movements to any $u$ inside $u$, 
+%each of the $m$ traces either disappeared or cycles. After $m!$ steps, all
+%cycles are back to their original point. 
+%
+%All traces are now restarted or move from one $\N$ to the same $\N$, with or without progression.
+
+\item
+At least one trace $x_i$ progresses and it is not erased by any other trace. Otherwise we could follow a path
+in which each progress is erased in some new step, and so there is no infinite progressing trace.
+We use this trace as the main variable $x_i$ of the recursion. In all steps, either $x_i$ is constant or decreases,
+and in at least one case it decreases. In all cases in which $x_i$ decrease we use primitive
+recursion on $x_i$ in $\systemT$, as main variable. 
+In all other case, $x_i$ is not removed, therefore it stays the same. 
+We isolate the main variable $x_j$ of the recursion for these steps, it is progressing therefore $j \not = i$.
+We use primitive recursion on $x_j$: this is the second variable of primitive recursion. 
+We continue in this way and we define a primitive recursion in $\systemT$, with pairwise distinct 
+indexes $x_{i_1} = x_i$, $x_{i_2} = x_j$, \ldots, $x_{i_k}$ for some $k \ge 1$. We extend 
+$x_{i_1}, \ldots, x_{i_k}$ to $x_{i_1}, \ldots, x_{i_n}$ in a random way: we defined in this way a
+permutation $\sigma$ on $\{1, \ldots, m\}$ by $\sigma(j) = i_j$ for $j \in \{1, \ldots, m\}$
+We define in this way a closed primitive recursive term 
+$\lambda \vec{x}.t^\sigma \in \systemT$. Each bud $u$
+defining a permutation $\tau$ is replaced by $\exch_{\tau}(f)$.
+The term $\exch_\tau \in \systemT$ applies the permutation $\tau$ to the arguments of $f$,
+and during the recursive call $f$ is replaced by $\lambda \vec{x}.u^\sigma$.
+\end{enumerate}
+
+We claim that the infinite term $t^\sigma \in \systemT$ 
+is equivalent to the cyclic recursive term $t \in \CTlambda$ we started from.

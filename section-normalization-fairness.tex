@@ -1,0 +1,31 @@
+\\
+\emph{(Here we should insert our notes for the proof of strong normalization for safe reductions)}
+\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
+\\
+
+There are terms requiring infinite reductions to normalize, but there are reductions normalizing in the limit.
+We conjecture that we can characterize reductions normalizing in the limit using the notion of "fair" reductions.
+
+\begin{definition}
+\begin{enumerate}
+\item
+We say that a node is in the $k,\cond$-level if it has less than $k$ nodes $\cond$ in its branch.
+\item
+We say that an infinite reduction sequence is is \emph{fair} for nodes of $k,\cond$-level in the following case:
+for all $i\in \N$, all $k>0$, there is some  $j \ge i$ such that at step $j$ either all nodes in the 
+$k,\cond$-level are normal, or one of them is reduced at step $j$.
+\end{enumerate}
+\end{definition}
+
+\emph{Conjecture 1}. For all $k \in \N$, an infinite reduction sequence $\sigma$ 
+eventually stop reducing nodes in the $k,\cond$-level.
+
+Conjecture 1 should be proved by adapting the proof of strong normalization for safe reductions to a
+termination result on the first $k$-levels for all reductions, and assuming the same result for $k-1$.
+
+\emph{Conjecture 2}. An infinite reduction sequence $\sigma$ 
+is normalizing in the limit if and only if for all $k \in \N$,
+$k > 0$, $\sigma$ is fair for the task of reducing nodes in the $k,\cond$-level.
+
+Conjecture 2 should follow in few steps from conjecture Conjecture 1.
+
