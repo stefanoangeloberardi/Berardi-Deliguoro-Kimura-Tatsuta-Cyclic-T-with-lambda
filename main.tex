@@ -57,42 +57,56 @@
 
 
 \section{Introduction}
-We will introduce $\LAMBDA$, a set of infinite $\lambda$-terms whose types are: the atomic type $\N$, 
+We will introduce $\LAMBDA$, a set of infinite $\lambda$-terms with a circular syntax.
+The types of $\LAMBDA$ are: the atomic type $\N$, 
 possibly type variables $\alpha, \beta, \ldots$, and all types $A \rightarrow B$ for any types $A$, $B$. 
+Type variables are only used to provide examples and play a minor role in our paper.
+
 The terms of $\LAMBDA$  are possibly infinite trees representing expressions defined with 
 $0$,$\Succ $,$\ap$ (application), 
-typed variables,  $\lambda$ (the binder for defining maps), 
-and $\cond$, a fixed point binder operator for the arithmetic conditional (test on zero). 
+variables $x^T$ with a type superscript,  $\lambda$ (the binder for defining maps), 
+and $\cond$, a fixed point binder operator for the arithmetic conditional (i.e., for test on zero). 
 If we have no type variables, the the trees in $\LAMBDA$ represent partial functionals on $\N$, 
 provided we add reduction rules.
 
-In this paper will consider the subsets $\CTlambda \subset \GTC, \Reg, \WTyped \subseteq \LAMBDA$,
-$\WTyped$ is the set of well-typed terms of $\LAMBDA$. 
-$\GTC \subseteq \WTyped$ is the subset of well-typed circular 
-$\lambda$-terms satisfying a condition called the global trace condition, 
-and they denote total functionals. $\Reg$ is the subset of terms which are regular trees (having finitely
-many subtrees), and therefore are possibly infinite terms which are finitely presented.
-$\CTlambda$ is $\GTC \cap \Reg$, that is, it consists of all well-typed circular 
+%19:42 19/04/2024
+
+In this paper will consider the set of well-typed terms $\WTyped \subseteq \LAMBDA$,
+of terms with a unique type for the term and all its subtypes. 
+We will consider $\GTC \subseteq \WTyped$, the subset of well-typed circular 
+$\lambda$-terms satisfying a condition called the global trace condition. 
+Terms of $\GTC$ denote total functionals. 
+We will consider $\Reg$, the subset of terms which are regular trees (having finitely
+many subtrees). They are possibly infinite terms which are finitely presented, 
+by a finite graph with possibly cycles.
+Eventually, we introduce the topic of this paper, the system $\CTlambda$.
+ $\CTlambda$ is $\GTC \cap \Reg$, that is, it consists of all well-typed circular 
 $\lambda$-terms satisfying satisfying the global trace condition and which are
 regulal trees. We will prove that $\CTlambda$ is a decidable subset of $\Reg$.
 $\CTlambda$ is a new circular version of G\"{o}del system $\systemT$. 
 Differently from all previous circular version of $\systemT$, our system $\CTlambda$
 uses binders instead of combinators. 
-Our goal is providing a circular syntax more familiar to researchers working in the field of Type Theory.
+The circular syntax has the advange of writing much shorter terms.
+Besides, by introducing a circular syntax with binders, we hope to provide 
+a circular syntax more familiar to researchers working in the field of Type Theory.
 
 We will prove the expected results for the circular syntax $\CTlambda$:
 strong normalization for reductions not inside any fixed point and Church-Rosser. 
 We will prove normalization in the limit if we use reductions which are ``fair'':
-they can reduction \emph{inside} fixed points, but they never forget entirely 
-to reduce \emph{outside} all fixed points.
-Besides, we will prove that the closed terms $\CTlambda$ (those without free \emph{term} variables)
+fair reductions can reduce \emph{inside} fixed points, but they never forget entirely 
+the task of reducing \emph{outside} all fixed points.
+
+Eventually, we will prove that the closed terms $\CTlambda$ (those without free \emph{term} variables)
 represent exactly the total computable functionals definable in G\"{o}del system $\systemT$
 using $\N$ as only atomic type.
 
-%14:57 17/04/2024
 
-\section{ The set of infinite $\lambda$-terms}
-We define the set $\LAMBDA$ of infinite terms, the subset $\WTyped$
+%14:57 17/04/2024
+%21:08 19/04/2024
+
+
+\section{The set of infinite $\lambda$-terms}
+We define the set $\LAMBDA$ of infinite circular terms, the subset $\WTyped$
 of well-typed terms and a reduction relation for them.
 
 \begin{definition}[Types of $\LAMBDA$]
@@ -120,7 +134,7 @@ all $n \in \Nat$ are represented in $\LAMBDA$ by expressions of type $\N$ which 
 The terms of $\LAMBDA$ 
 are all possibly infinite trees we can define with $x^T$ (variable name with superscript $T \in \Type$), 
 $\lambda x^T.t$ (binder, abstraction), 
-$\ap(t,u)$, $0$, $\Succ (t)$ (successor of $t$), $\cond x^\N.(f,g)$ (binder, arithmetical conditional).
+$\ap(t,u)$, $0$, $\Succ (t)$ (successor of $t$), $\cond x^\N.(f,g)$ (binder and arithmetical conditional).
 
 \item
 $t$ is an immediate subterm of $\Succ(t)$, $f$, $g$ are  immediate subterm of $\cond x^\N.(f,g)$
@@ -133,9 +147,13 @@ The subterm relation is the reflexive and transitive closure of the immediate su
 We write $\SubTerm(t)$ for the set of subterms of $t$. 
 
 \item
+$\Reg$ is the set of terms $t \in \LAMBDA$ such that $\SubTerm(t)$ is finite.
+We call the terms of $\Reg$ the \emph{regular terms}.
+
+\item
 We write $\Tree(t)$ for the tree of all chains
 $(t_1, \ldots, t_n)$, with $t_1=t$ and $t_{i+1}$ immediate subterm of $t_i$ for all $(i+1) \le n$.
-subterm 
+
 
 \item
 When $t = \Succ ^n(0)$ for some natural number $n \in \Nat$
@@ -151,15 +169,18 @@ $\Num$ is the representation inside $\LAMBDA$ of the set $\Nat$ of natural numbe
 All numeral are finite terms of $\Lambda$. 
 All finite well-typed typed $\lambda$-terms 
 we can define with the rules above are finite terms of $\LAMBDA$.
-The term $t = \cond x^\N.(0,t)$ is in $\LAMBDA$. 
+Regular terms can be represented by the subterm relation restricted to $\SubTerm(t)$:
+this relation defines a graph with possibly cicles.
+
+
+An example of regular term: the term $t = \cond x^\N.(0,t)$. 
 The set $\SubTerm(t)=\{t,0\}$ of subterms  of $t$ is finite, therefore $t$ is a regular term.
 However, $\Tree(t)$ is an infinite tree (it includes itself as a subtree). 
 The finite branches of $\Tree(t)$ are all $(t,t,t,\ldots,0)$, the unique infinite branch of $\Tree(t)$
 is $(t,t,t,\ldots)$. 
 
-In order to define the type of a an infinite term, we first 
+In order to define the type of an infinite term, we first 
 define the context for any term of $\LAMBDA$.
-
 
 \begin{definition}[Types and Contexts of $\LAMBDA$]
 \mbox{}
@@ -168,7 +189,11 @@ define the context for any term of $\LAMBDA$.
 \item
 A  context of $\LAMBDA$ is any finite list $\Gamma = ({x_1}^{A_1}:A_1, \ldots, x_n^{A_n}:A_n)$ 
 of pairwise distinct variables, each assigned to its $A_1, \ldots, A_n \in \Type$. 
+
+\item
 We write $\FV(\Gamma) = \{{x_1}^{A_1}, \ldots, {x_n}^{A_n}\}$.
+We say that $\Gamma$ is a context for $t \in \LAMBDA$ if $\FV(t) \subseteq \FV(\Gamma)$.
+
 
 \item
 If $\Gamma = ({x_1}^{A_1}:A_1, \ldots, x_n^{A_n}:A_n)$ ,
@@ -191,8 +216,10 @@ If $x \not \in \FV(\Gamma)$ then $\Gamma\setminus\{x^T:T\} = \Gamma$.
 
 From the context for a term we can define a context for each subterm of the term.
 A context is a list of type assignment to variables: our variables already have a type superscript,
-so a type assignment is redundant
-yet we add an assignment $\ldots:T$ for uniformity with the notations in use in Type Theory.
+so a type assignment is redundant for variables (not for terms).
+Yet, we add an assignment relation $t:T$ for uniformity with the notations in use in Type Theory.
+
+%21:26 19/04/2024
 
 \begin{definition}[Inherited Contexts of $\LAMBDA$]
 
