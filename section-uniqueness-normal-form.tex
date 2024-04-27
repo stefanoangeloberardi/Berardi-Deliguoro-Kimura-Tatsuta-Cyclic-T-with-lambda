@@ -1,0 +1,84 @@
+In this section we prove a weak form of confluence: normal form for
+all closed terms of $\CTlambda$ of type $\N$ is unique.
+
+By the weak normalization result proved in \S  \ref{section-weak-normalization},
+we will deduce: for all for all closed terms $t$ of $\CTlambda$ of type $\N$, 
+there is some $n \in \N$ such that there is a safe reduction $t \reduces n$, and all normal form of $t$
+are equal to $n$.
+
+We define a notion $\sim$ of equivalence for well-typed terms with the same type.
+Assume $t, u : A$ are \emph{closed} terms of $\CTlambda$.
+ (that is, well-typed, regular and with the global trace condition). 
+
+We define an equivalence $\sim_0$ for closed terms,
+by induction on the type $A$ of $t$, $u$.
+
+\begin{enumerate}
+\item
+Assume $A = \N$. Then $t \sim_0 u$ if and only if for all normal $t',u':\N$, if $t \reduces t'$
+and $u \reduces u'$ then $t'=u'$.
+\item
+Assume $A = B \rightarrow C$. Then $t \sim_0 u$ if and only if for all closed $b,c:B$ if
+$b \sim_0 c$ then $t(b) \sim_0 u(c)$.
+\end{enumerate}
+
+We will prove that for all closed terms $t$ of $\CTlambda$ we have $t \sim_0 t$.
+If $A=\N$ this means that the normal form of all closed terms of $\CTlambda$ of type $\N$ is unique,
+which is our goal.
+
+We first define $t \sim u$ for \emph{any} terms of $\CTlambda$ with the same type.
+ $t \sim u$ if and only if for any two substitution 
+$\sigma = [\vec{t} / \vec{x}]$ and $\tau = [\vec{u} / \vec{x}]$,
+if $\vec{t} \sim_0 \vec{u}$ and $\sigma(t)$, $\sigma(u)$ are closed then $\sigma(t) \sim_0 \sigma(u)$.
+
+We will prove that  for all terms $t$ of $\CTlambda$ we have $t \sim t$. In the case of closed terms $t$
+we can choose $\sigma=\tau=$ the empty sbustitution and we obtain $t \sim_0 t$, which is our goal.
+
+Assume that $t:\N$ is a closed term $t$ of $\CTlambda$ and $n \in \N$. 
+\begin{enumerate}
+\item
+We say that $n$ is a value of $t$ if $t \reduces n$ (if $t$ safely reduces to $n$). 
+\item
+We say that $t$ is confluent if $t \sim_0 t$.
+\end{enumerate}
+Assume $\vec{x}:\vec{A}$ and $t[\vec{x}]: \vec{D} \rightarrow \N$. Assume 
+$\vec{a}:\vec{A},\vec{d}:\vec{D}$ 
+and $\vec{b}:\vec{A},\vec{e}:\vec{D}$ are vectors of closed terms of $\CTlambda$. We say that 
+these four vectors are a counterexample to $t$ if $\vec{a},\vec{d} \sim_0 \vec{b},\vec{e}$
+and $\neg (t[\vec{a}](\vec{d}) \sim_0  t[\vec{b}](\vec{e}))$.
+
+We have $t \sim t$ if and only if there is no counter-example for $t$.
+
+
+By the weak normalization result proved in \\Succ  \ref{section-weak-normalization}, all 
+closed term $t$ of $\CTlambda$ of type $\N$ have a value. If $t$ is confluent, then the value is unique.
+For confluent closed term $t$ of $\CTlambda$ of type $\N$, "safe" reduction preserves the value. Indeed,
+if $t \reduces u$ then $u$ is a closed term of $\CTlambda$ of type $\N$, therefore $u$ has a value
+$m$, which is also a value of $t$. By confluence of $t$ we conclude that $n=m$.
+
+If $t$ is as above, with value $n$, and $t \reduces \Succ (u)$, then $n>0$, 
+$u$ is a confluent closed term $t$ of $\CTlambda$ of type $\N$, and the value of $u$ is $n-1$.
+Indeed,if $u \reduces u'$ and $u'$ is normal, then $t \reduces \Succ (u')$, therefore $\Succ (u')=n$ 
+by confluence of $t$, and we conclude that $n>0$ and $u'=n-1$. Thus, the normal form of $u$ is unique.
+
+We will prove the following.
+
+\begin{theorem}
+Assume $t$ is any well-typed term such that $\neg (t \sim t)$. Then there is some infinite path 
+$\pi=\{t_i | i \in \N\}$ of $t$ with some infinite sequence $\sigma= \{\sigma_i| i \in \N\}$, with
+each $\sigma_i$ counter-example for $t_i$, and with the value of $\sigma$ compatible with the
+trace conditions of $\pi$.
+\end{theorem}
+
+As a corollary from the theorem we will conclude: 
+if $t$ satisfies the global trace condition, then there is no such $\sigma$, therefore $t \sim t$, 
+as we wished to show.
+
+We prove that for any term $ (t \sim t)$ with counter-example $\vec{a},\vec{d} \sim_0 \vec{b},\vec{e}$
+and $\neg (t[\vec{a}](\vec{d}) \sim_0  t[\vec{b}](\vec{e}))$ we can find some immediate
+subterm $t'$ and with a counter-example $\vec{a'},\vec{d'} \sim_0 \vec{b'},\vec{e'}$
+and $\neg (t'[\vec{a'}](\vec{d'}) \sim_0  t'[\vec{b'}](\vec{e'}))$, \emph{compatible with trace
+condition}.
+
+
+%21:09 20/03/2024
