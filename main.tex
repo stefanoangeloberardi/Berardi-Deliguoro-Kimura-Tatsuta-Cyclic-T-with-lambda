@@ -168,20 +168,22 @@ and for each $m \in T \restr l$ we say that $l \conc m$ is the corresponding nod
 If $l=(i)$ we say that $T_l$ is an immediate subterm of $T$.
 \item
 A binary tree labeled on a set $L$ is any pair $\setT = (T, \phi)$ with 
-$\phi:T \rightarrow L$. If $l \in T$ then we call $\phi(l)$ the label of $l$. 
+$\phi:T \rightarrow L$. We call $\universe{\setT}=T$ the set of nodes of $\setT$
+and $\Label(\setT,l) = \phi(l)$ the label of $l$ in $\setT$.
 \item
-We define $\setT \restr l =
-(T \restr l, \phi_l)$ and $\phi_l(m) = l \conc m$. We call $\setT \restr l$ the labeled subtree of $\setT$
-in the node $l$, immediate sub-tree if $l=(i)$. 
+We define $\setT \restr l = (T \restr l, \phi_l)$ and $\phi_l(m) = l \conc m$. 
+We call any $\setT \restr l$ a labeled subtree of $\setT$
+in the node $l$, an immediate sub-tree if $l=(i)$. 
 \end{enumerate}
 \end{definition}
 
-Remark that the labeling of a node $m \in T \restr l$ 
-is the same label of the corresponding node $l \conc m$ of $T$.
+Remark that the labeling of a node $m \in \universe{\setT \restr l}$ 
+is the same label of the corresponding node $l \conc m$ of $\universe{\setT}$.
  
 Let $n = 0, 1, 2$. Assume $\setT_1, \ldots,\setT_n$ are trees labeled on $L$ and $l \in L$.
 Then we define $$\setT = l \setT_1 \ldots \setT_n$$ as the unique tree labeled on $L$
-with the root labeled $l$ and $\setT \restr (i) = \setT_i$ for all $1 \le i \le n$.
+with the root labeled $l$, i.e.: $\Label(\setT,\nil)=l$, and with:
+$\setT \restr (i) = \setT_i$ for all $1 \le i \le n$.
 
 Now we define the types of $\LAMBDA$, then the terms of $\LAMBDA$.
 
@@ -244,10 +246,10 @@ Subterms are coded by the nodes of $t$.
 $\Reg$ is the set of terms $t \in \LAMBDA$ such that $\SubTerm(t)$ is finite.
 We call the terms of $\Reg$ the \emph{regular terms}.
 
-\item
-We write $\Tree(t)$ for the tree of all chains
-$(t_1, \ldots, t_n)$ with $t_1=t$ and weakly increasing by $\sqsubset_1$: 
- for all $(i+1) \le n$ we have $t_{i+1}=t_i$ or $t_{i+1} \sqsubset_1 t_i$.
+%\item
+%We write $\Tree(t)$ for the tree of all chains
+%$(t_1, \ldots, t_n)$ with $t_1=t$ and weakly increasing by $\sqsubset_1$: 
+% for all $(i+1) \le n$ we have $t_{i+1}=t_i$ or $t_{i+1} \sqsubset_1 t_i$.
 
 \item
 As usual, we abbreviate $\ap(t,u)$ with $t(u)$.
@@ -592,12 +594,18 @@ The subterms of $t$ are $\{t, u, 0\}$ and a proof $\Pi: \vdash t:A$ is
 	   {\infer[0]{\prove 0:\N}{}}
   }
 \]
-Formally, $\Pi=(T,\phi)$ is defined by $T=$ the same tree of $t$, 
-$\phi(l)=(\vdash A)$ if $t \restr l = t$, 
-$\phi(l) = (\vdash \N \rightarrow A)$ if $t \restr l = u$
-and $\phi(l)=(\vdash\N)$ if $t \restr l = 0$. 
+Formally, the typing proof $\Pi=(T,\phi):\vdash t:A$ 
+is defined by $\universe{\Pi}=\universe{t}$ and:
+\begin{enumerate}
+\item
+$\Label(\Pi,l)=(\vdash A)$ \ \ \ \ \ \ \ for all $l \in \universe{t}$ such that  $t \restr l = t$,
+\item
+$\Label(\Pi,l) = (\vdash \N \rightarrow A)$  for all $l \in \universe{t}$ such that $t \restr l = u$,
+\item
+ $\Label(\Pi,l)=(\vdash\N)$ \ \ \ \ \ \ \  for all $l \in \universe{t}$ such that $t \restr l = 0$. 
+\end{enumerate}
 %09:06 24/04/2024
-\\
+
 A term with at least two types has the leftmost branch infinite, as it is the case for $t$ above.
 We will prove that if \emph{all} subterms of a term have the leftmost branch finite, then the term 
 has at most one type. If the term is also regular then we can decide if the typing proof exists and 
@@ -1480,7 +1488,7 @@ elements of $\vec{A}$.
   vector of values $\vec{a'}$. 
   Then $t[\vec{u}]a_0:\vec{A'}\rightarrow\N$ is total 
   by the induction hypothesis on $\vec{A'}\rightarrow \N$.
-  By definition $t[\vec{u}]:A_0,\vec{A'}\rightarrow\N$ is closed total,
+  By definition $t[\vec{u}] : A_0,\vec{A'}\rightarrow\N$ is closed total,
   and so by definition $t[\vec{x}]$ is total, as we wished to show.
 \end{enumerate}
 
@@ -1491,55 +1499,58 @@ elements of $\vec{A}$.
 %17:32 24/04/2024
 
 Let $\Pi=(T,\phi)$ be a proof of $\Gamma\vdash t:A$ and $e$ be a node of $\Pi$, that is, a list  
-$e=(i_1, \ldots, i_n) \in t$.
-We write $\Pi(e)$ for the type assignment 
-$\Gamma_n\vdash t_n:A_n = \phi_n(e)$. We want to prove that all terms of $\GTC$ are total.
+$e=(e_1, \ldots, e_n) \in \universe{\Pi} = T$.
+We write $\Gamma_n\vdash t_n:A_n = \Label(\Pi,e)$ for the
+ label of the node $e$. We want to prove that all terms of $\GTC$ are total.
 
 \begin{theorem}
-  Assume $\Pi:\Gamma\vdash t:A$.
+  Assume $\Pi:\Gamma\vdash t:A$ (hence $t\in \WTyped$).
   If $t$ is \emph{not} total, then $t \not \in \GTC$, i.e.:
-  there is some infinite path in $\Pi$ with no infinite progressing trace. 
+  there is some infinite path $(e_1, e_2, \ldots)$ of $\Pi$ with no infinite progressing trace. 
 \end{theorem}
 
 %19:01 16/04/2024
-%18:96 30/04/2024
+%18:11 30/04/2024
 
 \begin{proof}
   Assume that $t$ is not total
   and $t: \vec{x}:\vec{D}\vdash\vec{A}\rightarrow\N$ 
-  has a proof $\Pi$ in order to show that $t \not \in \GTC$.
+  has a proof $\Pi=(T,\phi)$ in order to show that $t \not \in \GTC$.
   By Proposition \ref{prop:trace_assign}.\ref{prop:trace_assign2} it is enough to prove that
-  $\Pi$ has some infinite path $\pi$ and some trace-compatible assignment $\rho$ for $\pi$.
+  $\Pi$ has some infinite path $\pi=(e_1, e_2, \ldots)$ 
+  and some trace-compatible assignment $\rho$ for $\pi$.
   By \ref{lem:total_value3} of Lemma~\ref{lem:total_value},
   there exist closed values $\vec{a}:\vec{A}$ and $\vec{d}:\vec{D}$ such that
   $t[\vec{d}]\vec{a}$ is not total. 
-  By induction on $i$, we construct a term $e_i$ for each natural number $i$,
-  and a value assignment $\vec{v_i} = (\vec{d_i},\vec{a_i})$ for $e_i$, such that 
-  such that $\pi=(e_1, \ldots, e_n)$ is a chain of immediate subterms from $e_1  = t$
-  and $(\vec{v_1},\ldots,\vec{v_n})$ is a trace-compatible assignment for $\pi$.
-  We assume that:
+  By induction on $i \in \N$, we construct an index $e_i \in \{1,2\}$ for each natural number $i$,
+  and a value assignment $\vec{v_i} = (\vec{d_i},\vec{a_i})$ such that 
+  $t_i = t \restr (e_1, \ldots, e_{i-1})$ is a subterm of $t$
+  and $(\vec{v_1},\ldots,\vec{v_i})$ is a trace-compatible assignment for the node 
+  $l_i = (e_1, \ldots, e_{i-1})$.
+  We have to find some $e_{i} \in \{1,2\}$ such that:
   \begin{itemize}
   \item[(i)]
 %15:38 19/04/2024
-    $e_i$ is a node of $\Pi$, whose last term is 
-    $t_i: \vec{x_i}:\vec{D_i}\vdash\vec{A_i}\rightarrow\N$ is
-    at the node $e_i$ in $\Pi$, and $e_{i+1}$ is a child node of $e_i$ in $\Pi$; 
+   $t_{i} = t \restr l_{i}$ is a subterm of $t$,
+    $\Pi( ( l_{i} ) = \vec{x_{i}}:\vec{D_{i}}\vdash t_{i} : \vec{A_{i}}\rightarrow\N$, 
+    and $e_{i}$ is any child node of $(e_1, \ldots, e_{i})$ in $\universe{\Pi}$; 
   \item[(ii)]
-    $t_i$ is not total;
+    $t_{i}$ is not total;
   \item[(iii)]
-    $\vec{d_i}:\vec{D_i}$ and $\vec{a_i}:\vec{A_i}$ are closed values
-    such that $t_i[\vec{d_i}]\vec{a_i}$ is not total;
+    $\vec{d_{i}}:\vec{D_{i}}$ and $\vec{a_{i}}:\vec{A_{i}}$ are closed values
+    such that $t_{i}[\vec{d_{i}}]\vec{a_{i}}$ is not total;
   \item[(iv)]
-    there is a trace-compatible assignment from
-    ($\vec{d_i};\vec{a_i}$) to ($\vec{d_{i+1}};\vec{a_{i+1}}$), for any $i\ge 0$, in $\Pi$.
-    Moreover, if $i$ is a progress point, namely $t_i$ is of the form $\cond(f,g)$ and $t_{i+1}$ is $g$,
-    then $\vec{a_i} = \Succ(m')\vec{a'}$, $\vec{d_{i+1}} = \vec{d_i}m'$, and
-    a trace passes from $\Succ(m')$ to $m'$. 
+    the value assignment 
+    $\vec{d_1};\vec{a_1}$, \ldots, $\vec{d_{i}};\vec{a_{i}}$) is trace compatible.
+    That is, if $i-1$ is a progress point, namely if $t_{i-1}$ is of the form $\cond(f,g)$ and $e_{i}=2$ 
+    (hence $t_{i}$ is $g$),
+    then $\vec{a_i} = \Succ(m')\vec{a'}$, $\vec{d_{i}} = \vec{d_i}m'$.
     %\Daisuke{mynote:write this more clearly}
   \end{itemize}
   
-  We first define $(e_1,\vec{d_1},\vec{a_1})$ for the root node $t$ of $\Pi$.
-  We choose $e_1 = t$ and $(\vec{d},\vec{a})$ values such that $t[\vec{d}](\vec{a})$ is not total.
+  We first define $(l_1,\vec{d_1},\vec{a_1})$ for the root node $t$ of $\Pi$.
+  In this case $l_1 = \nil$ 
+   and $(\vec{d},\vec{a})$ are values such that $t[\vec{d}](\vec{a})$ is not total.
   Points (i), (ii), (iii), (iv) are immediate.
 
   Next, assume that $(e_i,\vec{d_i},\vec{a_i})$ is already constructed.
@@ -1553,148 +1564,163 @@ $\Gamma_n\vdash t_n:A_n = \phi_n(e)$. We want to prove that all terms of $\GTC$ 
 \begin{enumerate}
 \item
   The case of $\weak$, namely
-  $\Pi(e_i) = t[y_{f(1)}/x_1,\ldots,y_{f(n)}/x_n]:\Delta\vdash \vec{A_i}\rightarrow\N$
+  $\Label(\Pi,l_{i+1}) = t[y_{\theta (1)}/x_1,\ldots,y_{\theta (n)}/x_n]:\Delta\vdash \vec{A_i}\rightarrow\N$
   is obtained from $\Gamma\vdash t:A$, where
   $\Gamma = x_1:C_1,\ldots,x_n:C_n$, $\Delta = y_1:B_1,\ldots,y_m:B_m$, 
-  $f:\{1,\ldots,n\}\to\{1,\ldots,m\}$ is an injection, 
-  and $x_i^{C_i}=y_{f(i)}^{B_{f(i)}}$ for all $1\le i\le n$.
+  $\theta:\{1,\ldots,n\}\to\{1,\ldots,m\}$ is an injection, 
+  and $x_i^{C_i}=y_{\theta(i)}^{B_{\theta(i)}}$ for all $1\le i\le n$.
   By the induction hypothesis and $(b)$, the conclusion
-  $t[y_{f(1)}/x_1,\ldots,y_{f(n)}/x_n][d_{i,f(1)}/y_{f(1)},\ldots,d_{i,f(n)}/y_{f(n)}]\vec{a_i}:\N$ 
-  of $\weak$ is not total, where $\vec{d_i} = d_{i,1}\ldots d_{i,m}$.
-  Then define $e_{i+1}$ as the unique parent node of $e_i$, and we
-  also define $\vec{d_{i+1}}$ and $\vec{a_{i+1}}$ by $d_{i,f(1)}\ldots d_{i,f(n)}$
+  $t[y_{\theta (1)}/x_1,\ldots,y_{\theta (n)}/x_n][d_{i,\theta (1)}/y_{\theta (1)},\ldots,d_{i,\theta (n)}/y_{\theta (n)}]\vec{a_i}:\N$ 
+  of $\weak$ is not total, where we have $\vec{d_i} = d_{i,1}\ldots d_{i,m}$.
+  Then we define $e_{i+1}$ as the unique parent node of $e_i$ in the rule, and we
+  also we define $\vec{d_{i+1}}$ and $\vec{a_{i+1}}$ by $d_{i,\theta (1)}\ldots d_{i,\theta (n)}$
   and $\vec{a_i}$, respectively. 
   We obtain (i), (ii), and (iii) for $i+1$, as expected.
-  We also have (iv) since the connection, determined by $f$, from
+  We also have (iv) since the connection, determined by $\theta $, from
   $(d_{i,1}\ldots d_{i,m};\vec{a_i})$ to 
-  $(\vec{d_{i+1}};\vec{a_{i+1}}) = (d_{i,f(1)},\ldots d_{i,f(n)};\vec{a_i})$
+  $(\vec{d_{i+1}};\vec{a_{i+1}}) = (d_{i,\theta (1)},\ldots d_{i,\theta (n)};\vec{a_i})$
   is trace compatible. 
 
 \item
-  The case of $\var$-rule, namely $\Pi(e_i) = \Gamma\vdash x_j:C_j$, 
+  The case of $\var$-rule, namely $\Label(\Pi,l_{i+1}) = \Gamma\vdash x_j:C_j$ for some $j$, 
 cannot be, because $t_i = [x_j/d_j] = d_j$ is closed total by assumption on $\vec{d}$.
 
 \item
-  The case of $0$-rule, namely $\Pi(e_i) = \Gamma\vdash 0:\N$, cannot be, because $t_i = 0$ is total
-because it is a numeral.
+  The case of $0$-rule, namely $\Label(\Pi,l_{i+1}) = \Gamma\vdash 0:\N$, 
+cannot be. Indeed, $t_i = 0$ is total because $0$ is a numeral.
 
 \item  
-  The case of $\Succ$-rule, namely $\Pi(e_i) = \Gamma\vdash \Succ(t_{i+1}): \N$ is obtained from
-  $\Gamma\vdash t_{i+1}: \N$. $\vec{a_i}$ is empty, and
-  by the induction hypothesis $\Succ(t_{i+1}[\vec{d_i}]):\N$ is not closed total.
-  Then, by the definition of closed total, $t_{i+1}[\vec{d_i}]$ is not closed total. 
-  Define $e_{i+1}$ as the unique parent node of $e_i$, and
-  also define $\vec{d_{i+1}}$ and $\vec{a_{i+1}}$ by $d_i$ and the empty list, respectively. 
+  The case of $\Succ$-rule, namely $\Label(\Pi,l_{i+1}) = 
+  \Gamma\vdash t_i: \N = \Gamma\vdash \Succ(u): \N$ for some $u$ 
+  is obtained from our assumptions on
+  $\Gamma\vdash \Succ(u): \N$. In this case $\vec{a_i}$ is empty, $t_{i+1}=u$, and
+  by the induction hypothesis $\Succ(u)[\vec{d_i}]):\N$ is not closed total.
+  Then, by the definition of closed total, $u[\vec{d_i}] =t_{i+1}[\vec{d_i}] $ is not closed total. 
+  We define $e_{i+1}=1$, 
+  the index of the unique parent node of $l_{i+1}=(e_1, \ldots, e_n)$ in the $\Succ$-rule, and
+  we also define $\vec{d_{i+1}}$ and $\vec{a_{i+1}}$ by $\vec{d_i}$ and the empty list, respectively. 
   We obtain (i), (ii), (iii), and (iv) for $i+1$, as expected.
 
 \item
-  The case of $\ap$-rule, namely 
-  $\Pi(e_i) = \Gamma\vdash t[\vec{x}](u[\vec{x}]): \vec{A}\rightarrow\N$ is obtained from
-  $\Gamma\vdash t[\vec{x}]: B \rightarrow \vec{A}\rightarrow\N$ 
-  and $\Gamma\vdash u[\vec{x}]: B$.
-  By the induction hypothesis, $t[\vec{d_i}](u[\vec{d_i}])\vec{a_i}:\N$ is not total.
+  The case of the $\apnotvar$-rule, namely 
+  $\Label(\Pi,l_{i+1}) = \Gamma\vdash f[\vec{x}](u[\vec{x}]): \vec{A}\rightarrow\N$ 
+  for some $f$, $u$
+  is obtained from $\Gamma\vdash f[\vec{x}]: B \rightarrow \vec{A}\rightarrow\N$ 
+  and $\Gamma\vdash u[\vec{x}]: B$. $u$ is not variable.
+  By the induction hypothesis, $f[\vec{d_i}](u[\vec{d_i}])\vec{a_i}:\N$ is not total.
   We argue by case on the statement: \emph{$u[\vec{d_i}]:B$ is closed total}.
 
 \begin{enumerate}
 \item
   We first consider the subcase that \emph{$u[\vec{d_i}]:B$ is closed total}.
   We define $a':B$ by $a' = n\in\Num$ such that $u[\vec{d_i}] \safeReduces^* n$ if $B=\N$,
-  by $a' = u[\vec{d_i}]$ otherwise. By lemma \ref{}.\ref{}, $a'$ is a value.
-  Then define $e_{i+1}=t[\vec{x}]$,
+  by $a' = u[\vec{d_i}]$ otherwise. By lemma \ref{lem:total_value}.\ref{lem:total_value1}, $a'$ is a value.
+  Then define $e_{i+1}=1$, the index of $f[\vec{x}]$,
   and define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = a',\vec{a_i}$. 
-  Using Lemma~\ref{lem:total_value}, we obtain (i), (ii), (iii) for $i+1$, as expected. 
+  Using Lemma \ref{lem:total_value}.\ref{lem:total_value1}, \ref{lem:total_value}.\ref{lem:total_value2}
+  we obtain (i), (ii), (iii) for $i+1$, as expected. 
   We also have (iv) since the connection from 
   $(\vec{d_i};\vec{a_i})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (\vec{d_i};a',\vec{a_i})$ is
-  trace-compatible: all connected $\N$-argument of $e_{i}$ and $e_{i+1}$ are the same,
-  because the only fresh argument of $e_{i+1}$ is $a'$ and no argument of $e_i$ is connected to it.
+  trace-compatible: all connected 
+  $\N$-argument of $t_{i}=f(u)[\vec{x}]$ and $t_{i+1}[\vec{x}] = f[\vec{x}]$ are the same,
+  because the only fresh argument of $f[\vec{x}]$ 
+  is $a'$ and no argument of $f(u)[\vec{x}]$ is connected to it.
 \item
   Next we consider the subcase that \emph{$u[\vec{d_i}]:B$ is not closed total}.
-  By lemma \ref{}.\ref{}
+  By lemma \ref{lem:total_value}.\ref{lem:total_value3}
   there is a sequence of values $\vec{a'}$ such that $u[\vec{d_i}]\vec{a'}:\N$ is not total.
-  Define $e_{i+1}=u[\vec{x}]$,
+  Define $e_{i+1}=2$, the index of $u[\vec{x}]$,
   and define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = \vec{a'}$. 
   We obtain (i), (ii), (iii) for $i+1$, as expected.
   We also have (iv) since the connection from 
   $(\vec{d_i};\vec{a_i})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (\vec{d_i};\vec{a'})$ is
-  trace compatible: all connected $\N$-argument of $e_{i}$ and $e_{i+1}$ are 
+  trace compatible: all connected $\N$-argument of $t_{i}=f(u)[\vec{x}]$ and $t_{i+1}=u[\vec{x}]$ are 
   in $\vec{d_i}$ and therefore are the same.
  \end{enumerate}
 
 \item
-  The case of $\eta$-rule, namely 
-  $\Pi(e_i) = f[\vec{x}](x): \Gamma,x^\N\vdash \vec{A}\rightarrow\N$ is obtained from
-  $f[\vec{x}]:\Gamma\vdash N\rightarrow \vec{A} \rightarrow \N$, where
-  $(x^\N:\N)\not\in\Gamma$.
+  The case of $\apvar$-rule, namely 
+  $\Label(\Pi,l_{i+1}) 
+    = 
+   \Gamma,x^\N\vdash f[\vec{x}](x):  \vec{A}\rightarrow\N$ is obtained from
+  $f[\vec{x}]:\Gamma\vdash N\rightarrow \vec{A} \rightarrow \N$. $x$ is a variable.
   By the induction hypothesis, $f[\vec{d'}]d\vec{a_i}:\N$ is not total,
-  where $\vec{d_i} = \vec{d'},d$ and $d$ is the value of the argument type of $x^\N$.
-  Define $e_{i+1}$ as the unique parent node of $e_i$, and
+  where $\vec{d_i} = \vec{d'},d$ and $d$ is the value of the variable $x^\N$.
+  Define $e_{i+1}=1$ as the index of unique parent node of $l_{i+1}=(e_1,\ldots,e_i)$, and
   also define $\vec{d_{i+1}}$ by $\vec{d'}$ and define $\vec{a_{i+1}}$ by $d,\vec{a_i}$. 
   We obtain (i), (ii), and (iii) for $i+1$, as expected.
   We also have (iv) since the connection from
   $(\vec{d_i};\vec{a_i}) = (\vec{d'},d;\vec{a_i})$ to
   $(d_{i+1};\vec{a_{i+1}}) = (\vec{d'};d\vec{a_i})$
-  is trace compatible: all connected argument in $\vec{d_{i}},\vec{a_{i}}$ and 
-  $\vec{d_{i+1}},\vec{a_{i+1}}$ are the same. The only difference between the two assignments
-  is that the value $d$ of the last argument type $\N$ is moved to the value $d$ 
-  of the first unnamed argument of $f$. 
+  is trace compatible: all connected $\N$-arguments in $\vec{d_{i}},\vec{a_{i}}$ and 
+  $\vec{d_{i+1}},\vec{a_{i+1}}$ are the same.  
+ The only difference between the two assignments
+  is that the value $d$ of one variable $x$ of type $\N$ 
+ in $t_i[\vec{x}]=f[\vec{x}](x)$ is duplicated to the value $d$ 
+  of the first unnamed argument of $ f[\vec{x}]$. 
 
 \item
   The case of $\lambda$-rule, namely
-  $\Pi(e_i) = \lambda x^A.(t_{i+1}[\vec{x},x]):
-    \Gamma\vdash A, \vec{A} \rightarrow \N$ is obtained from
-  $t_{i+1}[\vec{x},x^A]:\Gamma,x^A\vdash \vec{A}\rightarrow\N$.
-  By the induction hypothesis, $(\lambda x.(t_{i+1}[\vec{d_i},x]))a\vec{a'}:\N$ is not total,
+  $\Label(\Pi,l_{i+1}) = 
+    \Gamma\vdash \lambda x^A.u[\vec{x},x] : A, \vec{A} \rightarrow \N$ is obtained from
+  $t_{i+1}[\vec{x},x^A]:\Gamma,x^A\vdash \vec{A}\rightarrow\N$, 
+  where $t_{i+1}[\vec{x},x]=u[\vec{x},x]$.
+  By the induction hypothesis, $(\lambda x.(u[\vec{d_i},x]))a\vec{a'}:\N$ is not total,
   where $\vec{a_i} = a\vec{a'}$.
   Then, by Lemma~\ref{lem:total_value}, $t_{i+1}[\vec{d_i},a]\vec{a'}$ is not total. 
-  Define $e_{i+1}$ as the unique parent node of $e_i$, and
-  also define $\vec{d_{i+1}} = \vec{d_i},a$ and $\vec{a_{i+1}} = \vec{a'}$. 
+  We define $e_{i+1}=1$ as the index of unique parent node of $l_{i+1}=(e_1,\ldots,e_i)$,
+  and we also define $\vec{d_{i+1}} = \vec{d_i},a$ and $\vec{a_{i+1}} = \vec{a'}$. 
   We obtain (i), (ii), (iii) for $i+1$, as expected.
   We also have (iv) since the connection from 
   $(\vec{d_i};\vec{a_i}) = (\vec{d_i};a\vec{a'})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (\vec{d_i}a;
     \vec{a'})$ is trace-compatible: all connected argument in $\vec{d_{i}},\vec{a_{i}}$ and 
   $\vec{d_{i+1}},\vec{a_{i+1}}$ are the same. The only difference between the two assignments
-  is that the value $d$ of the first unnamed argument of $t_i$ is moved to the value $d$
-  of the last argument type $\N$.
-  This is the opposite of the movement we have in the $\apvar$.
+  is that the value $d$ of the first unnamed argument of $t_i[\vec{x}]$ is moved to the value $d$
+  of the last variable of type $\N$ of $t_{i+1}[\vec{x},x]=u[\vec{x},x]$.
+  This is a kind of opposite of the movement we have in the $\apvar$.
 
 \item  
   The case of $\cond$-rule, namely
-  $\Pi(e_i) = \cond(f[\vec{x}],g[\vec{x},x]):
-    \Gamma\vdash C\rightarrow\vec{A}\rightarrow\N$
+  $\Label(\Pi,l_{i+1}) = \cond(f[\vec{x}],g[\vec{x},x]):
+    \Gamma\vdash C\rightarrow \N,\vec{A}\rightarrow\N$
   is obtained from 
   $f[\vec{x}]:\Gamma\vdash \vec{A}\rightarrow\N$
   and
-  $g[\vec{x},x]:\Gamma,x^\N\vdash \vec{A}\rightarrow\N$. 
+  $g[\vec{x}]:\Gamma\vdash \N,\vec{A}\rightarrow\N$. 
   By the induction hypothesis, $\cond(f[\vec{d_i}],g[\vec{d_i},x])m\vec{a'}:\N$ is not total,
-  where $\vec{a_i} = m\vec{a'}$ and $m \in \Nat$. We argue by cases on $m$.
+  where $\vec{a_i} = m\vec{a'}$ and $m \in \Num$. We argue by cases on $m$.
 \begin{enumerate}
 \item
   We first consider the \emph{subcase $m=0$}.
-  Define $e_{i+1}$ by the parent node whose term is $f[\vec{x}]$,
+  Define $e_{i+1}=1$ the index of parent node whose term is $f[\vec{x}]$,
   and define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = \vec{a'}$. 
   We obtain (i), (ii), (iii) for $i+1$, as expected. 
   We also have (iv) since the connection from 
   $(\vec{d_i};\vec{a_i})
  =(\vec{d_i};0\vec{a'})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (\vec{d_i};\vec{a'})$
-  is trace compatible: each argument of $e_i$ is connected to some equal argument of $e_{i+1}$,
-  the first argument of $e_i$ disappears but it is connected to no argument in $f$.
+  is trace compatible: 
+  each argument of $t_i$ is connected to some equal argument of $t_{i+1}[\vec{x}]=f[\vec{x}]$,
+  the first argument of $t_i[\vec{x}]$ disappears but it is connected to no $\N$-argument in $f[\vec{x}]$.
 \item
   Next we consider the \emph{subcase $m=\Succ(m')$}. 
-  Define $e_{i+1}$ by the parent node whose term is $g[\vec{x},x]$,
+  Define $e_{i+1}=2$ the index of the parent node whose term is $g[\vec{x}]$,
   and define $\vec{d_{i+1}} = \vec{d_i},m'$ and $\vec{a_{i+1}} = \vec{a'}$. 
   We obtain (i), (ii), (iii) for $i+1$, as expected.
   We also have (iv) since the connection from 
   $(\vec{d_i};\vec{a_i})
   =(\vec{d_i};\Succ(m'),\vec{a'})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (\vec{d_i},m';\vec{a'})$
-  is trace compatible: each argument of $e_i$ is connected to some equal argument of $e_{i+1}$,
-  but for the argument $m$ of $e_i$ which is connected to $m'$ in the last argument type $\N$.
+  is trace compatible: 
+  each argument of $t_i[\vec{x}]$ is connected to some equal argument of $t_{i+1}[\vec{x}]=g[\vec{x}]$,
+  but for the first unnamend argument of $t_i[\vec{x}]$ 
+   which is connected the first unnamend argument of $g[\vec{x}]$.
   This is fine because in the second premise of a $\cond$ 
-  the trace progress. This requires that \emph{the numeral $m$ decreases by $1$}, as indeed it is the case.
+  the trace progress. This requires that \emph{the value $m$ of the argument decreases by $1$}, 
+  as indeed it is the case: the new value is $m'$.
 \end{enumerate}
 
 \end{enumerate}
 
-  Hence, by the above construction, we have an infinite path $\pi = (e_1,e_2,\ldots)$ in $\Pi$
+  By the above construction, we have an infinite path $\pi = (e_1,e_2,\ldots)$ in $\universe{\Pi}$
  and a trace-compatible assignment, as we wished to show.
 
 %  Since $\Pi$ satisfies the global trace condition, $\vec{e}$ contains a progressing trace
@@ -1709,7 +1735,7 @@ because it is a numeral.
 \end{proof}
 
 From this theorem we derive the weak normalization result: 
-every closed term of type $\N$ reduces to some numeral for at least
+every closed term of type $\N$ is closed total, therefore by definition it reduces to some numeral for at least
 one reduction path. 
 
 \begin{corollary}
