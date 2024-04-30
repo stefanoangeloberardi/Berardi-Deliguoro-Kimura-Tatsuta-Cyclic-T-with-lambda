@@ -1206,8 +1206,8 @@ then $\tau$ progresses once. We conclude that $\tau$ infinitely progresses.
 %14:27 24/04/2024
 
 The proof above includes a type inference from the term $\interval$ to itself.
-We draw the type inference in the picture below. 
-We include a back edge from the 
+We draw the type inference in the figure \ref{figure-term-interval}. 
+In this figure, we include a back edge from the 
 $\bfColor{oldgold}{\dagger}$ on the top to the $\bfColor{oldgold}{\dagger}$ in the bottom,
 and we marked $\bfColor{oldgold}{ \spadesuit}$ the only progress point, which is cyclically repeated
 in $\tau$.
@@ -1216,51 +1216,61 @@ $\Sigma = (\nil:\alpha, \cons:\N,\alpha \rightarrow \N)$
 and
 $\Gamma = \Sigma,(f:\N \rightarrow \N, a:\N)$.
 
-\[
-%\infer[\lambda]
-% {\Sigma\vdash \Interval:(\N \rightarrow \N),\N,\N,\bfColor{oldgold}{\N}\rightarrow\alpha}
-% {\infer[\lambda]
-%   {\Sigma,f:\N\rightarrow\N \vdash \lambda a.\interval:\N,\N,\bfColor{oldgold}{\N}\rightarrow\alpha}
-   {\infer[\lambda]  
-     {\Gamma \vdash \interval:\N,\bfColor{oldgold}{\N}\rightarrow\alpha
-          \ \ \ (\bfColor{oldgold}{ \spadesuit}, \bfColor{oldgold}{\dagger})}
-       {\infer[\cond]{\Gamma, x:\N 
-	\vdash 
-	\cond (\base,  \inductive )
-	:\bfColor{oldgold}{\N}\rightarrow\alpha}
-       {\infer[\apvar]{\Gamma, x:\N 
-	           \vdash 
-	           \base:\alpha}
-             {\infer[]{\Gamma, x:\N 
-	           \vdash 
-	           \cons(\iter(x)):\alpha \rightarrow\N}{\ldots}}
-            {\ \ \ \ \ \ }  &
-          \infer[\lambda]{\Gamma, x:\N 
-	           \vdash 
-	           \lambda y.\inductive : \bfColor{oldgold}{\N}\rightarrow\alpha}
-             {\infer[\apnotvar]{\Gamma, x:\N, y:\bfColor{oldgold}{\N} \vdash
-               \inductive : \alpha}
-            {\infer[]
-                     {\Gamma, x:\N, y:\N 
-                          \vdash \cons(\iter(x)):\alpha\rightarrow\N}{\ldots}
-               {\ \ \ \ \ \ }
-                     {\infer[\apvar]{\Gamma, x:\N, y:\bfColor{oldgold}{\N} 
-                          \vdash \interval(\Succ(x))(y):\alpha}
-                         {\infer[\apnotvar]{\Gamma, x:\N, y:\N 
-                          \vdash \interval(\Succ(x)):\bfColor{oldgold}{\N} \rightarrow\alpha}
-                              {\infer[\weak]{\Gamma, x:\N, y:\N 
-                          \vdash \interval:\N,\bfColor{oldgold}{\N} \rightarrow\alpha}
-                                {\infer[]{\Gamma 
-                          \vdash \interval:\N,\bfColor{oldgold}{\N} \rightarrow\alpha
-                           \ \ \ (\bfColor{oldgold}{\dagger})}
-              {\ldots}}}}}
-            }
-          }
-       }
-      }  
-    }
-%}
-\]
+%PROOF SNAPSHOT
+\begin{figure}
+\label{figure-term-interval}
+\includegraphics[scale=0.6]{type-inference-term-interval.PNG}
+\begin{center}\mbox{Figure \ref{figure-term-interval}}\end{center}
+\end{figure}
+%% LATEX SOURCE CODE THEN A SNAPSHOT 
+%% THEN THE SNAPSHOT HAS BEEN MODIFIED IN WORD 
+%% THEN A LAST SNAPSHOT
+%  
+%\[
+%%\infer[\lambda]
+%% {\Sigma\vdash \Interval:(\N \rightarrow \N),\N,\N,\bfColor{oldgold}{\N}\rightarrow\alpha}
+%% {\infer[\lambda]
+%%   {\Sigma,f:\N\rightarrow\N \vdash \lambda a.\interval:\N,\N,\bfColor{oldgold}{\N}\rightarrow\alpha}
+%   {\infer[\lambda]  
+%     {\Gamma \vdash \interval:\N,\bfColor{oldgold}{\N}\rightarrow\alpha
+%          \ \ \ (\bfColor{oldgold}{ \spadesuit}, \bfColor{oldgold}{\dagger})}
+%       {\infer[\cond]{\Gamma, x:\N 
+%	\vdash 
+%	\cond (\base,  \inductive )
+%	:\bfColor{oldgold}{\N}\rightarrow\alpha}
+%       {\infer[\apvar]{\Gamma, x:\N 
+%	           \vdash 
+%	           \base:\alpha}
+%             {\infer[]{\Gamma, x:\N 
+%	           \vdash 
+%	           \cons(\iter(x)):\alpha \rightarrow\N}{\ldots}}
+%            {\ \ \ \ \ \ }  &
+%          \infer[\lambda]{\Gamma, x:\N 
+%	           \vdash 
+%	           \lambda y.\inductive : \bfColor{oldgold}{\N}\rightarrow\alpha}
+%             {\infer[\apnotvar]{\Gamma, x:\N, y:\bfColor{oldgold}{\N} \vdash
+%               \inductive : \alpha}
+%            {\infer[]
+%                     {\Gamma, x:\N, y:\N 
+%                          \vdash \cons(\iter(x)):\alpha\rightarrow\N}{\ldots}
+%               {\ \ \ \ \ \ }
+%                     {\infer[\apvar]{\Gamma, x:\N, y:\bfColor{oldgold}{\N} 
+%                          \vdash \interval(\Succ(x))(y):\alpha}
+%                         {\infer[\apnotvar]{\Gamma, x:\N, y:\N 
+%                          \vdash \interval(\Succ(x)):\bfColor{oldgold}{\N} \rightarrow\alpha}
+%                              {\infer[\weak]{\Gamma, x:\N, y:\N 
+%                          \vdash \interval:\N,\bfColor{oldgold}{\N} \rightarrow\alpha}
+%                                {\infer[]{\Gamma 
+%                          \vdash \interval:\N,\bfColor{oldgold}{\N} \rightarrow\alpha
+%                           \ \ \ (\bfColor{oldgold}{\dagger})}
+%              {\ldots}}}}}
+%            }
+%          }
+%       }
+%      }  
+%    }
+%%}
+%\]
 
 More comments about the term $\Interval$.
 We have infinitely many nested $\beta$-reduction $(\lambda x. \ldots)(\Succ (x))$.
@@ -1315,15 +1325,15 @@ We define closed total terms as in Tait's normalization proof, and a subset of t
 The only different between values and closed total terms 
 is that if a value has type $\N$ then it is a numeral.
 
-Here is an informal definition. Values of type $\N$ are numerals. 
+Here is an informal definition. Values of type $\N$ are exactly the numerals. 
 Total terms $t$ of type $\N$ are
 the closed terms of type $\N$ evaluating in at least one reduction path to a numeral. 
-Total terms $t$ of type $\N$ include values of type $\N$. 
+Hence total terms $t$ of type $\N$ include values of type $\N$. 
 Closed total terms and values of type $t:\alpha$ (with $\alpha$ type variable) coincide, 
 both are all closed terms.
 Closed total terms and values of type $t:A \rightarrow B$ coincide, 
-both are the terms mapping values to total terms. 
-An open term is total if all substitutions of free variables with values produce a closed \emph{total} term.
+both are all the terms mapping values to total terms. 
+An open term is total if all substitutions of free variables with values produce a \emph{closed total} term.
 
 Below is the formal definition of values, closed total terms and total terms.
 
@@ -1356,17 +1366,17 @@ in a path of a proof in a way compatible with traces.
 \begin{definition}[Trace-compatible Assignment]
 Assume $\pi = (t_1, \ldots, t_n) \in \Tree(t)$ is any chain of immediate subterms from $t_1=t$,
 and $\vec{v} = (\vec{v_1}, \ldots, \vec{v_n})$ 
- is any vector of value assigments, one for each $t_i$, 
-$\vec{v}$ is \emph{trace-compatible}  if it satisfies the following condition. 
+ is any vector of value assigments, one for each $t_i$. 
+$\vec{v}$ is \emph{trace-compatible}  if and only it satisfies the following condition:
 
-  For all $j$  index of an argument of $t_i$ assigned to $\Succ^{a}(0)$, 
-  all $k$ index of an argument of $t_{i+1}$ assigned to $\Succ^{b}(0)$, 
+  for all $j$  index of an $\N$-argument of $t_i$ assigned to $\Succ^{a}(0)$, 
+  all $k$ index of an $\N$-argument of $t_{i+1}$ assigned to $\Succ^{b}(0)$, 
   if $j$ is connected to $k$ then:
  \begin{enumerate}
  \item
- if $j$ progresses to $k$ we have $a=b+1$
+ if $j$ progresses to $k$ then $a=b+1$
  \item
- if $j$ does not progress to $k$ we have $a=b$.
+ if $j$ does not progress to $k$ then $a=b$.
  \end{enumerate}
 
 \end{definition}
@@ -1376,11 +1386,11 @@ If an infinite path has a trace-compatible assignment, then all traces of the pa
 \begin{proposition}[Trace assigment]
 \label{prop:trace_assign}
 Assume $\Pi:\Gamma \vdash t:A$ and $\pi$ is an infinite path of $\Pi$ and
-$\rho$ is a value assignment to $\pi$.
+$\rho$ is a value assignment to $\pi$. Assume $n \in \Nat$.
 \begin{enumerate}
 \item
 \label{prop:trace_assign1}
-If an argument $j$ of some $t_i \in \pi$ has type $\N$ and value $\Succ^n(0)$, then a trace
+If an $\N$ argument $j$ of some $t_i \in \pi$ has value $\Succ^n(0)$ in $\rho$, then a trace
 from $j$ progresses at most $n$ times.
 \item
 \label{prop:trace_assign2}
@@ -1412,7 +1422,7 @@ Closed total terms are closed by safe reductions and by application.
     Let $t:A$ be a closed term and $t \safeReduces u$.
     If $u$ is total, then so is $t$.
   \item\label{lem:total_value2}
-    Let $f:A \rightarrow B$, $a:A$ be closed \emph{total} terms.
+    Let $f:A \rightarrow B$ and $a:A$ be closed \emph{total} terms.
     Then so is $f(a)$.
   \item\label{lem:total_value3}
     Let $t[\vec{x}]:\vec{A}\rightarrow\N$ be a term,
@@ -1435,7 +1445,7 @@ By the subject reduction property, $u$ has type $A$.
   Hence $t:\N$ is total.
 \item
   We first show the second \emph{base case}, namely when $A =\alpha$.
-  Both $t$ and $u$ are closed terms of type $\alpha$, therefore are closed total terms.
+  Both $t$ and $u$ are closed terms of type $\alpha$, therefore both are closed total terms.
 \item
   We show the \emph{induction case}, namely when $A = (A_1\rightarrow A_2)$.
   Take arbitrary closed value $a:A_1$. Then we have $t(a) \safeReduces u(a)$ and 
@@ -1471,7 +1481,7 @@ elements of $\vec{A}$.
   Then $t[\vec{u}]a_0:\vec{A'}\rightarrow\N$ is total 
   by the induction hypothesis on $\vec{A'}\rightarrow \N$.
   By definition $t[\vec{u}]:A_0,\vec{A'}\rightarrow\N$ is closed total,
-  and so by definition $t[\vec{x}]$ is total, as we expected.
+  and so by definition $t[\vec{x}]$ is total, as we wished to show.
 \end{enumerate}
 
 \end{enumerate}
@@ -1480,11 +1490,10 @@ elements of $\vec{A}$.
 %10:28 19/04/2024
 %17:32 24/04/2024
 
-Let $\Pi$ be a proof of $\Gamma\vdash t:A$ and $e$ be a node of $\Pi$, that is, a chain  
-$(t_1, \ldots, t_n) \in \Tree(t)$ of immediate
-subterms of $t$ with $t_1 = t$.
-We write $\Pi(e)$ for $\Gamma_n\vdash t_n:A_n$ with $\Gamma_n$ inherited contex of 
-$t_n$ and $A_n$ the type assigned by $\Pi$ to $t_n$.
+Let $\Pi=(T,\phi)$ be a proof of $\Gamma\vdash t:A$ and $e$ be a node of $\Pi$, that is, a list  
+$e=(i_1, \ldots, i_n) \in t$.
+We write $\Pi(e)$ for the type assignment 
+$\Gamma_n\vdash t_n:A_n = \phi_n(e)$. We want to prove that all terms of $\GTC$ are total.
 
 \begin{theorem}
   Assume $\Pi:\Gamma\vdash t:A$.
@@ -1493,6 +1502,7 @@ $t_n$ and $A_n$ the type assigned by $\Pi$ to $t_n$.
 \end{theorem}
 
 %19:01 16/04/2024
+%18:96 30/04/2024
 
 \begin{proof}
   Assume that $t$ is not total
