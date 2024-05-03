@@ -749,7 +749,7 @@ of $t$ is any $j \in \{1, \ldots, n+m\}$ such that $C_j = \N$.
 \end{enumerate}
 \end{definition}
 
-We now define the atom connection between $\N$-argument of subterms of $t$
+We now define the connection between $\N$-argument of subterms of $t$
 in a proof $\Pi: t:\Gamma \vdash A$ of  $\LAMBDA$. 
 The definition of  atom connection for a syntax including the binder $\lambda$ 
 is the main contribution of this paper. 
@@ -819,7 +819,7 @@ is in connection the type of the free variable $x$ in the second premise (the pr
 but it is in connection with no argument in the first premise (the premise with $f$).
 
 
-\subsection{A formal definition of atom connection}
+\subsection{A formal definition of connection}
 The definition of connection requires to define an injection 
 $$
 \ins:\N,\N \rightarrow\N
@@ -828,7 +828,7 @@ We set $\ins(p,x)=x+1$ if $x \ge p+1$, and $\ins(p,x)=x$ if $x\le p$.
 The role of $\ins$ is inserting one fresh index $p+1$ for a new argument type higher in the proof
 connected to no argument in the conclusion.
 
-\begin{definition}[Atom connection in a proof of  $\LAMBDA$]
+\begin{definition}[Connection in a proof of  $\LAMBDA$]
 Assume $\vec{A} = A_1, \ldots, A_n$, $\vec{B}=B_1, \ldots, B_m$, $\Gamma = \vec{x}:\vec{A}$,
 and $\Gamma \vdash t:\vec{B} \rightarrow \N$.
 
@@ -842,11 +842,14 @@ then $k = \phi(k')$.
 if $t=f(a)$ is obtained by a rule $\apnotvar$ (i.e., $a$ is not a variable) and $t'=f$ 
 then $k' = \ins(n,k)$. If $t'=a$ then $k'=k$ and $k' \le n$.
 \item
+if $t=f(a)$ is obtained by a rule $\apvar$ (i.e., $a$ is not a variable) and $t'=f$ 
+then $k' = \ins(n,k)$ and $k' > n$ or $k'=k$ and $k' \le n$.
+\item
 if $t=\cond(f,g)$ and $t'=f$ 
 then $k' = \ins(n,k)$. If $t'=g$ then $k'=k$.
 \end{enumerate}
 We require $k = k'$ in all other cases, 
-which are: $\Succ $, $\lambda$, $\apvar$. 
+which are: $\Succ $, $\lambda$. 
 \\
 No connection is defined for the rules $\var$, $0$.
 \end{definition}
