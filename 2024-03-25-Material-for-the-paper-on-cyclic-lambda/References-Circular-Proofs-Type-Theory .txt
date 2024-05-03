@@ -85,3 +85,22 @@ CHECKED no connections (21/03/24)
 8. Fortier, Santocalnale 2013 
 "Cut for circular proofs, semantics and cut-elimination"
 
+-----------------------------------------------------
+
+9. Bouncing threads for
+circular and non-wellfounded proofs
+Towards compositionality with circular proofs
+(Extended version) ∗
+David Baelde
+ENS Rennes
+david.baelde@irisa.fr
+Amina Doumane
+CNRS
+amina.doumane@ens-lyon.fr
+Denis Kuperberg
+CNRS
+denis.kuperberg@ens-lyon.fr
+Alexis Saurin
+CNRS, Université Paris-Cité & INRIA
+alexis.saurin@irif.fr
+
