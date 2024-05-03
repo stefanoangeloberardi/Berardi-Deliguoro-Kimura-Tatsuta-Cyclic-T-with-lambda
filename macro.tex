@@ -90,11 +90,11 @@
 \def\ErdosTree{{\rm ErdosTree}}
 \def\KB{{\rm KB}}
 \def\MonoList{{\rm MonoList}}
-\def\Seq{{\rm Seq}}
+%\def\Seq{{\rm Seq}}
 \def\Univ{{\rm univ}}
 \def\Infinite{{\rm Infinite}}
 \def\S{{\bf S}}
-\def\N{{\bf N}}
+%\def \N {{N}} %\def\N{{\bf N}} %
 \def\Ind{{\rm Ind}}
 \def\LKID{{\bf LKID}}
 \def\PA{{\bf PA}}
@@ -202,7 +202,7 @@
 \def\Var{{\rm Var}}
 \def\Range{{\rm Range}}
 \def\Cell{{\rm Cell}}
-\def\Tree{{\rm Tree}}
+%\def\Tree{{\rm Tree}}
 \def\Switch{{\rm Switch}}
 \def\All{{\rm All}}
 \def\To{\leadsto}
@@ -286,15 +286,70 @@
 
 %Macro for the work on Cyclic System T with lambda
 %22/03/2024
-\newcommand{\ap}               { {\tt ap} }
-\newcommand{\cond}           { {\tt cond} }
-\newcommand{\reduces}      { {\mapsto} }
-\newcommand{\CTlambda}   { { {\tt CT} \mbox{-} \lambda} }
-\newcommand{\nameIn}       { {\tt name\mbox{-}in} }
+\newcommand{\ap}                { {\tt ap} }
+\newcommand{\cond}            { {\tt cond} }
+\newcommand{\reduces}       { {\mapsto} }
+\newcommand{\CTlambda}    { { {\tt CT} \mbox{-} \lambda} }
+%\newcommand{\nameIn}       { {\tt name\mbox{-}in} }
+\newcommand{\etaRule}       { {\eta\mbox{-rule}} }
 \newcommand{\ins}               { {\tt ins} }
 \newcommand{\struct}          { {\tt struct} }
-\newcommand{\It}                 { {\tt It} }
-\newcommand{\Interval}       { {\tt I} }
+\newcommand{\Iter}              { {\tt It} }
+\newcommand{\iter}               { {\tt it} }
+\newcommand{\Interval}       { {\tt In} }
+\newcommand{\interval}        { {\tt in} }
+\newcommand{\Succ}             { {\tt S} }
 \newcommand{\nil}                { {\tt nil} }
-\newcommand{\cons}            { {\tt cons} }
+\newcommand{\cons}             { {\tt cons} }
+\newcommand{\outline}  [1]   { {\contour{black}{\textcolor{white}{#1}}}  }
+\newcommand{\systemT}       { {\outline{\tt T}} }
+\newcommand{\LAMBDA}       { {\outline{$\Lambda$}} }
+\newcommand{\Rec}               { {\tt Rec} }
+\newcommand{\rec}                { {\tt rec} }
+\newcommand{\exch}             { {\tt exch} }
+\newcommand{\composed}     { {\mbox{\tiny $\circ$}} }
+\newcommand{\WTyped}        { {\tt WTyped} }
+\newcommand{\safe}              { {\tiny \tt safe} }
+\newcommand{\GlobalTraceCondition}  { {\tt GlTrCon} }
+\newcommand{\Sum}              { {\tt Sum} }
+\newcommand{\safeReduces} {\mathbin{\reduces_\safe}}
+\newcommand{\var}                { {\tt var} }
+\newcommand{\Graph}            { {\tt Graph} }
+\newcommand{\bfColor} [2]     {{\bf \color{#1}{#2}}}
+\newcommand{\weak}             {{\tt weak}}
+
+%colors from the web site: https://latexcolor.com/
+\definecolor{amber}{rgb}{1.0, 0.75, 0.0}
+\definecolor{oldgold}{rgb}{0.81, 0.71, 0.23}
+
+\newcommand{\SubTerm}               {{\tt SubT}}
+\newcommand{\Tree}                      {{\tt Tree}}
+\newcommand{\N}                           {{N}}
+\newcommand{\Num}                      {{\tt Num}}
+\newcommand{\Nat}                        {{\outline{\tt N}}}
+\newcommand{\GTC}                       {{\tt GTC}}
+\newcommand{\Reg}                       {{\tt Reg}}
+\newcommand{\Type}                      {{\tt Type}}
+\newcommand{\conc}                      {{\star}}
+\newcommand{\typingRule}            {{\tt r}}
+%\newcommand{\apvar}                     {{\ap_{\mbox{\tiny var}}}}
+%\newcommand{\apnotvar}               {{\ap_{\neg\mbox{\tiny var}}}}
+\newcommand{\apvar}                    {{{\tt ap}_{\mbox{\tiny $v$}}}}
+\newcommand{\apnotvar}               {{{\tt ap}_{\mbox{\tiny $\neg v$}}}}
+\newcommand{\subseteqsim}         {{\raisebox{2pt}{$\subset$}_{\!\!\!\!\!\sim}}}
+\newcommand{\supseteqsim}         {{\raisebox{2pt}{$\supset$}_{\!\!\!\!\!\sim}}}
+\newcommand{\Ctxt}                       {{\tt Ctxt}}
+\newcommand{\Seq}                        {{\tt Seq}}
+\newcommand{\Stat}                       {{\tt Stat}}
+\newcommand{\Rule}                       {{\tt Rule}}
+\newcommand{\restr}                      {{\lceil}}
+\newcommand{\setT}                       {{\mathcal T}}
+\newcommand{\base}                      {{\tt base}}
+\newcommand{\inductive}               {{\tt ind}}
+\newcommand{\universe}     [1]       {{|#1|}}
+\newcommand{\Label}                     {{\tt Lbl}}
+
+
+
+
 

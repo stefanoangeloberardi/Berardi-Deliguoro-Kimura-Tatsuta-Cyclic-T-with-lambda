@@ -1,0 +1,74 @@
+For infinite terms we can define a notion of reduction contracting infinitely many redexes at the same time.
+In this section investigate this notion, 
+we show that for recursive terms it is a recursive operation, and that the result
+is well-defined for the set $\GlobalTraceCondition$ of terms with the global trace condition. 
+We also show that $\GlobalTraceCondition$ is closed under infinite reductions.
+
+Assume $t \in \LAMBDA$ and $X$ is a set of redexes in $t$. We define an operation $\reduces_X$ 
+on each node $t'$ of $t$, and its result $u \in \LAMBDA$ by induction on the distance between
+$t'$ and $t$.
+
+If $t \not \in X$ and $t=0,\Succ(u), x, \lambda x^Tu, f(u), \cond(f,g)$, we apply $\reduces_X$
+on all immediate subterms $t'$ of $t$. If $t = (\lambda x^T.b)(u), \cond x^\N.(f,g)(0), \cond x^\N.(f,g)(\Succ(u))$,
+we contract $t$, respectively, to $b[u/x], f, g[u/x]$, then we apply $\reduces_X$ to the result.
+
+The operation $\reduces_X$ loops if in some path of $t$ we always find redexes in $X$. This is the case of 
+$t = (\lambda x^T.t)(x)$ and of $u=\cond x^\N.(0,u)(1)$ and of $X=$ all redexes of $t$, $u$ respectively. 
+In both terms, the unique infinite path of the term is made of redexes of $X$, and $\reduces_X$ never
+provides a single symbol of the output.
+
+If we want to consider infinite redexes in $\LAMBDA$ we should allow undefined sub-terms inside a term.
+This is not the case for the set $\GlobalTraceCondition$ of terms with the global trace condition:
+we can show that $\GlobalTraceCondition$ is closed under $\reduces_X$.
+
+We first check that $\reduces_X$ applied to $\GlobalTraceCondition$ produces no undefined sub-term.
+
+\begin{lemma}[No infinite rexed path]
+If $t \in \GlobalTraceCondition$ (if $t$ has the global trace condition)
+then $\reduces_X$ applied to $t$ produces no undefined sub-term.
+\end{lemma}
+
+\begin{proof}
+We have to prove that there is no path in $t$ only made  of redexes.
+Suppose a path in $t$ is only made  of redexes 
+$r=(\lambda x^T.b)(u)$ or $r=(\cond x^\N.(f,g))(t)$, where $t=0$ or $t=\Succ(u)$. 
+We first check that no trace $\tau$ starting from $r$ can progress in the next sub-term of the path.
+Indeed, if $\tau$ progresses, then $r=(\cond x^\N.(f,g))(t)$
+and $\tau$ to the type of the variable $x$ bound by $\cond x^\N.(f,g)$. 
+The only way to obtain this is that $t=x$ and $r$ is obtained by an $\etaRule$,
+and in this case $r$ is no redex, because $x \not = 0, \Succ(u)$.
+
+This implies that in a path $\pi$ only made of redexes any trace $\tau$ 
+cannot progress after its first point, and therefore it cannot infinitely progress and the term has
+no global trace condition.
+\end{proof}
+
+
+We prove that $\GlobalTraceCondition$ is closed under $\reduces_X$.
+
+
+\begin{lemma}
+If $t \in \GlobalTraceCondition$ and $t \reduces_X u$ then $u \in \in \GlobalTraceCondition$
+\end{lemma}
+
+\begin{proof}
+We prove that for any infinite path $\pi$ in $u$ there is some infinite path $\rho$ in $t$ such that
+for all traces $\tau$ of $\rho$ there is some trace $\sigma$ of $\pi$ which is obtained by
+removing some points of $\tau$ which are either the first point or are not progress points. 
+It will follow that if we have an infinitely progressing trace $\tau$ in $\rho$, then we have some infinitely
+progressing trace $\sigma$ in $\pi$.
+
+We follow $\pi$ and we apply $\reduces_X$. We find finitely many redexes which we reduce to
+some $v[t_n/x_n]\ldots[t_1/x_1]$ with $v$ not redex. A single step in $\rho$ through $v$
+corresponds to $n+1$ steps in $\pi$, in such a way that a trace in $\pi$ is restricted to a trace
+in $\rho$. The restriction removes no progresses point but at most the first. 
+
+If the path $\rho$ continues in this way forever then we are done.
+
+The other possibility is: $\pi$ could move to some $t_i$ which was an $x_i$ in $t$. In this case we restart
+the path in $t$ through $t_i$, while $\rho$ continues in $t_i[t_{i-1}/x_{i-1}]\ldots[t_1/x_1]$.
+After finitely many steps $\rho$ can continue through $t_j$ for some $1 \le j < i$, which was an $x_j$
+in $t$. This process can continue at most $n$ times. 
+Eventually $\rho$ continues forever inside $t_k$ for some $1 \le k \le n$. In this case there is a $1$ to $1$
+connection between the trace in $\rho$ and in $t_k$ and the traces in $\pi$ and in $t_k$.
+\end{proof}
