@@ -17,6 +17,8 @@
 \newcommand{\N}{N}
 \newcommand{\gN}{\bfColor{oldgold}{N}}
 \newcommand{\rN}{\bfColor{red}{N}}
+\newcommand{\bN}{\bfColor{blue}{N}}
+\newcommand{\rbN}{\bfColor{red}{N}\hspace{-1em}\bfColor{blue}{N}}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
@@ -61,7 +63,7 @@ If $A$ is $\N$, trace chasing would be as follows.
   $\infer[\Rapv]{
     \Gamma, x:\rN \vdash f(x):B
   }{
-    \Gamma, x:\N \vdash f: \rN\to B
+    \Gamma, x:\rN \vdash f: \rN\to B
   }$. 
 \end{center}
 
@@ -183,54 +185,62 @@ the subterm $(\lambda k.\Sum(m)(n))(m)$ of $\Sumd$.
 This causes a situation of missing trace. 
 \[
 \infer{
-  \vdash \Sumd:\rN\to\gN\to\N
+  \vdash \Sumd:\rbN\to\N\to\N
 }{
   \infer[\Rapv]{
-    m:\rN, n:\gN \vdash (\lambda k.\Sum(m)(n))(m):\N
+    m:\rbN, n:\N \vdash (\lambda k.\Sum(m)(n))(m):\N
   }{
     \infer{
-      m:\N, n:\gN \vdash \lambda k.\Sum(m)(n):\rN\to\N
+      m:\rN, n:\N \vdash \lambda k.\Sum(m)(n):\bN\to\N
     }{
       \infer[\Rapv]{
-        m:\N, n:\gN, k:\rN \vdash \Sum(m)(n):\N
+        m:\rN, n:\N, k:\bN \vdash \Sum(m)(n):\N
       }{
         \infer[\Rapv]{
-          m:\N, n:\N, k:\rN \vdash \Sum(m):\gN\to\N
+          m:\rN, n:\N, k:\bN \vdash \Sum(m):\N\to\N
         }{
           \infer{
-            m:\N, n:\N, k:\rN \vdash \Sum:\N\to\gN\to\N
+            m:\N, n:\N, k:\bN \vdash \Sum:\rN\to\N\to\N
           }{
             \infer{
-              \vdash \Sum:\N\to\gN\to\N
+              \vdash \Sum:\rN\to\N\to\N
             }{
               \infer[\Rapv]{
-                m:\N,n:\gN\vdash\Cond{n}{\lambda m'.\Sumd(m')(\Suc{n})}(m):\N
+                m:\rN,n:\N\vdash\Cond{n}{\lambda m'.\Sumd(m')(\Suc{n})}(m):\N
               }{
-                \infer[\Rcond]{
-                  m:\N,n:\gN\vdash\Cond{n}{\lambda m'.\Sumd(m')(\Suc{n})}:\N\to\N
+                \infer{
+                  m:\N,n:\N\vdash\Cond{n}{\lambda m'.\Sumd(m')(\Suc{n})}:\rN\to\N
                 }{
-                  \infer{
-                    n:\N \vdash n:\N
-                  }{}
-                  &
-                  \infer{
-                    n:\gN\vdash\lambda m'.\Sumd(m')(\Suc{n}):\N\to\N
+                  \infer[\Rcond]{
+                    n:\N\vdash\Cond{n}{\lambda m'.\Sumd(m')(\Suc{n})}:\rN\to\N
                   }{
                     \infer{
-                      n:\gN,m':\N\vdash\Sumd(m')(\Suc{n}):\N
+                      n:\N \vdash n:\N
+                    }{}
+                    &
+                    \infer{
+                      n:\N\vdash\lambda m'.\Sumd(m')(\Suc{n}):\rN\to\N
                     }{
-                      \infer[\Reta]{
-                        m':\N\vdash\Sumd(m'):\N\to\N
-                      }{
-                        \vdash\Sumd:\N\to\N\to\N
-                      }
-                      &
                       \infer{
-                        n:\N\vdash\Suc{n}:\N
+                        n:\N,m':\rN\vdash\Sumd(m')(\Suc{n}):\N
                       }{
+                        \infer[\Rapv]{
+                          m':\rN\vdash\Sumd(m'):\N\to\N
+                        }{
+                          \infer{
+                            m':\N\vdash\Sumd:\rN\to\N\to\N
+                          }{
+                            \vdash\Sumd:\rN\to\N\to\N
+                          }
+                        }
+                        &
                         \infer{
-                          n:\N\vdash n:\N
-                        }{}
+                          n:\N\vdash\Suc{n}:\N
+                        }{
+                          \infer{
+                            n:\N\vdash n:\N
+                          }{}
+                        }
                       }
                     }
                   }
@@ -244,8 +254,8 @@ This causes a situation of missing trace.
   }
 }
 \]
-This does not satisfies GTC,
-since the unique infinite path contains no progressing trace. 
+This proof satisfies GTC,
+since the only infinite path contains an infinitely progressing trace $(\rbN,\rbN,\rN,\ldots)$
 
 
 
