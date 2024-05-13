@@ -975,10 +975,10 @@ In this example, the type superscript $\N$ of variables $x^\N, z^\N$ is omitted.
 We provide an infinite regular term $\Sum$ computing the sum on $\N$,
 defined by $\Sum = \lambda x.\cond(x,\lambda z.\Succ(\Sum(x)(z)))$.
 This term is regular because it has finitely many subterms: 
-$$
+\[
 \Sum, \  \  \ \cond(x,\lambda z.\Succ(\Sum(x)(z))), 
 \  \  \ x, \  \  \ \lambda z.\Succ(\Sum(x)(z)),  \  \  \ \Sum(x)(z), \  \  \ \Sum(x)
-$$
+\]
 This term is well-typed by the following circular derivation, in which we have a back edge from the 
 $\bfColor{oldgold}{\dagger}$ above to the $\bfColor{oldgold}{\dagger}$ below.
 We colored in \bfColor{oldgold}{old gold} one sequence of atoms $\bfColor{oldgold}{\N}$ 
@@ -996,28 +996,33 @@ The progress point is repeated infinitely many times.
     \cond(x,\lambda z.\Succ(\Sum(x)(z))): \bfColor{oldgold}{\N} \rightarrow \N
   }{
     \infer[\var]{
-      x : \N \vdash x
+      x : \N \vdash x : \N
     }{}
     &
-    \infer[\Succ]{
-      x:\N, z : \bfColor{oldgold}{\N} 
-      \vdash \Succ(\Sum(x)(z)): \N  
-        \ \ \ (\bfColor{oldgold}{ \spadesuit})
+    \infer[\lambda]{
+      x:\N \vdash \lambda z.\Succ(\Sum(x)(z)): \bfColor{oldgold}{\N} \rightarrow \N  
+      \ \ \ (\bfColor{oldgold}{ \spadesuit})
     }{
-      \infer[\apvar]{
-       x:\N, z : \bfColor{oldgold}{\N} 
-       \vdash \Sum(x)(z): \N
+      \infer[\Succ]{
+        x:\N, z : \bfColor{oldgold}{\N} 
+        \vdash \Succ(\Sum(x)(z)): \N  
+        \ \ \ (\bfColor{oldgold}{ \spadesuit})
       }{
-         \infer[\apvar]{
-       x:\N, z : \N
-       \vdash \Sum(x): \bfColor{oldgold}{\N} \rightarrow \N
-         }{
-         \infer[\weak]{
-         x:\N, z : \N
-         \vdash \Sum: \N, \bfColor{oldgold}{\N} \rightarrow  \N
+        \infer[\apvar]{
+          x:\N, z : \bfColor{oldgold}{\N} 
+          \vdash \Sum(x)(z): \N
+        }{
+          \infer[\apvar]{
+            x:\N, z : \N
+            \vdash \Sum(x): \bfColor{oldgold}{\N} \rightarrow \N
           }{
-         \infer{\vdash \Sum: \N, \bfColor{oldgold}{\N} \rightarrow \N 
-           \ \ \ (\bfColor{oldgold}{\dagger})}{\ldots}
+            \infer[\weak]{
+              x:\N, z : \N
+              \vdash \Sum: \N, \bfColor{oldgold}{\N} \rightarrow  \N
+            }{
+              \infer{\vdash \Sum: \N, \bfColor{oldgold}{\N} \rightarrow \N 
+                \ \ \ (\bfColor{oldgold}{\dagger})}{\ldots}
+            }
           }
         }
       }
@@ -1102,7 +1107,7 @@ We abbreviate $\Gamma = (f:\N \rightarrow \N, a:\N)$.
 {
     \infer[\cond]{ %opening: \infer[\cond]
       \Gamma 
-      \vdash \iter: \N, \bfColor{oldgold}{\N} \rightarrow \N 
+      \vdash \iter: \bfColor{oldgold}{\N} \rightarrow \N 
         \ \ \ (\bfColor{oldgold}{ \spadesuit}, \bfColor{oldgold}{\dagger})
      }{ 
          \infer[\var]{
@@ -1121,16 +1126,16 @@ We abbreviate $\Gamma = (f:\N \rightarrow \N, a:\N)$.
            }{
           \infer[\var]{
        \Gamma, x:\N 
-      \vdash f:\N}{}
+      \vdash f:\N \rightarrow \N}{}
            {\ \ \ \ \ \ \ \ \ \ \ \ }
            {\infer[\apvar] %opening: \infer[\apvar]
             {\Gamma, x:\bfColor{oldgold}{\N}
-        \vdash \iter(x): \N \rightarrow \N 
+        \vdash \iter(x): \N 
              }{
           \infer[\weak]{\Gamma, x:\N
-                                 \vdash \iter: \N, \bfColor{oldgold}{\N} \rightarrow \N}
+                                 \vdash \iter: \bfColor{oldgold}{\N} \rightarrow \N}
                                 {\infer[]{\Gamma
-                                 \vdash \iter: \N, \bfColor{oldgold}{\N} \rightarrow \N
+                                 \vdash \iter: \bfColor{oldgold}{\N} \rightarrow \N
                                   \ \ \ (\bfColor{oldgold}{ \dagger})}{\ldots}          
              }
            }
@@ -1154,45 +1159,45 @@ only the variables $\nil$ and $\cons$. Elimination rules are not required in our
 
 We will define a term $\Interval$ with one argument $f:\N \rightarrow \N$ and three argument
 $a,x,y:\N$ (we skip type superscripts), such that 
-$$
+\[
 \Interval(f,a,n,m) \  \sim \ [f^n(a), f^{n+1}(a), \ldots, f^{n+m}(a)] \  : \ \alpha
-$$ 
+\]
 for all numeral $n,m \in \Num$. 
-We have to to solve the recursive equations 
-$$
+We have to solve the recursive equations 
+\[
 \Interval(f,a,n,0)  \sim [f^n(a)]
 \ \ \ \ \ \ 
 \Interval(f,a,n,\Succ (m))  \sim f^n(a) @ \Interval(f,a,\Succ(n),m)
-$$ 
+\]
 Assume $\iter = \cond (a, \lambda x.f(\iter(x))):\N \rightarrow \N$ is the term
 in the context $(f:\N\rightarrow\N, a:\N)$ defined 
 in the previous sub-section: in particular, $\iter(n) \sim f^n(a)$ for all $n \in \Num$.
 We solve the recursive equation for $\Interval$ with $\Interval = \lambda f,a.\interval$,
 where 
-$$
+\[
 \interval:\N,\N \rightarrow \alpha
-$$
+\]
 is a term in the context $(f:\N\rightarrow\N, a:\N)$ defined by 
-$$
+\[
 \interval 
 \ \ \ = \ \ \ 
 \lambda x.\cond (\base,  \lambda y.\inductive),
-$$
+\]
 where the base case and the inductive case are
-$$
+\[
 \base 
 \ \ \ =\ \ \  
 [\iter(x)]
 \ \ \ =\ \ \ 
 \cons(\iter(x),\nil)
-$$
-$$
+\]
+\[
 \inductive 
 \ \ \ = \ \ \ 
 \iter(x) @ \interval(\Succ(x))(y)
 \ \ \ = \ \ \  
 \cons(\ \iter(x), \ \interval(\Succ(x))(y) \ )
-$$ 
+\]
 
 
 \begin{proposition}

@@ -103,9 +103,9 @@ With $\Reta$, we need to use the rule $\Rap$ to handle
 the subterm $(\lambda k.\Sum(m)(n))(m)$ of $\Sumd$
 because of the side-condition of $\Reta$.
 
-\begin{lemma}
+\begin{proposition}
   $\Sumd:\N\to\N\to\N$ is well-typed with $\Reta$.
-\end{lemma}
+\end{proposition}
 \begin{proof}
   \[
   \infer{
@@ -179,10 +179,9 @@ because of the side-condition of $\Reta$.
   \hfill$\Box$
 \end{proof}
 
-However, $\Sumd:\N\to\N\to\N$ cannot be typed with $\Rapv$, 
-since we need to use the rule $\Rapv$ to handle
-the subterm $(\lambda k.\Sum(m)(n))(m)$ of $\Sumd$. 
-This causes a situation of missing trace. 
+\begin{proposition}
+  $\Sumd:\N\to\N\to\N$ has a proof in the system with $\Rapv$ that satisfies GTC. 
+\end{proposition}
 \[
 \infer{
   \vdash \Sumd:\rbN\to\N\to\N
