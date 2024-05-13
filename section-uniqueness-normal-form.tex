@@ -1,74 +1,119 @@
 In this section we prove a weak form of confluence: normal form for
 all closed terms of $\CTlambda$ of type $\N$ is unique.
-
 By the weak normalization result proved in Section~\ref{section-weak-normalization},
 we will deduce: for all closed terms $t$ of $\CTlambda$ of type $\N$, 
-there is some $n \in \N$ such that there is a safe reduction $t \reduces n$, and all normal form of $t$
+there is some $n \in \N$ such that there is a safe reduction $t \safeReduces^* n$, and all normal form of $t$
 are equal to $n$.
 
-We define a notion $\sim$ of equivalence for well-typed terms with the same type.
-Assume $t, u : A$ are \emph{closed} terms of $\CTlambda$.
- (that is, well-typed, regular and with the global trace condition). 
+We define equivalences $\sim_A$ (for each type $A$) for well-typed terms with type $A$.
+\begin{definition}
+  We define an equivalence $\sim_A$ for \emph{closed} terms of $\CTlambda$
+  by induction on the type $A$. 
+  \begin{enumerate}
+  \item
+    $t \sim_N u$ if and only if for all normal $t',u':\N$, if $t \safeReduces^* t'$
+    and $u \safeReduces^* u'$ then $t'=u'$.
+  \item
+    $t \sim_{A\rightarrow B} u$ if and only if for all closed $a_1,a_2:A$ if
+    $a_1 \sim_A a_2$ then $t(a_1) \sim_B u(a_2)$.
+  \end{enumerate}
+  We write $a_1,\ldots,a_n \sim_{A_1,\ldots,A_n} a'_1,\ldots,a'_n$ if $a_i\sim_{A_i} a'_i$ holds
+  for all $i\in\{1,\ldots,n\}$. 
+  
+  We also define $t[\vec{x}] \sim_A u[\vec{x}]$ for \emph{any} terms of $\CTlambda$,
+  with $\vec{x}:\vec{A}\vdash t[\vec{x}]:A$ and $\vec{x}:\vec{A}\vdash u[\vec{x}]:A$. 
+  \begin{enumerate}
+  \item[3.]
+    $t[\vec{x}] \sim_A u[\vec{x}]$ if and only if for all closed terms $\vec{a_1}:\vec{A}$ and $\vec{a_2}:\vec{A}$,
+    if $\vec{a_1}\sim_{\vec{A}}\vec{a_2}$ then $t[\vec{a_1}] \sim_A u[\vec{a_2}]$. 
+  \end{enumerate}  
+  
+\end{definition}
 
-We define an equivalence $\sim_0$ for closed terms,
-by induction on the type $A$ of $t$, $u$.
-
-\begin{enumerate}
-\item
-Assume $A = \N$. Then $t \sim_0 u$ if and only if for all normal $t',u':\N$, if $t \reduces t'$
-and $u \reduces u'$ then $t'=u'$.
-\item
-Assume $A = B \rightarrow C$. Then $t \sim_0 u$ if and only if for all closed $b,c:B$ if
-$b \sim_0 c$ then $t(b) \sim_0 u(c)$.
-\end{enumerate}
-
-We will prove that for all closed terms $t$ of $\CTlambda$ we have $t \sim_0 t$.
+We will prove that, for all closed terms $t$ of $\CTlambda$ with type $A$, we have $t \sim_A t$.
 If $A=\N$ this means that the normal form of all closed terms of $\CTlambda$ of type $\N$ is unique,
 which is our goal.
 
-We first define $t \sim u$ for \emph{any} terms of $\CTlambda$ with the same type.
- $t \sim u$ if and only if for any two substitution 
-$\sigma = [\vec{t} / \vec{x}]$ and $\tau = [\vec{u} / \vec{x}]$,
-if $\vec{t} \sim_0 \vec{u}$ and $\sigma(t)$, $\sigma(u)$ are closed then $\sigma(t) \sim_0 \sigma(u)$.
+\begin{definition}
+  Let $t$ be a term of $\CTlambda$. 
+  \begin{enumerate}
+  \item
+    Assume that $t$ is a closed term with type $N$. 
+    We say that $n$ is a value of $t$ if $t \safeReduces^* n$ ($t$ safely reduces to $n$). 
+  \item
+    We say that $t$ is confluent if $t \sim_A t$.
+  \item
+    Assume $\vec{x}:\vec{A}\vdash t:\vec{D}\rightarrow\N$. 
+    We say a quadraple $(\vec{a};\vec{d};\vec{a'};\vec{d'})$ of vectors consist of closed terms
+    is a counterexample to $t$ if
+    $\vec{a}\sim_{\vec{A}}\vec{a'}$, $\vec{d}\sim_{\vec{D}}\vec{d'}$, and
+    $t[\vec{a}](\vec{d}) \not\sim_N t[\vec{a'}](\vec{d'})$. 
+  \end{enumerate}
+\end{definition}
 
-We will prove that  for all terms $t$ of $\CTlambda$ we have $t \sim t$. In the case of closed terms $t$
-we can choose $\sigma=\tau=$ the empty sbustitution and we obtain $t \sim_0 t$, which is our goal.
-
-Assume that $t:\N$ is a closed term $t$ of $\CTlambda$ and $n \in \N$. 
-\begin{enumerate}
-\item
-We say that $n$ is a value of $t$ if $t \reduces n$ (if $t$ safely reduces to $n$). 
-\item
-We say that $t$ is confluent if $t \sim_0 t$.
-\end{enumerate}
-Assume $\vec{x}:\vec{A}$ and $t[\vec{x}]: \vec{D} \rightarrow \N$. Assume 
-$\vec{a}:\vec{A},\vec{d}:\vec{D}$ 
-and $\vec{b}:\vec{A},\vec{e}:\vec{D}$ are vectors of closed terms of $\CTlambda$. We say that 
-these four vectors are a counterexample to $t$ if $\vec{a},\vec{d} \sim_0 \vec{b},\vec{e}$
-and $\neg (t[\vec{a}](\vec{d}) \sim_0  t[\vec{b}](\vec{e}))$.
-
-We have $t \sim t$ if and only if there is no counter-example for $t$.
-
-
-By the weak normalization result proved in \\Succ  \ref{section-weak-normalization}, all 
+By the weak normalization result proved in Section~\ref{section-weak-normalization}, all 
 closed term $t$ of $\CTlambda$ of type $\N$ have a value. If $t$ is confluent, then the value is unique.
-For confluent closed term $t$ of $\CTlambda$ of type $\N$, "safe" reduction preserves the value. Indeed,
-if $t \reduces u$ then $u$ is a closed term of $\CTlambda$ of type $\N$, therefore $u$ has a value
-$m$, which is also a value of $t$. By confluence of $t$ we conclude that $n=m$.
+Hence we have the following. 
 
-If $t$ is as above, with value $n$, and $t \reduces \Succ (u)$, then $n>0$, 
-$u$ is a confluent closed term $t$ of $\CTlambda$ of type $\N$, and the value of $u$ is $n-1$.
-Indeed,if $u \reduces u'$ and $u'$ is normal, then $t \reduces \Succ (u')$, therefore $\Succ (u')=n$ 
-by confluence of $t$, and we conclude that $n>0$ and $u'=n-1$. Thus, the normal form of $u$ is unique.
+\begin{lemma}
+  If $t:\N$ is a confluent closed term, then $t$ has a unique normal form.
+\end{lemma}
 
-We will prove the following.
+By using the weak normalization result, 
+two closed terms $t$ and $u$ equivalent with respect to $\sim_\N$, namely $t \sim_\N u$,
+have a common numeral as their unique normal form. 
+
+\begin{lemma}
+  Let $t$ and $u$ be closed terms in $\CTlambda$. 
+  If $t \sim_\N u$, then there exists $n$ of type $\N$ such that
+  (1) $t \safeReduces^* n$, (2) $u \safeReduces^* n$,
+  (3) if $t \safeReduces^* t'$ and $t'$ is a normal form, then $t' = n$, and
+  (4) if $u \safeReduces^* u'$ and $u'$ is a normal form, then $u' = n$. 
+\end{lemma}
+\begin{proof}
+  By Corollary~\ref{cor:unique_normal_form}, there are numerals $m,n$ such that
+  $t\safeReduces^* m$ and $u\safeReduces^* n$.
+  Then we obtain (1) and (2), since $m=n$ holds by $t\sim_\N u$.
+  If $t \safeReduces^* t'$ and $t'$ is a normal form, then $t'=n$ by $t\sim_\N u$.
+  Hence (3) holds. We also have (4) in a similar way. 
+\end{proof}
+
+%For confluent closed term $t$ of $\CTlambda$ of type $\N$, "safe" reduction preserves the value. Indeed,
+%if $t \reduces u$ then $u$ is a closed term of $\CTlambda$ of type $\N$, therefore $u$ has a value
+%$m$, which is also a value of $t$. By confluence of $t$ we conclude that $n=m$.
+
+%If $t$ is as above, with value $n$, and $t \reduces \Succ (u)$, then $n>0$, 
+%$u$ is a confluent closed term $t$ of $\CTlambda$ of type $\N$, and the value of $u$ is $n-1$.
+%Indeed,if $u \reduces u'$ and $u'$ is normal, then $t \reduces \Succ (u')$, therefore $\Succ (u')=n$ 
+%by confluence of $t$, and we conclude that $n>0$ and $u'=n-1$. Thus, the normal form of $u$ is unique.
+
+We have $t \sim_A t$ if and only if there is no counter-example for $t$.
+This is shown by the following lemma.
+\begin{lemma}
+  Let $t$ be a term of $\vec{x}:\vec{A} \vdash t[\vec{x}]:\vec{D}\rightarrow\N$. 
+  Let $\vec{a},\vec{d},\vec{a'},\vec{d'}$ be vectors of closed terms.
+  Assume that
+  $\vec{a}\sim_{\vec{A}}\vec{a'}$ and $\vec{d}\sim_{\vec{D}}\vec{d'}$ implies $t[\vec{a}](\vec{d}) \sim_N t[\vec{a'}](\vec{d'})$. 
+  Then $t[\vec{x}]$ is confluent. 
+\end{lemma}
+\begin{proof}
+  Take any $\vec{a},\vec{d},\vec{a'},\vec{d'}$ such that $\vec{a}\sim_{\vec{A}}\vec{a'}$ and $\vec{d}\sim_{\vec{D}}\vec{d'}$.
+  Then $t[\vec{a}](\vec{d}) \sim_N t[\vec{a'}](\vec{d'})$ holds by the assumption.
+  We have $t[\vec{a}] \sim_{\vec{D}\rightarrow\N} t[\vec{a'}]$ by the definition of $\sim_{\vec{D}\rightarrow\N}$.
+  Hence $t[\vec{x}] \sim_{\vec{D}\rightarrow\N} t[\vec{x}]$ holds by the definition. 
+\end{proof}
+
+Taking contraposition of this lemma, there exists a counterexample for non-confluent $t$. 
+Using this, we prove the following theorem.
 
 \begin{theorem}
-Assume $t$ is any well-typed term such that $\neg (t \sim t)$. Then there is some infinite path 
-$\pi=\{t_i | i \in \N\}$ of $t$ with some infinite sequence $\sigma= \{\sigma_i| i \in \N\}$, with
-each $\sigma_i$ counter-example for $t_i$, and with the value of $\sigma$ compatible with the
-trace conditions of $\pi$.
+  Assume $\Pi:\Gamma\vdash t:A$ (hence $t \in \WTyped$). 
+  If $t$ is not confluent,
+  then $t \not\in \GTC$, that is, $\Pi$ does not satisfy the global trace condition. 
 \end{theorem}
+\begin{proof}
+
+\end{proof}
 
 As a corollary from the theorem we will conclude: 
 if $t$ satisfies the global trace condition, then there is no such $\sigma$, therefore $t \sim t$, 
