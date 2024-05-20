@@ -523,29 +523,30 @@ Assume $\Gamma$ is a context of $t$ (i.e, $\FV(t) \subseteq \Gamma$) and $A \in 
 Then we write $\Pi: \Gamma \vdash t:A$, and we say that $\Pi$ is a proof of $\Gamma \vdash t:A$ if:
 
 \begin{enumerate}
-
 \item 
-$\phi(\nil) = \Gamma \vdash t:A$.
-
+  $\phi(\nil) = \Gamma \vdash t:A$.
 \item
-Assume that
-\begin{enumerate}
-\item
-$l \in T$ is labeled with $\phi(l) = \Delta \vdash u: B$.
-\item
-\item
-The children of $l$ in $T$ are labeled 
-$\Delta_1 \vdash u_1: B_1 = \phi(l \conc (1)), \ldots, \Delta_n \vdash u_n: B_n = \phi(l \conc (n))$ \end{enumerate}
-Then for some rule $r \in \Rule$ of $\LAMBDA$ we have
-\[
- \infer[r]
- {  \Delta \prove u : B  }
- {
-       {\Delta_1  \prove u_1:B_1}
-       { \ \ \ \ldots \ \ \ }
-	   {\Delta_n  \prove u_1:B_1}
- }
-\]
+  Assume that
+  \begin{enumerate}
+  \item
+    $l \in T$ is labeled with $\phi(l) = \Delta \vdash u: B$.
+  \item
+  \item
+    The children of $l$ in $T$ are labeled 
+    $\Delta_1 \vdash u_1: B_1 = \phi(l \conc (1)), \ldots, \Delta_n \vdash u_n: B_n = \phi(l \conc (n))$
+  \end{enumerate}
+  Then for some rule $r \in \Rule$ of $\LAMBDA$ we have
+  \[
+  \infer[r]{
+    \Delta \prove u : B
+  }{
+    \Delta_1  \prove u_1:B_1
+    &
+    \cdots
+    &
+    \Delta_n  \prove u_n:B_n
+  }
+  \]
 \end{enumerate}
 
 \end{definition}
@@ -581,20 +582,29 @@ For instance if $t=u(0)$ and $u=\cond(t,u)$
 we can prove $\vdash t:A$ for all types $A \in \Type$. 
 The subterms of $t$ are $\{t, u, 0\}$ and a proof $\Pi: \vdash t:A$ is
 \[
- \infer[\apnotvar]
- {  \prove t : A  }
- { \infer[\cond]{\prove u:\N \rightarrow A}{
-           \infer[]
-                  {\prove t : A  }
-                  {\ldots}
-           { \ \ \ \ \ \ }  &
-           \infer[]
-                  {\prove u : \N \rightarrow A  }
-                  {\ldots} 
-       }
-       { \ \ \ \ \ \ } &
-	   {\infer[0]{\prove 0:\N}{}}
+\infer[\apnotvar]{
+  \prove t : A
+}{
+  \infer[\cond]{
+    \prove u:\N \rightarrow A
+  }{
+    \infer*{
+      \prove t : A
+    }{}
+    &
+    \quad
+    &
+    \infer*{
+      \prove u : \N \rightarrow A
+    }{} 
   }
+  &
+  \quad
+  &
+  \infer[0]{
+    \prove 0:\N
+  }{}
+}
 \]
 Formally, the typing proof $\Pi=(T,\phi):\vdash t:A$ 
 is defined by $\universe{\Pi}=\universe{t}$ and:
@@ -662,12 +672,12 @@ An example. Let $u = \cond. (0, (\lambda z.u)(z) )$, where we omitted the type s
 of $z$ because it is irrelevant. Then $u$ is safe-normal, because
 all redexes in $u$ are of the form  $(\lambda z.u)(z)$ and in the right-hand-side of a $\cond$. 
 However, the tree form of $u$ has the following branch:
-$$
-u, \ \ \ 
-(\lambda z.u)(z), \ \ \ 
-\lambda z.u, \ \ \ 
-u, \ \ \ \ldots
-$$
+\begin{center}
+  $u$, \quad
+  $(\lambda z.u)(z)$, \quad
+  $\lambda z.u$, \quad
+  $u$, \quad $\ldots$
+\end{center}
 This branch is cyclic, infinite,
 and it includes infinitely many $\beta$-redexes.
 
@@ -709,11 +719,9 @@ To this aim, we need the notions of \emph{list of argument
 
 We sketch the notion of connection through an example.
 Assume 
-$$
-{x_1}^{A_1}:A_1,{x_2}^{A_2}:A_2 
-\vdash 
-t[x_1,x_2]:B_3 \rightarrow \N
-$$
+\[
+  {x_1}^{A_1}:A_1,{x_2}^{A_2}:A_2 \vdash t[x_1,x_2]:B_3 \rightarrow \N
+\]
 Then the list of argument types of $t$
 is $A_1, A_2, B_3$. $A_1,A_2$ are arguments with names $x_1, x_2$, and $B_3$ is an unnamed
 argument. The index of an $\N$-argument of $t$ is any $j \in \{1,2,3\}$ such that $A_j=\N$
@@ -762,11 +770,13 @@ We draw in the same color two $\N$-argument which are in connection.
 \begin{Eg}\label{eg:0}\rm
 An example of  atom connection for some instance of the $\weak$-rule.
 \[
-\infer[(\weak)]
-{  {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}, x_3:\bfColor{oldgold}{\N}
-					\prove t : \bfColor{orange}{\N} \rightarrow \N}
-	  {   {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N} 
-					\prove t : \bfColor{orange}{\N} \rightarrow \N}
+\infer[(\weak)]{
+        {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}, x_3:\bfColor{oldgold}{\N}
+		\prove t : \bfColor{orange}{\N} \rightarrow \N
+}{
+  {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N} 
+  \prove t : \bfColor{orange}{\N} \rightarrow \N
+}
 \]
 \end{Eg}
 Remark that the type $\N$ of the variable $x_3$, colored in \bfColor{oldgold}{old gold} and 
@@ -777,16 +787,17 @@ introduced by weakening, is in connection with no type in the rule $\weak$.
 An example of  atom connection for some instance of the $\apnotvar$-rule.
 We assume that $a$ is \emph{not} a variable.
 \[
-\infer[(\apnotvar)]
-{  {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}
-					\prove f(a) : \bfColor{orange}{\N} \rightarrow \N}
-    {
-	  {   {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}
-					\prove f : \bfColor{oldgold}{\N}, \bfColor{orange}{\N} \rightarrow \N}
-      {\ \ \ \ \ \ }
-      {   {x_1} : \bfColor{red}{\N}, x_2: \bfColor{blue}{\N}
-					\prove a : \N}
-	}
+\infer[(\apnotvar)]{
+  x_1 : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}
+  \prove f(a) : \bfColor{orange}{\N} \rightarrow \N
+}{
+  x_1 : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}
+  \prove f : \bfColor{oldgold}{\N}, \bfColor{orange}{\N} \rightarrow \N
+  &
+  \quad
+  &
+  x_1 : \bfColor{red}{\N}, x_2: \bfColor{blue}{\N} \prove a : \N
+}
 \]
 \end{Eg}
 Remark that the first unnamed argument of $f$ (colored in \bfColor{oldgold}{old gold}) 
@@ -802,16 +813,16 @@ We postpone examples with the rule $\apvar$.
 \begin{Eg}\label{eg:2}\rm
 An example of  atom connection for the rule $\cond$.
 \[
-\infer[(\cond)]
-{  {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}
-					\prove \cond(f,g) : \bfColor{oldgold}{\N} \rightarrow \N}
-    {
-      {   {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}
-					\prove f : \N}
-           {\ \ \ \ \ \ }
-	  {   {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}, x  : \bfColor{oldgold}{\N} 
-					\prove g : \N}
-    }
+\infer[(\cond)]{
+  {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}
+  \prove \cond(f,g) : \bfColor{oldgold}{\N} \rightarrow \N
+}{
+  x_1 : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N} \prove f : \N
+  &
+  \quad
+  &
+  x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N}, x:\bfColor{oldgold}{\N} \prove g:\N
+}
 \]
 \end{Eg}
 Remark that the first unnamed argument of $f$ (colored in \bfColor{oldgold}{old gold}) 
@@ -862,11 +873,13 @@ We draw in the same color two $\N$-argument which are in connection.
 Atom connection for $\apvar$.
 We assume that $x$ is a variable.
 \[
-\infer[(\apvar)]
-{  {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}, x  : \bfColor{oldgold}{\N}
-					\prove f(x) : \bfColor{orange}{\N} \rightarrow \N}
-	  {   {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}
-					\prove f : \bfColor{oldgold}{\N}, \bfColor{orange}{\N} \rightarrow \N}
+\infer[(\apvar)]{
+  x_1 : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}, x  : \bfColor{oldgold}{\N}
+  \prove f(x) : \bfColor{orange}{\N} \rightarrow \N
+}{
+  x_1 : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}
+  \prove f : \bfColor{oldgold}{\N}, \bfColor{orange}{\N} \rightarrow \N
+}
 \]
 \end{Eg}
 Remark that the first unnamed argument of $f$ (colored in \bfColor{oldgold}{old gold}) 
@@ -876,11 +889,12 @@ in the premise is in connection with the last variable type in the conclusion of
 Atom connection for  $\lambda$-rule.
 We assume that $x$ is  a variable.
 \[
-\infer[(\ap)]
-{  {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}
-					\prove \lambda x.b : \bfColor{oldgold}{\N} \rightarrow \N}
-	  {   {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}, x  : \bfColor{oldgold}{\N}
-					\prove b : \N}
+\infer[(\ap)]{
+  x_1: \bfColor{red}{\N}, x_2: \bfColor{blue}{\N}
+  \prove \lambda x.b : \bfColor{oldgold}{\N} \rightarrow \N
+}{
+  x_1: \bfColor{red}{\N}, x_2: \bfColor{blue}{\N}, x:\bfColor{oldgold}{\N} \prove b : \N
+}
 \]
 \end{Eg}
 Remark that the first unnamed argument of $\lambda x.b$ (colored in \bfColor{oldgold}{old gold}) 
@@ -975,10 +989,19 @@ In this example, the type superscript $\N$ of variables $x^\N, z^\N$ is omitted.
 We provide an infinite regular term $\Sum$ computing the sum on $\N$,
 defined by $\Sum = \lambda x.\cond(x,\lambda z.\Succ(\Sum(x)(z)))$.
 This term is regular because it has finitely many subterms: 
-\[
-\Sum, \  \  \ \cond(x,\lambda z.\Succ(\Sum(x)(z))), 
-\  \  \ x, \  \  \ \lambda z.\Succ(\Sum(x)(z)),  \  \  \ \Sum(x)(z), \  \  \ \Sum(x)
-\]
+\begin{center}
+  $\Sum$,
+  \quad
+  $\cond(x,\lambda z.\Succ(\Sum(x)(z)))$,
+  \quad
+  $x$,
+  \quad
+  $\lambda z.\Succ(\Sum(x)(z))$,
+  \quad
+  $\Sum(x)(z)$,
+  \quad
+  $\Sum(x)$. 
+\end{center}
 This term is well-typed by the following circular derivation, in which we have a back edge from the 
 $\bfColor{oldgold}{\dagger}$ above to the $\bfColor{oldgold}{\dagger}$ below.
 We colored in \bfColor{oldgold}{old gold} one sequence of atoms $\bfColor{oldgold}{\N}$ 
@@ -989,7 +1012,7 @@ The progress point is repeated infinitely many times.
 \[
 \infer[\lambda]{
   \vdash \Sum:\N, \bfColor{oldgold}{\N} \rightarrow \N 
-   \ \ \ (\bfColor{oldgold}{\dagger})
+   \quad (\bfColor{oldgold}{\dagger})
 }{
   \infer[\cond]{
     x : \N \vdash 
@@ -1001,12 +1024,12 @@ The progress point is repeated infinitely many times.
     &
     \infer[\lambda]{
       x:\N \vdash \lambda z.\Succ(\Sum(x)(z)): \bfColor{oldgold}{\N} \rightarrow \N  
-      \ \ \ (\bfColor{oldgold}{ \spadesuit})
+      \quad (\bfColor{oldgold}{ \spadesuit})
     }{
       \infer[\Succ]{
         x:\N, z : \bfColor{oldgold}{\N} 
         \vdash \Succ(\Sum(x)(z)): \N  
-        \ \ \ (\bfColor{oldgold}{ \spadesuit})
+        \quad (\bfColor{oldgold}{ \spadesuit})
       }{
         \infer[\apvar]{
           x:\N, z : \bfColor{oldgold}{\N} 
@@ -1020,8 +1043,8 @@ The progress point is repeated infinitely many times.
               x:\N, z : \N
               \vdash \Sum: \N, \bfColor{oldgold}{\N} \rightarrow  \N
             }{
-              \infer{\vdash \Sum: \N, \bfColor{oldgold}{\N} \rightarrow \N 
-                \ \ \ (\bfColor{oldgold}{\dagger})}{\ldots}
+              \infer*{\vdash \Sum: \N, \bfColor{oldgold}{\N} \rightarrow \N 
+                \quad (\bfColor{oldgold}{\dagger})}{}
             }
           }
         }
@@ -1108,7 +1131,7 @@ We abbreviate $\Gamma = (f:\N \rightarrow \N, a:\N)$.
     \infer[\cond]{ %opening: \infer[\cond]
       \Gamma 
       \vdash \iter: \bfColor{oldgold}{\N} \rightarrow \N 
-        \ \ \ (\bfColor{oldgold}{ \spadesuit}, \bfColor{oldgold}{\dagger})
+        \quad (\bfColor{oldgold}{ \spadesuit}, \bfColor{oldgold}{\dagger})
      }{ 
          \infer[\var]{
        \Gamma 
@@ -1134,9 +1157,9 @@ We abbreviate $\Gamma = (f:\N \rightarrow \N, a:\N)$.
              }{
           \infer[\weak]{\Gamma, x:\N
                                  \vdash \iter: \bfColor{oldgold}{\N} \rightarrow \N}
-                                {\infer[]{\Gamma
+                                {\infer*{\Gamma
                                  \vdash \iter: \bfColor{oldgold}{\N} \rightarrow \N
-                                  \ \ \ (\bfColor{oldgold}{ \dagger})}{\ldots}          
+                                  \ \ \ (\bfColor{oldgold}{ \dagger})}{}
              }
            }
           }
@@ -1164,11 +1187,13 @@ $a,x,y:\N$ (we skip type superscripts), such that
 \]
 for all numeral $n,m \in \Num$. 
 We have to solve the recursive equations 
-\[
-\Interval(f,a,n,0)  \sim [f^n(a)]
-\ \ \ \ \ \ 
-\Interval(f,a,n,\Succ (m))  \sim f^n(a) @ \Interval(f,a,\Succ(n),m)
-\]
+\begin{center}
+  $\Interval(f,a,n,0) \sim [f^n(a)]$
+  \quad
+  and
+  \quad
+  $\Interval(f,a,n,\Succ (m))  \sim f^n(a) @ \Interval(f,a,\Succ(n),m)$.
+\end{center}
 Assume $\iter = \cond (a, \lambda x.f(\iter(x))):\N \rightarrow \N$ is the term
 in the context $(f:\N\rightarrow\N, a:\N)$ defined 
 in the previous sub-section: in particular, $\iter(n) \sim f^n(a)$ for all $n \in \Num$.
@@ -1362,7 +1387,7 @@ Below is the formal definition of values, closed total terms and total terms.
     A closed term $t:\N$ or is a \emph{value} if and only if $t \in \Nat$ ($t$ is some numeral).
   \item
     A closed term $t:\N$ is \emph{closed total}
-    if and only if $t \safeReduces^* u$ for some $u\in \Nat$.
+    if and only if $t \safeReducesAst u$ for some $u\in \Nat$.
   \item
     Closed terms and values of type $t:\alpha$ (type variable) coincide, both are all closed terms.
    \item
@@ -1385,7 +1410,7 @@ in a path of a proof in a way compatible with traces.
 Assume $\pi = (t_1, \ldots, t_n) \in \Tree(t)$ is any chain of immediate subterms from $t_1=t$,
 and $\vec{v} = (\vec{v_1}, \ldots, \vec{v_n})$ 
  is any vector of value assigments, one for each $t_i$. 
-$\vec{v}$ is \emph{trace-compatible}  if and only it satisfies the following condition:
+$\vec{v}$ is \emph{trace-compatible}  if and only if it satisfies the following condition:
 
   for all $j$  index of an $\N$-argument of $t_i$ assigned to $\Succ^{a}(0)$, 
   all $k$ index of an $\N$-argument of $t_{i+1}$ assigned to $\Succ^{b}(0)$, 
@@ -1404,7 +1429,7 @@ If an infinite path has a trace-compatible assignment, then all traces of the pa
 \begin{proposition}[Trace assigment]
 \label{prop:trace_assign}
 Assume $\Pi:\Gamma \vdash t:A$ and $\pi$ is an infinite path of $\Pi$ and
-$\rho$ is a value assignment to $\pi$. Assume $n \in \Nat$.
+$\rho$ is a trace-compatible assignment to $\pi$. Assume $n \in \Nat$.
 \begin{enumerate}
 \item
 \label{prop:trace_assign1}
@@ -1459,7 +1484,7 @@ By the subject reduction property, $u$ has type $A$.
 \item
   We first show the first \emph{base case}, namely when $A =\N$.
   By the assumption, $u$ is closed total.
-  By definition of $u$ closed total, we have $t \safeReduces u \safeReduces^* n$ for some $n\in\Num$. 
+  By definition of $u$ closed total, we have $t \safeReduces u \safeReducesAst n$ for some $n\in\Num$. 
   Hence $t:\N$ is total.
 \item
   We first show the second \emph{base case}, namely when $A =\alpha$.
@@ -1523,38 +1548,36 @@ We write $\Gamma_n\vdash t_n:A_n = \Label(\Pi,e)$ for the
 %18:11 30/04/2024
 
 \begin{proof}
-  Assume that $t$ is not total
-  and $t: \vec{x}:\vec{D}\vdash\vec{A}\rightarrow\N$ 
-  has a proof $\Pi=(T,\phi)$ in order to show that $t \not \in \GTC$.
+  Assume that $t$ is not total. 
+  Let $\vec{x}:\vec{D}$ and $\vec{A}\rightarrow\N$ be $\Gamma$ and $A$, respectively.
   By Proposition \ref{prop:trace_assign}.\ref{prop:trace_assign2} it is enough to prove that
   $\Pi$ has some infinite path $\pi=(e_1, e_2, \ldots)$ 
   and some trace-compatible assignment $\rho$ for $\pi$.
   By \ref{lem:total_value3} of Lemma~\ref{lem:total_value},
   there exist closed values $\vec{a}:\vec{A}$ and $\vec{d}:\vec{D}$ such that
   $t[\vec{d}]\vec{a}$ is not total. 
-  By induction on $i \in \N$, we construct an index $e_i \in \{1,2\}$ for each natural number $i$,
+  By induction on $i \in \N$, for each $i$, we construct a path $l_i = (e_1,\ldots,e_{i-1})$
   and a value assignment $\vec{v_i} = (\vec{d_i},\vec{a_i})$ such that 
-  $t_i = t \restr (e_1, \ldots, e_{i-1})$ is a subterm of $t$
-  and $(\vec{v_1},\ldots,\vec{v_i})$ is a trace-compatible assignment for the node 
-  $l_i = (e_1, \ldots, e_{i-1})$.
-  We have to find some $e_{i} \in \{1,2\}$ such that:
+  $t_i = t \restr l_i$ is a subterm of $t$
+  and $(\vec{v_1},\ldots,\vec{v_i})$ is a trace-compatible assignment for the node $l_i$. 
+  We have to find some $(l_i,\vec{d_i},\vec{a_i})$ such that:
   \begin{itemize}
   \item[(i)]
 %15:38 19/04/2024
    $t_{i} = t \restr l_{i}$ is a subterm of $t$,
-    $\Pi( ( l_{i} ) = \vec{x_{i}}:\vec{D_{i}}\vdash t_{i} : \vec{A_{i}}\rightarrow\N$, 
+    $\Label(\Pi,l_i) = \vec{x_{i}}:\vec{D_{i}}\vdash t_{i} : \vec{A_{i}}\rightarrow\N$, 
     and $e_{i}$ is any child node of $(e_1, \ldots, e_{i})$ in $\universe{\Pi}$; 
   \item[(ii)]
     $t_{i}$ is not total;
   \item[(iii)]
-    $\vec{d_{i}}:\vec{D_{i}}$ and $\vec{a_{i}}:\vec{A_{i}}$ are closed values
-    such that $t_{i}[\vec{d_{i}}]\vec{a_{i}}$ is not total;
+    $\vec{d_{i}}:\vec{D_i}$ and $\vec{a_i}:\vec{A_i}$ are closed values
+    such that $t_{i}[\vec{d_i}]\vec{a_i}$ is not total;
   \item[(iv)]
     the value assignment 
-    $\vec{d_1};\vec{a_1}$, \ldots, $\vec{d_{i}};\vec{a_{i}}$) is trace compatible.
-    That is, if $i-1$ is a progress point, namely if $t_{i-1}$ is of the form $\cond(f,g)$ and $e_{i}=2$ 
-    (hence $t_{i}$ is $g$),
-    then $\vec{a_i} = \Succ(m')\vec{a'}$, $\vec{d_{i}} = \vec{d_i}m'$.
+    $\vec{d_1},\vec{a_1}$, \ldots, $\vec{d_i},\vec{a_i}$) is trace compatible.
+    That is, if $i-1$ is a progress point, namely if $t_{i-1}$ is of the form $\cond(f,g)$ and $e_i=2$ 
+    (hence $t_i$ is $g$),
+    then $\vec{a_i} = \Succ(m')\vec{a'}$, $\vec{d_i} = \vec{d_i}m'$.
     %\Daisuke{mynote:write this more clearly}
   \end{itemize}
   
@@ -1563,9 +1586,9 @@ We write $\Gamma_n\vdash t_n:A_n = \Label(\Pi,e)$ for the
    and $(\vec{d},\vec{a})$ are values such that $t[\vec{d}](\vec{a})$ is not total.
   Points (i), (ii), (iii), (iv) are immediate.
 
-  Next, assume that $(e_i,\vec{d_i},\vec{a_i})$ is already constructed.
-  Then we define $(e_{i+1},\vec{d_{i+1}},\vec{a_{i+1}})$ by the case analysis on
-  the last rule for the node $e_{i+1}$ in $\Pi$. 
+  Next, assume that $(l_i,\vec{d_i},\vec{a_i})$ is already constructed.
+  Then we define $(l_{i+1},\vec{d_{i+1}},\vec{a_{i+1}})$ by the case analysis on
+  the last rule for the node $l_i$ in $\Pi$. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % APPARENTLY THE CASE $\struct(f)$ CAN BE SIMPLIFIED TO WEAKENING-Stefano
@@ -1574,164 +1597,160 @@ We write $\Gamma_n\vdash t_n:A_n = \Label(\Pi,e)$ for the
 \begin{enumerate}
 \item
   The case of $\weak$, namely
-  $\Label(\Pi,l_{i+1}) = t[y_{\theta (1)}/x_1,\ldots,y_{\theta (n)}/x_n]:\Delta\vdash \vec{A_i}\rightarrow\N$
-  is obtained from $\Gamma\vdash t:A$, where
-  $\Gamma = x_1:C_1,\ldots,x_n:C_n$, $\Delta = y_1:B_1,\ldots,y_m:B_m$, 
-  $\theta:\{1,\ldots,n\}\to\{1,\ldots,m\}$ is an injection, 
-  and $x_i^{C_i}=y_{\theta(i)}^{B_{\theta(i)}}$ for all $1\le i\le n$.
-  By the induction hypothesis and $(b)$, the conclusion
-  $t[y_{\theta (1)}/x_1,\ldots,y_{\theta (n)}/x_n][d_{i,\theta (1)}/y_{\theta (1)},\ldots,d_{i,\theta (n)}/y_{\theta (n)}]\vec{a_i}:\N$ 
-  of $\weak$ is not total, where we have $\vec{d_i} = d_{i,1}\ldots d_{i,m}$.
-  Then we define $e_{i+1}$ as the unique parent node of $e_i$ in the rule, and we
-  also we define $\vec{d_{i+1}}$ and $\vec{a_{i+1}}$ by $d_{i,\theta (1)}\ldots d_{i,\theta (n)}$
+  $\Label(\Pi,l_i) = \Gamma'\vdash t:\vec{A_i}\rightarrow\N$
+  is obtained from $\Gamma\vdash t:\vec{A_i}\rightarrow\N$, where
+  $\Gamma = x_1:D_1,\ldots,x_n:D_n$, $\Gamma' = x'_1:D'_1,\ldots,x'_m:D'_m$, and $\Gamma \subseteqsim \Gamma'$
+  with an injection $\phi:\{1,\ldots,n\}\to\{1,\ldots,m\}$. 
+  We have $x_i = x'_{\phi(i)}$ and $D_i = D'_{\phi(i)}$ for all $i \in \{1,\ldots,n\}$.
+  By the induction hypothesis and (ii), 
+  $t[d_{i,\phi(1)}/x_1,\ldots,d_{i,\phi(n)}/x_n]\vec{a_i} = t[d_{i,1}/x'_1,\ldots,d_{i,m}/x'_m]\vec{a_i}$ is not total,
+  where $\vec{d_i} = d_{i,1}\ldots d_{i,m}$.
+  Then we define $l_{i+1} = l_i\conc(1)$ taking the unique child node of $l_i$ in $\Pi$, and we
+  also define $\vec{d_{i+1}}$ and $\vec{a_{i+1}}$ by $d_{i,\phi(1)}\ldots d_{i,\phi(n)}$
   and $\vec{a_i}$, respectively. 
   We obtain (i), (ii), and (iii) for $i+1$, as expected.
-  We also have (iv) since the connection, determined by $\theta $, from
-  $(d_{i,1}\ldots d_{i,m};\vec{a_i})$ to 
-  $(\vec{d_{i+1}};\vec{a_{i+1}}) = (d_{i,\theta (1)},\ldots d_{i,\theta (n)};\vec{a_i})$
-  is trace compatible. 
+  We also have (iv) since $((\vec{d_i},\vec{a_i}),(\vec{d_{i+1}},\vec{a_{i+1}}))$
+  is trace compatible for $(t_i,t_{i+1})$. 
 
 \item
-  The case of $\var$-rule, namely $\Label(\Pi,l_{i+1}) = \Gamma\vdash x_j:C_j$ for some $j$, 
-cannot be, because $t_i = [x_j/d_j] = d_j$ is closed total by assumption on $\vec{d}$.
-
+  The case of $\var$-rule, namely $\Label(\Pi,l_i) = \Gamma\vdash x:D$ for some $x_{i,k}:D_{i,k} = x:D \in \Gamma$
+  cannot be, because $t_i [\vec{d_i}/\vec{x_i}] = d_{i,k}$ is closed total by assumption on $\vec{d}$.
+  
 \item
-  The case of $0$-rule, namely $\Label(\Pi,l_{i+1}) = \Gamma\vdash 0:\N$, 
+  The case of $0$-rule, namely $\Label(\Pi,l_i) = \Gamma\vdash 0:\N$, 
 cannot be. Indeed, $t_i = 0$ is total because $0$ is a numeral.
 
 \item  
-  The case of $\Succ$-rule, namely $\Label(\Pi,l_{i+1}) = 
-  \Gamma\vdash t_i: \N = \Gamma\vdash \Succ(u): \N$ for some $u$ 
-  is obtained from our assumptions on
-  $\Gamma\vdash \Succ(u): \N$. In this case $\vec{a_i}$ is empty, $t_{i+1}=u$, and
-  by the induction hypothesis $\Succ(u)[\vec{d_i}]):\N$ is not closed total.
+  The case of $\Succ$-rule, namely $\Label(\Pi,l_i) = \Gamma\vdash t_i: \N = \Gamma\vdash \Succ(u): \N$
+  for some $u$ is obtained from our assumptions on
+  $\Gamma\vdash u: \N$. In this case $\vec{a_i}$ is empty, $t_{i+1}=u$, and
+  by the induction hypothesis $\Succ(u)[\vec{d_i}]:\N$ is not closed total.
   Then, by the definition of closed total, $u[\vec{d_i}] =t_{i+1}[\vec{d_i}] $ is not closed total. 
   We define $e_{i+1}=1$, 
-  the index of the unique parent node of $l_{i+1}=(e_1, \ldots, e_n)$ in the $\Succ$-rule, and
-  we also define $\vec{d_{i+1}}$ and $\vec{a_{i+1}}$ by $\vec{d_i}$ and the empty list, respectively. 
+  the index of the unique child node of $l_{i+1}=l_i\conc(1)$ in the $\Succ$-rule, and
+  we also define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = ()$. 
   We obtain (i), (ii), (iii), and (iv) for $i+1$, as expected.
 
 \item
   The case of the $\apnotvar$-rule, namely 
-  $\Label(\Pi,l_{i+1}) = \Gamma\vdash f[\vec{x}](u[\vec{x}]): \vec{A}\rightarrow\N$ 
-  for some $f$, $u$
-  is obtained from $\Gamma\vdash f[\vec{x}]: B \rightarrow \vec{A}\rightarrow\N$ 
-  and $\Gamma\vdash u[\vec{x}]: B$. $u$ is not variable.
+  $\Label(\Pi,l_i) = \Gamma\vdash f[\vec{x}](u[\vec{x}]): \vec{A}\rightarrow\N$, 
+  for some $f$ and $u$, is obtained from $\Gamma\vdash f[\vec{x}]: B \rightarrow \vec{A}\rightarrow\N$ 
+  and $\Gamma\vdash u[\vec{x}]: B$, where $u$ is not a variable.
   By the induction hypothesis, $f[\vec{d_i}](u[\vec{d_i}])\vec{a_i}:\N$ is not total.
   We argue by case on the statement: \emph{$u[\vec{d_i}]:B$ is closed total}.
 
 \begin{enumerate}
 \item
   We first consider the subcase that \emph{$u[\vec{d_i}]:B$ is closed total}.
-  We define $a':B$ by $a' = n\in\Num$ such that $u[\vec{d_i}] \safeReduces^* n$ if $B=\N$,
-  by $a' = u[\vec{d_i}]$ otherwise. By lemma \ref{lem:total_value}.\ref{lem:total_value1}, $a'$ is a value.
-  Then define $e_{i+1}=1$, the index of $f[\vec{x}]$,
-  and define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = a',\vec{a_i}$. 
-  Using Lemma \ref{lem:total_value}.\ref{lem:total_value1}, \ref{lem:total_value}.\ref{lem:total_value2}
+  We define $b:B$ by $b = n\in\Num$ such that $u[\vec{d_i}] \safeReducesAst n$ if $B=\N$,
+  by $b = u[\vec{d_i}]$ otherwise. By lemma \ref{lem:total_value}.\ref{lem:total_value1}, $b$ is a value.
+  Then define $l_{i+1}=l_i\conc(1)$, the index of $f[\vec{x}]$,
+  and define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = b,\vec{a_i}$. 
+  Using Lemma \ref{lem:total_value}.\ref{lem:total_value1} and \ref{lem:total_value}.\ref{lem:total_value2}
   we obtain (i), (ii), (iii) for $i+1$, as expected. 
   We also have (iv) since the connection from 
-  $(\vec{d_i};\vec{a_i})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (\vec{d_i};a',\vec{a_i})$ is
+  $(\vec{d_i},\vec{a_i})$ to $(\vec{d_{i+1}},\vec{a_{i+1}}) = (\vec{d_i},b,\vec{a_i})$ is
   trace-compatible: all connected 
   $\N$-argument of $t_{i}=f(u)[\vec{x}]$ and $t_{i+1}[\vec{x}] = f[\vec{x}]$ are the same,
   because the only fresh argument of $f[\vec{x}]$ 
-  is $a'$ and no argument of $f(u)[\vec{x}]$ is connected to it.
+  is $b$ and no argument of $f(u)[\vec{x}]$ is connected to it.
 \item
   Next we consider the subcase that \emph{$u[\vec{d_i}]:B$ is not closed total}.
+  Let $B = \vec{C}\rightarrow\N$.
   By lemma \ref{lem:total_value}.\ref{lem:total_value3}
-  there is a sequence of values $\vec{a'}$ such that $u[\vec{d_i}]\vec{a'}:\N$ is not total.
-  Define $e_{i+1}=2$, the index of $u[\vec{x}]$,
-  and define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = \vec{a'}$. 
+  there is a sequence of values $\vec{c}:\vec{C}$ such that $u[\vec{d_i}]\vec{c}:\N$ is not total.
+  Define $l_{i+1}= l_i \conc (2)$ taking the child $u[\vec{x}]$,
+  and define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = \vec{c}$. 
   We obtain (i), (ii), (iii) for $i+1$, as expected.
   We also have (iv) since the connection from 
-  $(\vec{d_i};\vec{a_i})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (\vec{d_i};\vec{a'})$ is
+  $(\vec{d_i},\vec{a_i})$ to $(\vec{d_{i+1}},\vec{a_{i+1}}) = (\vec{d_i},\vec{c})$ is
   trace compatible: all connected $\N$-argument of $t_{i}=f(u)[\vec{x}]$ and $t_{i+1}=u[\vec{x}]$ are 
   in $\vec{d_i}$ and therefore are the same.
  \end{enumerate}
 
 \item
   The case of $\apvar$-rule, namely 
-  $\Label(\Pi,l_{i+1}) 
-    = 
-   \Gamma,x^\N\vdash f[\vec{x}](x):  \vec{A}\rightarrow\N$ is obtained from
-  $f[\vec{x}]:\Gamma\vdash N\rightarrow \vec{A} \rightarrow \N$. $x$ is a variable.
-  By the induction hypothesis, $f[\vec{d'}]d\vec{a_i}:\N$ is not total,
-  where $\vec{d_i} = \vec{d'},d$ and $d$ is the value of the variable $x^\N$.
-  Define $e_{i+1}=1$ as the index of unique parent node of $l_{i+1}=(e_1,\ldots,e_i)$, and
-  also define $\vec{d_{i+1}}$ by $\vec{d'}$ and define $\vec{a_{i+1}}$ by $d,\vec{a_i}$. 
+  $\Label(\Pi,l_i) 
+  = 
+  \Gamma \vdash f[\vec{x}](x): \vec{A}\rightarrow\N$ is obtained from
+  $\Gamma \vdash f[\vec{x}]: D,\vec{A} \rightarrow \N$,
+  where $\Gamma=x_1:D_1,\ldots,x_m:D_m$ and $x_k:D_k = x:D\in\Gamma$. 
+  By the induction hypothesis, $f[\vec{d_i}]d_{i,k}\vec{a_i}:\N$ is not total,
+  where $\vec{d_i} = (d_{i,1},\ldots,d_{i,m})$. 
+  Define $l_{i+1}=l_i\conc(1)$ as the unique child of $l_i$ in $\Pi$, and
+  also define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = d_{i,k},\vec{a_i}$. 
   We obtain (i), (ii), and (iii) for $i+1$, as expected.
   We also have (iv) since the connection from
-  $(\vec{d_i};\vec{a_i}) = (\vec{d'},d;\vec{a_i})$ to
-  $(d_{i+1};\vec{a_{i+1}}) = (\vec{d'};d\vec{a_i})$
-  is trace compatible: all connected $\N$-arguments in $\vec{d_{i}},\vec{a_{i}}$ and 
+  $(\vec{d_i},\vec{a_i})$ to
+  $(\vec{d_{i+1}},\vec{a_{i+1}}) = (\vec{d_i},d_{i,k},\vec{a_i})$
+  is trace compatible: all connected $\N$-arguments in $\vec{d_i},\vec{a_i}$ and 
   $\vec{d_{i+1}},\vec{a_{i+1}}$ are the same.  
- The only difference between the two assignments
-  is that the value $d$ of one variable $x$ of type $\N$ 
- in $t_i[\vec{x}]=f[\vec{x}](x)$ is duplicated to the value $d$ 
+  The only difference between the two assignments
+  is that, if $D_k = \N$, the value $d_{i,k}$ of type $\N$ for the variable $x_k$
+  in $t_i[\vec{x}]=f[x_1,\ldots,x_k,\ldots,x_m](x_k)$ is duplicated to the value $d_{i,k}$ 
   of the first unnamed argument of $ f[\vec{x}]$. 
 
 \item
   The case of $\lambda$-rule, namely
   $\Label(\Pi,l_{i+1}) = 
     \Gamma\vdash \lambda x^A.u[\vec{x},x] : A, \vec{A} \rightarrow \N$ is obtained from
-  $t_{i+1}[\vec{x},x^A]:\Gamma,x^A\vdash \vec{A}\rightarrow\N$, 
+  $\Gamma,x:A\vdash t_{i+1}[\vec{x},x^A]:\vec{A}\rightarrow\N$, 
   where $t_{i+1}[\vec{x},x]=u[\vec{x},x]$.
   By the induction hypothesis, $(\lambda x.(u[\vec{d_i},x]))a\vec{a'}:\N$ is not total,
-  where $\vec{a_i} = a\vec{a'}$.
-  Then, by Lemma~\ref{lem:total_value}, $t_{i+1}[\vec{d_i},a]\vec{a'}$ is not total. 
+  where $\vec{a_i} = a,\vec{a_*}$.
+  Then, by Lemma~\ref{lem:total_value}, $t_{i+1}[\vec{d_i},a]\vec{a_*}$ is not total. 
   We define $e_{i+1}=1$ as the index of unique parent node of $l_{i+1}=(e_1,\ldots,e_i)$,
-  and we also define $\vec{d_{i+1}} = \vec{d_i},a$ and $\vec{a_{i+1}} = \vec{a'}$. 
+  and we also define $\vec{d_{i+1}} = \vec{d_i},a$ and $\vec{a_{i+1}} = \vec{a_*}$. 
   We obtain (i), (ii), (iii) for $i+1$, as expected.
   We also have (iv) since the connection from 
-  $(\vec{d_i};\vec{a_i}) = (\vec{d_i};a\vec{a'})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (\vec{d_i}a;
-    \vec{a'})$ is trace-compatible: all connected argument in $\vec{d_{i}},\vec{a_{i}}$ and 
+  $(\vec{d_i},\vec{a_i}) = (\vec{d_i},a,\vec{a_*})$ to $(\vec{d_{i+1}},\vec{a_{i+1}}) = (\vec{d_i},a,\vec{a_*})$
+  is trace-compatible: all connected argument in $\vec{d_i},\vec{a_i}$ and 
   $\vec{d_{i+1}},\vec{a_{i+1}}$ are the same. The only difference between the two assignments
-  is that the value $d$ of the first unnamed argument of $t_i[\vec{x}]$ is moved to the value $d$
-  of the last variable of type $\N$ of $t_{i+1}[\vec{x},x]=u[\vec{x},x]$.
+  is that the value $a$ of the first unnamed argument of $t_i[\vec{x}]$ is moved to the value $a$
+  of the last variable of type $A$ of $t_{i+1}[\vec{x},x]=u[\vec{x},x]$.
   This is a kind of opposite of the movement we have in the $\apvar$.
 
-\item  
+\item
   The case of $\cond$-rule, namely
-  $\Label(\Pi,l_{i+1}) = \cond(f[\vec{x}],g[\vec{x},x]):
-    \Gamma\vdash C\rightarrow \N,\vec{A}\rightarrow\N$
+  $\Label(\Pi,l_i) = \Gamma\vdash C\rightarrow \cond(f[\vec{x}],g[\vec{x},x]):\N,\vec{A}\rightarrow\N$
   is obtained from 
-  $f[\vec{x}]:\Gamma\vdash \vec{A}\rightarrow\N$
+  $\Gamma\vdash f[\vec{x}]:\vec{A}\rightarrow\N$
   and
-  $g[\vec{x}]:\Gamma\vdash \N,\vec{A}\rightarrow\N$. 
-  By the induction hypothesis, $\cond(f[\vec{d_i}],g[\vec{d_i},x])m\vec{a'}:\N$ is not total,
-  where $\vec{a_i} = m\vec{a'}$ and $m \in \Num$. We argue by cases on $m$.
-\begin{enumerate}
-\item
-  We first consider the \emph{subcase $m=0$}.
-  Define $e_{i+1}=1$ the index of parent node whose term is $f[\vec{x}]$,
-  and define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = \vec{a'}$. 
-  We obtain (i), (ii), (iii) for $i+1$, as expected. 
-  We also have (iv) since the connection from 
-  $(\vec{d_i};\vec{a_i})
- =(\vec{d_i};0\vec{a'})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (\vec{d_i};\vec{a'})$
-  is trace compatible: 
-  each argument of $t_i$ is connected to some equal argument of $t_{i+1}[\vec{x}]=f[\vec{x}]$,
-  the first argument of $t_i[\vec{x}]$ disappears but it is connected to no $\N$-argument in $f[\vec{x}]$.
-\item
-  Next we consider the \emph{subcase $m=\Succ(m')$}. 
-  Define $e_{i+1}=2$ the index of the parent node whose term is $g[\vec{x}]$,
-  and define $\vec{d_{i+1}} = \vec{d_i},m'$ and $\vec{a_{i+1}} = \vec{a'}$. 
-  We obtain (i), (ii), (iii) for $i+1$, as expected.
-  We also have (iv) since the connection from 
-  $(\vec{d_i};\vec{a_i})
-  =(\vec{d_i};\Succ(m'),\vec{a'})$ to $(\vec{d_{i+1}};\vec{a_{i+1}}) = (\vec{d_i},m';\vec{a'})$
-  is trace compatible: 
-  each argument of $t_i[\vec{x}]$ is connected to some equal argument of $t_{i+1}[\vec{x}]=g[\vec{x}]$,
-  but for the first unnamend argument of $t_i[\vec{x}]$ 
-   which is connected the first unnamend argument of $g[\vec{x}]$.
-  This is fine because in the second premise of a $\cond$ 
-  the trace progress. This requires that \emph{the value $m$ of the argument decreases by $1$}, 
-  as indeed it is the case: the new value is $m'$.
-\end{enumerate}
+  $\Gamma\vdash g[\vec{x}]:\N,\vec{A}\rightarrow\N$. 
+  By the induction hypothesis, $\cond(f[\vec{d_i}],g[\vec{d_i},x])m\vec{a_*}:\N$ is not total,
+  where $\vec{a_i} = m,\vec{a_*}$ and $m \in \Num$. We argue by cases on $m$.
+  \begin{enumerate}
+  \item
+    We first consider the \emph{subcase $m=0$}.
+    Define $l_{i+1}=l_i\conc(1)$, namely the first child node of $l_i$ whose term is $f[\vec{x}]$,
+    and define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = \vec{a_*}$. 
+    We obtain (i), (ii), (iii) for $i+1$, as expected. 
+    We also have (iv) since the connection from 
+    $(\vec{d_i},\vec{a_i}) =(\vec{d_i},0,\vec{a_*})$ to
+    $(\vec{d_{i+1}},\vec{a_{i+1}}) = (\vec{d_i},\vec{a_*})$ is trace compatible: 
+    each argument of $t_i$ is connected to some equal argument of $t_{i+1}[\vec{x}]=f[\vec{x}]$,
+    the first argument of $t_i[\vec{x}]$ disappears but it is connected to no $\N$-argument in $f[\vec{x}]$.
+  \item
+    Next we consider the \emph{subcase $m=\Succ(m')$}. 
+    Define $l_{i+1}=l_i\conc(2)$, namely the second child node of $l_i$ whose term is $g[\vec{x}]$,
+    and define $\vec{d_{i+1}} = \vec{d_i},m'$ and $\vec{a_{i+1}} = \vec{a_*}$. 
+    We obtain (i), (ii), (iii) for $i+1$, as expected.
+    We also have (iv) since the connection from 
+    $(\vec{d_i},\vec{a_i})
+    =(\vec{d_i},\Succ(m'),\vec{a_*})$ to $(\vec{d_{i+1}},\vec{a_{i+1}}) = (\vec{d_i},m',\vec{a_*})$
+    is trace compatible: 
+    each argument of $t_i[\vec{x}]$ is connected to some equal argument of $t_{i+1}[\vec{x}]=g[\vec{x}]$,
+    but for the first unnamed argument of $t_i[\vec{x}]$ 
+    which is connected the first unnamed argument of $g[\vec{x}]$.
+    This is fine because in the second premise of a $\cond$ 
+    the trace progress. This requires that \emph{the value $m$ of the argument decreases by $1$}, 
+    as indeed it is the case: the new value is $m'$.
+  \end{enumerate}
 
 \end{enumerate}
 
-  By the above construction, we have an infinite path $\pi = (e_1,e_2,\ldots)$ in $\universe{\Pi}$
- and a trace-compatible assignment, as we wished to show.
+By the above construction, we have an infinite path $\pi = (e_1,e_2,\ldots)$ in $\universe{\Pi}$
+and a trace-compatible assignment, as we wished to show.
 
 %  Since $\Pi$ satisfies the global trace condition, $\vec{e}$ contains a progressing trace
 %  $(k_{m},k_{m+1},\ldots)$, where, for each $m\le i$, $k_i$ is an $\N$-argument of $t_i$, 
@@ -1748,14 +1767,13 @@ From this theorem we derive the weak normalization result:
 every closed term of type $\N$ is closed total, therefore by definition it reduces to some numeral for at least
 one reduction path. 
 
-\begin{corollary}\label{cor:unique_normal_form}
-Assume  $t: \Gamma\vdash A$,
-\begin {enumerate}
-\item
- $t \in \GTC$ implies that $t$ is total.
-\item
-  For any closed $t:\N$, there is numeral $n\in\Num$ such that $t\safeReduces^* n$. 
-\end{enumerate}
+\begin{corollary}\label{cor:WN_typeN}
+  \begin {enumerate}
+  \item
+   Assume  $\Gamma\vdash t:A$. Then $t \in \GTC$ implies that $t$ is total.
+  \item
+    For any closed $t:\N$, there is numeral $n\in\Num$ such that $t\safeReducesAst n$. 
+  \end{enumerate}
 \end{corollary}
 
 

@@ -1,53 +1,56 @@
 In this section we prove a weak form of confluence: normal form for
 all closed terms of $\CTlambda$ of type $\N$ is unique.
 By the weak normalization result proved in Section~\ref{section-weak-normalization},
-we will deduce: for all closed terms $t$ of $\CTlambda$ of type $\N$, 
-there is some $n \in \N$ such that there is a safe reduction $t \safeReduces^* n$, and all normal form of $t$
-are equal to $n$.
+we will deduce: for all closed terms $t$ of $\CTlambda$ of type $\N$,
+there is $n \in \N$ such that $t \safeReducesAst n$
+and all normal form of $t$ are equal to $n$. 
 
-We define equivalences $\sim_A$ (for each type $A$) for well-typed terms with type $A$.
+We define binary relations $\sim_A$ (for each type $A$) on well-typed terms with type $A$.
 \begin{definition}
-  We define an equivalence $\sim_A$ for \emph{closed} terms of $\CTlambda$
+  We define binary relations $\sim_A$ for \emph{closed} terms of $\CTlambda$
   by induction on the type $A$. 
   \begin{enumerate}
   \item
-    $t \sim_N u$ if and only if for all normal $t',u':\N$, if $t \safeReduces^* t'$
-    and $u \safeReduces^* u'$ then $t'=u'$.
+    $t_1 \sim_N t_2$ if and only if for all normal forms $t_1',t_2':\N$, if $t_1 \safeReducesAst t_1'$
+    and $t_2 \safeReducesAst t_2'$ then $t_1' = t_2'$.
   \item
-    $t \sim_{A\rightarrow B} u$ if and only if for all closed $a_1,a_2:A$ if
-    $a_1 \sim_A a_2$ then $t(a_1) \sim_B u(a_2)$.
+    $t_1 \sim_{A\rightarrow B} t_2$ if and only if for all closed $a_1,a_2:A$ if
+    $a_1 \sim_A a_2$ then $t_1(a_1) \sim_B t_2(a_2)$.
   \end{enumerate}
   We write $a_1,\ldots,a_n \sim_{A_1,\ldots,A_n} a'_1,\ldots,a'_n$ if $a_i\sim_{A_i} a'_i$ holds
   for all $i\in\{1,\ldots,n\}$. 
   
-  We also define $t[\vec{x}] \sim_A u[\vec{x}]$ for \emph{any} terms of $\CTlambda$,
-  with $\vec{x}:\vec{A}\vdash t[\vec{x}]:A$ and $\vec{x}:\vec{A}\vdash u[\vec{x}]:A$. 
+  We also define $t_1[\vec{x}] \sim_A t_2[\vec{x}]$ for \emph{any} terms of $\CTlambda$,
+  with $\vec{x}:\vec{A}\vdash t_i[\vec{x}]:B$, where $i\in\{1,2\}$, as follows. 
   \begin{enumerate}
   \item[3.]
-    $t[\vec{x}] \sim_A u[\vec{x}]$ if and only if for all closed terms $\vec{a_1}:\vec{A}$ and $\vec{a_2}:\vec{A}$,
-    if $\vec{a_1}\sim_{\vec{A}}\vec{a_2}$ then $t[\vec{a_1}] \sim_A u[\vec{a_2}]$. 
+    $t_1[\vec{x}] \sim_A t_2[\vec{x}]$ if and only if
+    for all closed terms $\vec{a_1}:\vec{A}$ and $\vec{a_2}:\vec{A}$,
+    if $\vec{a_1}\sim_{\vec{A}}\vec{a_2}$ then $t_1[\vec{a_1}] \sim_B t_2[\vec{a_2}]$. 
   \end{enumerate}  
   
 \end{definition}
 
+It is easily shown that $\sim_A$ is symmetric by the definition. 
 We will prove that, for all closed terms $t$ of $\CTlambda$ with type $A$, we have $t \sim_A t$.
 If $A=\N$ this means that the normal form of all closed terms of $\CTlambda$ of type $\N$ is unique,
 which is our goal.
 
-\begin{definition}
+\begin{definition}[Confluent and U-counterexample]
   Let $t$ be a term of $\CTlambda$. 
   \begin{enumerate}
   \item
     Assume that $t$ is a closed term with type $N$. 
-    We say that $n$ is a value of $t$ if $t \safeReduces^* n$ ($t$ safely reduces to $n$). 
+    We say that $n$ is a {\em value} of $t$ if $t \safeReducesAst n$ ($t$ safely reduces to $n$). 
   \item
-    We say that $t$ is confluent if $t \sim_A t$.
+    We say that $t$ is {\em confluent} if $t \sim_A t$.
   \item
-    Assume $\vec{x}:\vec{A}\vdash t:\vec{D}\rightarrow\N$. 
-    We say a quadraple $(\vec{a};\vec{d};\vec{a'};\vec{d'})$ of vectors consist of closed terms
-    is a counterexample to $t$ if
-    $\vec{a}\sim_{\vec{A}}\vec{a'}$, $\vec{d}\sim_{\vec{D}}\vec{d'}$, and
-    $t[\vec{a}](\vec{d}) \not\sim_N t[\vec{a'}](\vec{d'})$. 
+    Assume $\vec{x}:\vec{D}\vdash t:\vec{A}\rightarrow\N$. 
+    We say a quadraple $(\vec{d},\vec{a},\vec{d'},\vec{a'})$ is a {\em U-counterexample} to $t$
+    if and only if
+    both $(\vec{d},\vec{a})$ and $(\vec{d'},\vec{a'})$ are value assignments for $t$, 
+    $\vec{d}\sim_{\vec{D}}\vec{d'}$, $\vec{a}\sim_{\vec{A}}\vec{a'}$, and
+    $t[\vec{d}](\vec{a}) \not\sim_N t[\vec{d'}](\vec{a'})$. 
   \end{enumerate}
 \end{definition}
 
@@ -63,19 +66,33 @@ By using the weak normalization result,
 two closed terms $t$ and $u$ equivalent with respect to $\sim_\N$, namely $t \sim_\N u$,
 have a common numeral as their unique normal form. 
 
-\begin{lemma}
-  Let $t$ and $u$ be closed terms in $\CTlambda$. 
-  If $t \sim_\N u$, then there exists $n$ of type $\N$ such that
-  (1) $t \safeReduces^* n$, (2) $u \safeReduces^* n$,
-  (3) if $t \safeReduces^* t'$ and $t'$ is a normal form, then $t' = n$, and
-  (4) if $u \safeReduces^* u'$ and $u'$ is a normal form, then $u' = n$. 
+\begin{lemma}\label{lem:uniq_NF}
+  Let $t_1$ and $t_2$ be closed terms in $\CTlambda$. 
+  Assume $t_1 \sim_\N t_2$. 
+  \begin{enumerate}
+  \item\label{lem:uniq_NF1}
+    There exists $n \in \Num$ such that $t_1 \safeReducesAst n$ and $t_2 \safeReducesAst n$.
+    Moreover, for each $i\in \{1,2\}$, if $t_i \safeReducesAst u$ and $u$ is a normal form, then $u = n$. 
+  \item\label{lem:uniq_NF2}
+    If $t_1 \safeReduces t'_1$ and $t_2 \safeReduces t'_2$, then $t'_1 \sim_\N t'_2$. 
+  \end{enumerate}
+  
 \end{lemma}
 \begin{proof}
-  By Corollary~\ref{cor:unique_normal_form}, there are numerals $m,n$ such that
-  $t\safeReduces^* m$ and $u\safeReduces^* n$.
-  Then we obtain (1) and (2), since $m=n$ holds by $t\sim_\N u$.
-  If $t \safeReduces^* t'$ and $t'$ is a normal form, then $t'=n$ by $t\sim_\N u$.
-  Hence (3) holds. We also have (4) in a similar way. 
+  We show point~\ref{lem:uniq_NF1}. 
+  By Corollary~\ref{cor:WN_typeN}, there are $n_1,n_2 \in \Num$ such that
+  $t_1 \safeReducesAst n_1$ and $t_2\safeReducesAst n_2$.
+  Then $n_1=n_2$ holds by $t_1\sim_\N t_2$. 
+  If $t_i \safeReducesAst u$ and $u$ is a normal form, then $u = n_2$ by $t_1\sim_\N t_2$.
+
+  Next we show point~\ref{lem:uniq_NF2}.
+  It is enough to show the statement: $t_1\sim_\N t_2$ and $t_1 \safeReduces t'_1$ implies $t'_1 \sim_\N t_2$,
+  because we can prove point~\ref{lem:uniq_NF2} by using the statement twice with the symmetricity of $\sim_\N$. 
+  For showing the statement, assume that $t_1\sim_\N t_2$ and $t_1 \safeReduces t'_1$. Our goal is $t'_1 \sim_\N t_2$. 
+  To show it, take arbitrary normal forms $v'_1$ and $v_2$ such that $t'_1 \safeReducesAst v'_1$ and $t_2 \safeReducesAst v_2$.
+  By point~\ref{lem:uniq_NF1}, there is $n\in\Num$ for $t_1$ and $t_2$ that satisfies the properties as described.
+  Hence we have $v'_1 = n = v_2$ by using the property with $t_1 \safeReduces t'_1 \safeReducesAst v'_1$ and $t_2 \safeReducesAst v_2$. 
+  Therefore $t'_1 \sim_\N t_2$ is obtained. 
 \end{proof}
 
 %For confluent closed term $t$ of $\CTlambda$ of type $\N$, "safe" reduction preserves the value. Indeed,
@@ -87,23 +104,23 @@ have a common numeral as their unique normal form.
 %Indeed,if $u \reduces u'$ and $u'$ is normal, then $t \reduces \Succ (u')$, therefore $\Succ (u')=n$ 
 %by confluence of $t$, and we conclude that $n>0$ and $u'=n-1$. Thus, the normal form of $u$ is unique.
 
-We have $t \sim_A t$ if and only if there is no counter-example for $t$.
+We have $t \sim_A t$ if and only if there is no U-counterexample for $t$.
 This is shown by the following lemma.
-\begin{lemma}
-  Let $t$ be a term of $\vec{x}:\vec{A} \vdash t[\vec{x}]:\vec{D}\rightarrow\N$. 
-  Let $\vec{a},\vec{d},\vec{a'},\vec{d'}$ be vectors of closed terms.
+\begin{lemma}\label{lem:uniq_value}
+  Let $t$ be a term of $\vec{x}:\vec{D} \vdash t[\vec{x}]:\vec{A}\rightarrow\N$. 
+  Let $\vec{d},\vec{a},\vec{d'},\vec{a'}$ be vectors of closed terms.
   Assume that
-  $\vec{a}\sim_{\vec{A}}\vec{a'}$ and $\vec{d}\sim_{\vec{D}}\vec{d'}$ implies $t[\vec{a}](\vec{d}) \sim_N t[\vec{a'}](\vec{d'})$. 
+  $\vec{d}\sim_{\vec{D}}\vec{d'}$ and $\vec{a}\sim_{\vec{A}}\vec{a'}$ implies $t[\vec{d}](\vec{a}) \sim_N t[\vec{d'}](\vec{a'})$. 
   Then $t[\vec{x}]$ is confluent. 
 \end{lemma}
 \begin{proof}
-  Take any $\vec{a},\vec{d},\vec{a'},\vec{d'}$ such that $\vec{a}\sim_{\vec{A}}\vec{a'}$ and $\vec{d}\sim_{\vec{D}}\vec{d'}$.
-  Then $t[\vec{a}](\vec{d}) \sim_N t[\vec{a'}](\vec{d'})$ holds by the assumption.
-  We have $t[\vec{a}] \sim_{\vec{D}\rightarrow\N} t[\vec{a'}]$ by the definition of $\sim_{\vec{D}\rightarrow\N}$.
-  Hence $t[\vec{x}] \sim_{\vec{D}\rightarrow\N} t[\vec{x}]$ holds by the definition. 
+  Take any $\vec{d},\vec{a},\vec{d'},\vec{a'}$ such that $\vec{d}\sim_{\vec{D}}\vec{d'}$ and $\vec{a}\sim_{\vec{A}}\vec{a'}$.
+  Then $t[\vec{d}](\vec{a}) \sim_N t[\vec{d'}](\vec{a'})$ holds by the assumption.
+  We have $t[\vec{d}] \sim_{\vec{A}\rightarrow\N} t[\vec{d'}]$ by the definition of $\sim_{\vec{A}\rightarrow\N}$.
+  Hence $t[\vec{x}] \sim_{\vec{A}\rightarrow\N} t[\vec{x}]$ holds by the definition. 
 \end{proof}
 
-Taking contraposition of this lemma, there exists a counterexample for non-confluent $t$. 
+Taking contraposition of this lemma, there exists a U-counterexample for non-confluent $t$. 
 Using this, we prove the following theorem.
 
 \begin{theorem}
@@ -112,18 +129,247 @@ Using this, we prove the following theorem.
   then $t \not\in \GTC$, that is, $\Pi$ does not satisfy the global trace condition. 
 \end{theorem}
 \begin{proof}
+  Assume that $t$ is not confluent. 
+  Let $\Gamma = \vec{x}:\vec{D}$ and $A = \vec{A}\rightarrow\N$. 
+  By Proposition \ref{prop:trace_assign}.\ref{prop:trace_assign2} it is enough to prove that
+  there are an infinite path $\pi=(e_1, e_2, \ldots)$ of $\Pi$
+  and a trace-compatible assignment $\rho$ for $\pi$.
+  
+  By induction on $i \in \N$, for each $i$, we construct a path $l_i = (e_1,\ldots,e_{i-1})$
+  and value assignments $\vec{v_i} = (\vec{d_i},\vec{a_i})$ and $\vec{v'_i} = (\vec{d'_i},\vec{a'_i})$
+  for $t_i = t \restr l_i$, which is a subterm of $t$, such that 
+  both $(\vec{v_1},\ldots,\vec{v_i})$ and $(\vec{v'_1},\ldots,\vec{v'_i})$ are
+  trace-compatible assignments for the node $(t_1, \ldots, t_i)$.
+  We have to find $(l_i,\vec{d_i},\vec{a_i},\vec{d'_i},\vec{a'_i})$ such that:
+  \begin{enumerate}
+  \item[(i)]
+    For each $i\ge 1$, $l_i$ is a node of $\Pi$ and
+    $\Label(\Pi,l_i) = \vec{x_i}:\vec{D_i}\vdash t_i:\vec{A_i}\rightarrow\N$. 
+  \item[(ii)]
+    $t_i$ is not confluent whose U-counterexample is $(\vec{d_i},\vec{a_i},\vec{d'_i},\vec{a'_i})$. 
+  \item[(iii)]
+    $((\vec{d_1},\vec{a_1}),\ldots,(\vec{d_i},\vec{a_i}))$ and
+    $((\vec{d'_1},\vec{a'_1}),\ldots,(\vec{d'_i},\vec{a'_i}))$ are trace-compatible assignments for
+    $(t_1,\ldots,t_i)$. 
+  \end{enumerate}
 
+  For the case $i=1$,
+  by Lemma~\ref{lem:uniq_value},
+  there exist closed values $\vec{d_1},\vec{d'_1}:\vec{D}$ and $\vec{a_1},\vec{a'_1}:\vec{A}$ such that
+  $\vec{d_1}\sim_{\vec{D}}\vec{d'_1}$, $\vec{a_1}\sim_{\vec{A}}\vec{a'_1}$ and 
+  $t[\vec{d_1}]\vec{a_1} \not\sim_{\N} t[\vec{d'_1}]\vec{a'_1}$. 
+  Then we take $((),\vec{d_1},\vec{a_1},\vec{d'_1},\vec{a'_1})$ for this case.
+  Points (i), (ii), and (iii) are immediately shown. 
+
+  Next, assume that $(l_i,\vec{d_i},\vec{a_i},\vec{d'_i},\vec{a'_i})$ is already constructed. 
+  Then we define $(l_{i+1},\vec{d_{i+1}},\vec{a_{i+1}},\vec{d'_{i+1}},\vec{a'_{i+1}})$ by the case analysis
+  on the last rule for the node $l_i$ in $\Pi$. 
+
+  \begin{enumerate}
+  \item
+    The case of $\weak$, namely
+    $\Label(\Pi,l_i) = \Gamma'\vdash t:\vec{A_i}\rightarrow\N$
+    is obtained from $\Gamma\vdash t:\vec{A_i}\rightarrow\N$, where
+    $\Gamma = x_1:D_1,\ldots,x_n:D_n$, $\Gamma' = x'_1:D'_1,\ldots,x'_m:D'_m$, and $\Gamma \subseteqsim \Gamma'$
+    with an injection $\phi:\{1,\ldots,n\}\to\{1,\ldots,m\}$. 
+    We have $x_i = x'_{\phi(i)}$ and $D_i = D'_{\phi(i)}$ for all $i \in \{1,\ldots,n\}$.
+    By the induction hypothesis and (ii), we have 
+    $t[d_{i,\phi(1)}/x_1,\ldots,d_{i,\phi(n)}/x_n]\vec{a_i} = t[\vec{d_i}/\vec{x'}]\vec{a_i} \not\sim_\N t[\vec{d'_i}/\vec{x'}]\vec{a'_i} = t[d'_{i,\phi(1)}/x_1,\ldots,d'_{i,\phi(n)}/x_n]\vec{a'_i}$, 
+    where $\vec{d_i} = d_{i,1}\ldots d_{i,m}$ and $\vec{d'_i} = d'_{i,1}\ldots d'_{i,m}$.
+    Then we define $l_{i+1} = l_i \conc (1)$ taking the unique child node of $l_i$ in $\Pi$, and we
+    define
+    $\vec{d_{i+1}} = (d_{i,\phi(1)}\ldots d_{i,\phi(n)})$, 
+    $\vec{d'_{i+1}} = (d'_{i,\phi(1)}\ldots d'_{i,\phi(n)})$, 
+    $\vec{a_{i+1}} = \vec{a_i}$, and $\vec{a'_{i+1}} = \vec{a'_i}$. 
+    We obtain (i), (ii), and (iii) for $i+1$, as expected.
+    We also have (iv) since $((\vec{d_i},\vec{a_i}),(\vec{d_{i+1}},\vec{a_{i+1}}))$
+    and $((\vec{d'_i},\vec{a'_i}),(\vec{d'_{i+1}},\vec{a'_{i+1}}))$
+    are trace compatible for $(t_i,t_{i+1})$. 
+
+  \item
+    The case of $\var$-rule, namely $\Label(\Pi,l_i) = \Gamma\vdash x:D$ for some $x:D \in \Gamma$
+    cannot be, because $t_i = x$ is confluent. 
+
+  \item
+    The case of $0$-rule, namely $\Label(\Pi,l_i) = \Gamma\vdash 0:\N$, cannot be.
+    Indeed, $t_i = 0$ is confluent. 
+
+  \item  
+    The case of $\Succ$-rule, namely $\Label(\Pi,l_i) = 
+    \Gamma\vdash t_i: \N = \Gamma\vdash \Succ(u): \N$ for some $u$ 
+    is obtained from our assumptions on
+    $\Gamma\vdash u: \N$. In this case $\vec{a_i}$ is empty, $t_{i+1}=u$, and
+    by the induction hypothesis $\Succ(u)[\vec{d_i}]:\N$ is not confluent. 
+    Then, by the definition of confluent, $u[\vec{d_i}] =t_{i+1}[\vec{d_i}] $ is not confluent. 
+    We define $l_{i+1} = l_i \conc (1)$ taking the unique child of $l_i$ in $\Pi$. 
+    We also define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = ()$.  
+    We obtain (i), (ii), (iii), and (iv) for $i+1$, as expected.
+
+  \item
+    The case of the $\apnotvar$-rule, namely 
+    $\Label(\Pi,l_{i+1}) = \Gamma\vdash f[\vec{x}](u[\vec{x}]): \vec{A}\rightarrow\N$,
+    for some $f$ and $u$, 
+    is obtained from $\Gamma\vdash f[\vec{x}]: B \rightarrow \vec{A}\rightarrow\N$ 
+    and $\Gamma\vdash u[\vec{x}]: B$, where $u$ is not a variable.
+    By the induction hypothesis,
+    $f[\vec{d_i}](u[\vec{d_i}])\vec{a_i} \not\sim_\N f[\vec{d'_i}](u[\vec{d'_i}])\vec{a'_i}$
+    We argue by case on the statement: \emph{$u[\vec{d_i}] \sim_B u[\vec{d'_i}]$}.
+
+    \begin{enumerate}
+    \item
+      We first consider the subcase that \emph{$u[\vec{d_i}] \sim_B u[\vec{d'_i}]$}.
+      We define $b,b':B$ by $b = b' = n\in\Num$ such that $u[\vec{d_i}] \safeReducesAst n$ if $B=\N$,
+      by $b = u[\vec{d_i}]$ and $b' = u[\vec{d'_i}]$ otherwise.
+      By lemma \ref{lem:total_value}.\ref{lem:total_value1}, $b$ and $b'$ are values.
+      We also have $b \sim_B b'$ by the assumption of this case.
+      Then define $l_{i+1}=l_i\conc(1)$, the index of $f[\vec{x}]$,
+      and define $\vec{d_{i+1}} = \vec{d_i}$, $\vec{d'_{i+1}} = \vec{d'_i}$,
+      $\vec{a_{i+1}} = b,\vec{a_i}$, and $\vec{a'_{i+1}} = b',\vec{a'_i}$.
+      Then, by the induction hypothesis, $\vec{d_{i+1}} \sim_{\vec{D}} \vec{d'_{i+1}}$ and
+      $\vec{a_{i+1}} \sim_{B,\vec{A}} \vec{a'_{i+1}}$. 
+      Using Lemma \ref{lem:total_value}.\ref{lem:total_value1} and \ref{lem:total_value}.\ref{lem:total_value2}
+      we obtain (i), (ii), (iii) for $i+1$, as expected. 
+      We also have (iv) since the connections 
+      from $(\vec{d_i},\vec{a_i})$ to $(\vec{d_{i+1}},\vec{a_{i+1}}) = (\vec{d_i},b,\vec{a_i})$
+      and
+      from $(\vec{d'_i},\vec{a'_i})$ to $(\vec{d'_{i+1}},\vec{a'_{i+1}}) = (\vec{d'_i},b,\vec{a'_i})$
+      are trace-compatible: all connected 
+      $\N$-argument of $t_i=f(u)[\vec{x}]$ and $t_{i+1}[\vec{x}] = f[\vec{x}]$ are the same,
+      because the only fresh arguments of $f[\vec{x}]$ 
+      are $b$ and $b'$, and no argument of $f(u)[\vec{x}]$ is connected to them.
+    \item
+      Next we consider the subcase that \emph{$u[\vec{d_i}] \not\sim_B u[\vec{d'_i}]$}.
+      Let $B = \vec{C}\rightarrow\N$. 
+      By lemma \ref{lem:uniq_value},
+      there are sequences of values $\vec{c}, \vec{c'}:\vec{C}$ such that
+      $u[\vec{d_i}]\vec{c} \not\sim_\N u[\vec{d_i}]\vec{c'}$. 
+      Define $l_{i+1}= l_i \conc (2)$ taking the child $u[\vec{x}]$,
+      and define $\vec{d_{i+1}} = \vec{d_i}$, $\vec{a_{i+1}} = \vec{c}$, 
+      $\vec{d'_{i+1}} = \vec{d'_i}$, and $\vec{a'_{i+1}} = \vec{c'}$. 
+      We obtain (i), (ii), (iii) for $i+1$, as expected.
+      We also have (iv) since the connections from 
+      $(\vec{d_i},\vec{a_i})$ to $(\vec{d_{i+1}},\vec{a_{i+1}}) = (\vec{d_i},\vec{c})$
+      and
+      $(\vec{d'_i},\vec{a'_i})$ to $(\vec{d'_{i+1}},\vec{a'_{i+1}}) = (\vec{d'_i},\vec{c'})$
+      are trace compatible: all connected $\N$-argument of $t_{i}=f(u)[\vec{x}]$ and $t_{i+1}=u[\vec{x}]$ are 
+      in $\vec{d_i}$ and therefore are the same.
+    \end{enumerate}
+
+  \item
+    The case of $\apvar$-rule, namely 
+    $\Label(\Pi,l_i) 
+    = 
+    \Gamma \vdash f[\vec{x}](x): \vec{A}\rightarrow\N$ is obtained from
+    $\Gamma \vdash f[\vec{x}]: D,\vec{A} \rightarrow \N$,
+    where $\Gamma=x_1:D_1,\ldots,x_m:D_m$ and $x_k:D_k = x:D\in\Gamma$. 
+    By the induction hypothesis, $f[\vec{d_i}]d_{i,k}\vec{a_i} \not\sim_\N f[\vec{d'_i}]d'_{i,k}\vec{a'_i}$. 
+    where $\vec{d_i} = (d_{i,1},\ldots,d_{i,m})$ and $\vec{d'_i} = (d'_{i,1},\ldots,d'_{i,m})$. 
+    We define $l_{i+1}=l_i\conc(1)$ as the unique child of $l_i$ in $\Pi$. 
+    We also define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = d_{i,k},\vec{a_i}$
+    and define $\vec{d'_{i+1}} = \vec{d'_i}$ and $\vec{a'_{i+1}} = d'_{i,k},\vec{a'_i}$. 
+    We obtain (i), (ii), and (iii) for $i+1$, as expected.
+    We also have (iv) since the connections from
+    $(\vec{d_i},\vec{a_i})$ to $(d_{i+1},\vec{a_{i+1}}) = (\vec{d_i},d_{i,k},\vec{a_i})$
+    and
+    $(\vec{d'_i},\vec{a'_i})$ to $(d'_{i+1},\vec{a'_{i+1}}) = (\vec{d'_i},d'_{i,k},\vec{a'_i})$
+    are trace compatible: all connected $\N$-arguments in $\vec{d_{i}},\vec{a_{i}}$ and 
+    $\vec{d_{i+1}},\vec{a_{i+1}}$ are the same. Similarly
+    the connections of $\N$-arguments in $\vec{d'_i},\vec{a'_i}$ and $\vec{d'_{i+1}},\vec{a'_{i+1}}$ are the same.
+    The only differences are that, if $D_k = \N$, the values $d_{i,k}$ and $d'_{i,k}$ of type $\N$
+    for the variable $x_k^\N$ in $f[x_1,\ldots,x_k,\ldots,x_m](x_k)$ are duplicated to the values
+    $d_{i,k}$ and $d'_{i,k}$ of the first unnamed argument of $ f[\vec{x}]$, respectively. 
+
+  \item
+    The case of $\lambda$-rule, namely
+    $\Label(\Pi,l_i) = 
+    \Gamma\vdash \lambda x^A.u[\vec{x},x] : A, \vec{A} \rightarrow \N$ is obtained from
+    $\Gamma,x:A\vdash t_{i+1}[\vec{x},x^A]:\vec{A}\rightarrow\N$, 
+    where $t_{i+1}[\vec{x},x]=u[\vec{x},x]$.
+    By the induction hypothesis, $(\lambda x.(u[\vec{d_i},x]))a\vec{a_*} \not\sim_\N (\lambda x.(u[\vec{d'_i},x]))a'\vec{a'_*}$, 
+    where $\vec{a_i} = a,\vec{a_*}$ and $\vec{a'_i} = a',\vec{a'_*}$.    
+    Then, by Lemma~\ref{lem:uniq_NF}.\ref{lem:uniq_NF2}, $t_{i+1}[\vec{d_i},a]\vec{a_*}\not\sim_\N t_{i+1}[\vec{d'_i},a']\vec{a'_*}$.
+    We define $l_{i+1}=l_i\conc(1)$ as the unique child node of $l_i$,
+    and define $\vec{d_{i+1}} = \vec{d_i},a$ and $\vec{a_{i+1}} = \vec{a_*}$,
+    and also define $\vec{d'_{i+1}} = \vec{d'_i},a'$ and $\vec{a'_{i+1}} = \vec{a'_*}$.
+    We obtain (i), (ii), (iii) for $i+1$, as expected.
+    We also have (iv) since the connections from 
+    $(\vec{d_i},\vec{a_i}) = (\vec{d_i},a,\vec{a_*})$ to $(\vec{d_{i+1}},\vec{a_{i+1}}) = (\vec{d_i},a,\vec{a_*})$
+    and
+    $(\vec{d'_i},\vec{a'_i}) = (\vec{d'_i},a',\vec{a'_*})$ to $(\vec{d'_{i+1}},\vec{a'_{i+1}}) = (\vec{d'_i},a',\vec{a'_*})$
+    are trace-compatible.
+    We note that the values $a$ in $(\vec{d_i},\vec{a_i})$ and $a'$ in $(\vec{d'_i},\vec{a'_i})$ are
+    the first unnamed arguments of $t_i[\vec{x}]$, and, in $(\vec{d_{i+1}},\vec{a_{i+1}})$ and $(\vec{d_{i+1}},\vec{a_{i+1}})$,
+    they are moved to the values of the last variable of type $A$ of $t_{i+1}[\vec{x},x]=u[\vec{x},x]$.
+
+  \item  
+    The case of $\cond$-rule, namely
+    $\Label(\Pi,l_i) = \Gamma\vdash C\rightarrow \cond(f[\vec{x}],g[\vec{x},x]):\N,\vec{A}\rightarrow\N$
+    is obtained from 
+    $\Gamma\vdash f[\vec{x}]:\vec{A}\rightarrow\N$
+    and
+    $\Gamma\vdash g[\vec{x}]:\N,\vec{A}\rightarrow\N$. 
+    By the induction hypothesis, $\cond(f[\vec{d_i}],g[\vec{d_i},x])m\vec{a_*} \not\sim_\N \cond(f[\vec{d'_i}],g[\vec{d'_i},x])m\vec{a'_*}$, 
+    where $\vec{a_i} = m,\vec{a_*}$ and $\vec{a'_i} = m',\vec{a'_*}$ with $m,m' \in \Num$.
+    Since $m,m'$ are normal and $m \sim_\N m'$, we have $m = m'$. 
+    We argue by cases on $m$.
+    \begin{enumerate}
+    \item
+      We first consider the \emph{subcase $m=m'=0$}.
+      Define $l_{i+1}=l_i\conc(1)$, namely the first child node of $l_i$ whose term is $f[\vec{x}]$. 
+      We define $\vec{d_{i+1}} = \vec{d_i}$ and $\vec{a_{i+1}} = \vec{a_*}$,
+      and also define $\vec{d'_{i+1}} = \vec{d'_i}$ and $\vec{a'_{i+1}} = \vec{a'_*}$. 
+      We obtain (i), (ii), (iii) for $i+1$, as expected. 
+      We also have (iv) since the connection from 
+      $(\vec{d_i},\vec{a_i}) =(\vec{d_i},0,\vec{a_*})$ to
+      $(\vec{d_{i+1}},\vec{a_{i+1}}) = (\vec{d_i},\vec{a_*})$ is trace compatible: 
+      each argument of $t_i$ is connected to some equal argument of $t_{i+1}[\vec{x}]=f[\vec{x}]$,
+      the first argument of $t_i[\vec{x}]$ disappears but it is connected to no $\N$-argument in $f[\vec{x}]$.
+    \item
+      Next we consider the \emph{subcase $m=m'=\Succ(m_*)$}. 
+      Define $l_{i+1}=l_i\conc(2)$, namely the second child node of $l_i$ whose term is $g[\vec{x}]$. 
+      We define $\vec{d_{i+1}} = \vec{d_i},m_*$ and $\vec{a_{i+1}} = \vec{a_*}$,
+      and also define $\vec{d'_{i+1}} = \vec{d'_i},m_*$ and $\vec{a'_{i+1}} = \vec{a'_*}$. 
+      We obtain (i), (ii), (iii) for $i+1$, as expected.
+      We also have (iv) since the connections from 
+      $(\vec{d_i},\vec{a_i}) =(\vec{d_i},\Succ(m_*),\vec{a_*})$ to $(\vec{d_{i+1}},\vec{a_{i+1}}) = (\vec{d_i},m_*,\vec{a_*})$
+      and
+      $(\vec{d'_i},\vec{a'_i}) =(\vec{d'_i},\Succ(m_*),\vec{a'_*})$ to $(\vec{d'_{i+1}},\vec{a'_{i+1}}) = (\vec{d'_i},m_*,\vec{a'_*})$      
+      are trace compatible.
+      We note that, in both trace-compatible assignments, the first unnamed argument $m = \Succ(m_*)$ of $t_i[\vec{x}]$ 
+      which is connected the first unnamed argument $m_*$ of $g[\vec{x}]$, \emph{decreasing by $1$ from $m$}.
+      This is indeed as we expected for trace-compatible assignments since this $i$ is a progress point of them. 
+    \end{enumerate}
+  \end{enumerate}
+  
+  By the above construction, we have an infinite path $\pi=(e_1,e_2,\ldots)$ in $\Pi$ and
+  two trace compatible assignments
+  $\rho = ((\vec{d_1},\vec{a_1}),(\vec{d_2},\vec{a_2}),\ldots)$
+  and
+  $\rho' = ((\vec{d'_1},\vec{a'_1}),(\vec{d'_2},\vec{a'_2}),\ldots)$ for $\pi$,
+  as we wished to show. 
+  
 \end{proof}
 
 As a corollary from the theorem we will conclude: 
 if $t$ satisfies the global trace condition, then there is no such $\sigma$, therefore $t \sim t$, 
 as we wished to show.
 
-We prove that for any term $ (t \sim t)$ with counter-example $\vec{a},\vec{d} \sim_0 \vec{b},\vec{e}$
-and $\neg (t[\vec{a}](\vec{d}) \sim_0  t[\vec{b}](\vec{e}))$ we can find some immediate
-subterm $t'$ and with a counter-example $\vec{a'},\vec{d'} \sim_0 \vec{b'},\vec{e'}$
-and $\neg (t'[\vec{a'}](\vec{d'}) \sim_0  t'[\vec{b'}](\vec{e'}))$, \emph{compatible with trace
-condition}.
+\begin{corollary}\label{cor:UniqueNF_typeN}
+  \begin {enumerate}
+  \item
+    Assume $\Gamma\vdash t:A$. Then $t \in \GTC$ implies that $t$ is confluent. 
+  \item
+    For any closed $t:\N$, there is numeral $n\in\Num$ such that $t\safeReducesAst n$.
+    Moreover, for any normal form $u$ such that $t \safeReducesAst u$, we have $u=n$. 
+  \end{enumerate}
+\end{corollary}
+
+
+%We prove that for any term $ (t \sim t)$ with counter-example $\vec{a},\vec{d} \sim_0 \vec{b},\vec{e}$
+%and $\neg (t[\vec{a}](\vec{d}) \sim_0  t[\vec{b}](\vec{e}))$ we can find some immediate
+%subterm $t'$ and with a counter-example $\vec{a'},\vec{d'} \sim_0 \vec{b'},\vec{e'}$
+%and $\neg (t'[\vec{a'}](\vec{d'}) \sim_0  t'[\vec{b'}](\vec{e'}))$, \emph{compatible with trace
+%condition}.
 
 
 %21:09 20/03/2024
