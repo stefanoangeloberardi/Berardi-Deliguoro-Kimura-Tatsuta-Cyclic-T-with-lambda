@@ -2,7 +2,7 @@
 
 \title{CT-$\lambda$, a cyclic simply typed $\lambda$-calculus with fixed points}
 
-\author{Stefano Berardi }
+\author{Stefano Berardi,  Ugo de' Liguoro, Daisuke Kimura, Makoto Tatsuta}
 \date{}
 
 \else
@@ -30,22 +30,25 @@ cyclic proofs
 \maketitle
 
 \begin{abstract}
-We explore the possibility of defining a circular syntax
+A motivation for having a circular syntax for G\"{o}del System $\systemT$ is that terms 
+in a circular syntax are much shorter than the equivalent terms written in $\systemT$, 
+yet they can be checked mechanically.
+
+Several circular syntax for $\systemT$ have been proposed.
+In this paper explore the possibility of defining a circular syntax
 directly for $\lambda$-abstraction and simple types, instead of interpreting
  $\lambda$-abstraction through combinators first, then inserting a  circular syntax afterwards.
-We introduce our circular syntax as a fixed point operator defined by cases.
+A circular syntax using binders instead of combinators
+could be more familiar for researchers working in the field of Type Theory.
 
+We introduce our circular syntax as a fixed point operator defined by cases through a test on $0$.
 We prove the expected results for this circular simply typed $\lambda$-calculus, which we call $\CTlambda$: 
 \emph{(i)} every closed term of type $\N$ reduces to some numeral;
 \emph{(ii)}  strong normalization for all reductions sequences outside all fixed points; 
 \emph{(iii)}  strong normalization for ``fair'' reductions; \emph{(iv)} Church-Rosser property;
-and \emph{(i)} the equivalence between circular syntax and ordinary syntax 
+and \emph{(v)} the equivalence between circular syntax and ordinary syntax 
 for G\"{o}del system $\systemT$. 
 
-Our motivation is that terms of $\CTlambda$ 
-are much shorter than the equivalent terms written in $\systemT$.
-Beside, the circular syntax of $\CTlambda$, using binders instead of combinators, 
-could be more familiar for researchers working in the field of Type Theory.
 
 \end{abstract}
 
