@@ -1,8 +1,9 @@
 For infinite terms we can define a notion of reduction contracting infinitely many redexes at the same time.
 In this section investigate this notion, 
 we show that for recursive terms it is a recursive operation, and that the result
-is well-defined for the set $\GlobalTraceCondition$ of terms with the global trace condition. 
-We also show that $\GlobalTraceCondition$ is closed under infinite reductions.
+is well-defined for the set $\GTC$ of terms with the global trace condition. 
+We also show that $\GTC$ is closed under one step 
+of reduction contracting infinitely many redexes at the same time.
 
 Assume $t \in \LAMBDA$ and $X$ is a set of redexes in $t$. We define an operation $\reduces_X$ 
 on each node $t'$ of $t$, and its result $u \in \LAMBDA$ by induction on the distance between
@@ -18,13 +19,13 @@ In both terms, the unique infinite path of the term is made of redexes of $X$, a
 provides a single symbol of the output.
 
 If we want to consider infinite redexes in $\LAMBDA$ we should allow undefined sub-terms inside a term.
-This is not the case for the set $\GlobalTraceCondition$ of terms with the global trace condition:
-we can show that $\GlobalTraceCondition$ is closed under $\reduces_X$.
+This is not the case for the set $\GTC$ of terms with the global trace condition:
+we can show that $\GTC$ is closed under $\reduces_X$.
 
-We first check that $\reduces_X$ applied to $\GlobalTraceCondition$ produces no undefined sub-term.
+We first check that $\reduces_X$ applied to $\GTC$ produces no undefined sub-term.
 
 \begin{lemma}[No infinite rexed path]
-If $t \in \GlobalTraceCondition$ (if $t$ has the global trace condition)
+If $t \in \GTC$ (if $t$ has the global trace condition)
 then $\reduces_X$ applied to $t$ produces no undefined sub-term.
 \end{lemma}
 
@@ -44,11 +45,11 @@ no global trace condition.
 \end{proof}
 
 
-We prove that $\GlobalTraceCondition$ is closed under $\reduces_X$.
+We prove that $\GTC$ is closed under $\reduces_X$.
 
 
 \begin{lemma}
-If $t \in \GlobalTraceCondition$ and $t \reduces_X u$ then $u \in \in \GlobalTraceCondition$
+If $t \in \GTC$ and $t \reduces_X u$ then $u \in \in \GTC$
 \end{lemma}
 
 \begin{proof}
