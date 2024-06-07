@@ -1,0 +1,72 @@
+\section{Safe Church-Rosser for Infinite Lambda Terms}
+\label{section-safe-church-rosser}
+%15:12 16/04/2024
+We prove a form of Church-Rosser for the safe part of a term: 
+if $t \reduces u$ and $t \reduces v$ then there are $w$, $z$ such that 
+$u \reduces w$ and $v \reduces z$ and $w$, $v$ are equal outside the right-hand side of all $\cond$-
+sub-terms.
+
+\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
+\\
+\bfColor{red}{(Here we should fill this part - Stefano)}
+\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
+%15:46 24/04/2024
+
+We define the safe trunk of a term as the part of the term which we can normalize with safe reductions only.
+In the rest of this section we will
+prove that Safe Church-Rosser implies that if the safe trunk exists then it is unique. 
+
+Safe Church-Rosser and Safe strong Normalization together imply that after finitely many steps
+all safe reductions reach the same safe trunk.
+
+\begin{definition}[Safe Trunk of a term]
+\label{definition-safe-trunk}
+Assume $t \in \LAMBDA$.
+\begin{enumerate}
+\item
+The safe trunk of $t$ is any expression $u[\cond(f_1,\cdot), \ldots, \cond(f_n,\cdot)]$
+such that  for some $g_1, \ldots, g_n$ we have $v = u[\cond(f_1,g_1), \ldots, \cond(f_n,g_n)]$
+\emph{safe normal} and $t \reduces v$.
+\item
+$t$ is \emph{finite for safe reduction} if and only if all infinite reduction sequences from $t$ 
+include only finitely many \quotationMarks{safe} reduction steps.  
+\end{enumerate}
+\end{definition}
+
+
+\begin{lemma}[Safe Trunk of a term]
+\label{lemma-safe-trunk}
+Assume $t$ is finite for safe reductions.
+If the  safe-trunk of $t$ exists then it is unique. 
+\end{lemma}
+
+
+\begin{proof}
+Assume $t$ is finite for safe reductions in order to prove that the safe-trunk of $t$ is unique.
+
+Assume that $u[\cond(f_1,\cdot), \ldots, \cond(f_n,\cdot)]$ and
+$u'[\cond(f'_1,\cdot), \ldots, \cond(f'_{n'},\cdot)]$ are safe-trunks for $t$, in order to prove
+that $u=u'$ and $n=n'$. 
+
+Then for some $g_1, \ldots,g_n$ and some $g'_1, \ldots,g'_n$ we have that 
+$v = u[\cond(f_1,g_1), \ldots, \cond(f_n,g_n)]$ and 
+$v' = u'[\cond(f'_1,g'_1), \ldots, \cond(f'_n,g'_{n'})]$ 
+are safe-normal forms of $t$ and all $\cond$-expressions shown are maximal. 
+The decomposition of each safe-normal form $v$ is therefore unique:
+if $v = u"[\cond(f"_1,g"_1), \ldots, \cond(f"_n,g"_{n"})]$ then $u=u"$ and $n=n"$
+and $f_1=f"_1$, \ldots, $f_n=f"_n$.
+Each reduction from $v$, $v'$ takes place in some $g_1, \ldots,g'_{n'}$. 
+
+By Safe Church-Rosser  (first part of this section) we deduce that $v$ and $v'$ are confluent
+outside the right-hand-side of $\cond$-expressions, therefore
+for some $v"$ we have $v \reduces v"$ and $v' \reduces v'"$. 
+Since the reductions on $v, v'$ take place in some $g_1, \ldots,g'_{n'}$, 
+we deduce that $v" = u[\cond(f_1,g"_1), \ldots, \cond(f_n,g"_n)]$
+and $v'" = u[\cond(f'_1,g'"_1), \ldots, \cond(f'_n,g'"_{n'})]$ for some $g"_1, \ldots,g'"_{n'}$.
+From the unicity of the decomposition of $v"$
+with maximal $\cond$-subterms we conclude that $u=u'$ and $n=n'$
+and and $f_1=f'_1$, \ldots, $f_n=f'_n$, as wished.
+
+\end{proof}
+
+
