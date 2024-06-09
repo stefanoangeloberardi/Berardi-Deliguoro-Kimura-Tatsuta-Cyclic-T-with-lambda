@@ -1,3 +1,6 @@
+\section{Appendix: Equivalence between cyclic and non-cyclic system $T$} 
+\label{section-equivalence-cyclic-non-cyclic-T}
+\bfColor{red}{(This section is but a draft)}
 In this section we prove that the set of total functionals on $\N$ definable in 
 $\systemT$ and $\CTlambda$ are the same.
 
@@ -11,10 +14,6 @@ The opposite inclusion, from $\CTlambda$ to $\systemT$, it has been proved by pr
 combinatorial version of circular $\systemT$. For $\CTlambda$, we will define instead an algorithm
 taking an infinite term in  $\CTlambda$, described as a finite circular tree, 
 and returning a term in $\systemT$. 
-
-Our translation extends by a linear factor the size of the term: cyclic terms are simpler.
-%Our translation can expand
-%more than exponentially the size of the finite circular tree.
 
 We need a notion of extensional equality for  functionals on $\N$ of $\CTlambda$ and of $\systemT$. 
 
@@ -79,7 +78,7 @@ $(\CTlambda/\sim_{\CTlambda}, 0, \Succ, \ap)$ to the entire
 $(\systemT/\sim_{\systemT}, 0, \Succ, \ap)$.
 We ignore types of $\CTlambda$ including type variables, they have no corresponding in $\systemT$.
 
-For each $\N$-functional type $T$ we define a map $\phi_T$ from terms of type $T$ of $\CTlambda$
+For each $\N$-functional type $T$ we have to define a map $\phi_T$ from terms of type $T$ of $\CTlambda$
 to terms of type $T$ of $\systemT$. We abbreviate $\phi_T$ with $\phi$ and we require:
 
 \begin{enumerate}
@@ -95,134 +94,136 @@ $\phi(\Succ(t)) \sim_{\systemT} \Succ(\phi(t))$
 
 \end{enumerate}
 
-We require the following property of $\systemT$: we can define terms of $\systemT$ by $n$
-simultaneous lexicographic inductions. If $\vec{n} \in \N^m$ are numeral, we define 
-$\vec{n} \lexicographic{} \vec{m}$ if and only if $\vec{n} \not = \vec{m}$ and for the first $i \in [1,m]$
-such that $n_i \not = m_i$ we have $n_i +1 = m_i$. 
-If $T=\vec{A} \rightarrow \N$ is a functional type we define
-$0_T = \lambda \vec{x}:\vec{A}.0$. If $f:T$ we define $f \restr  \vec{x}$
-as the restriction of $f_i$ to the set of $\vec{y} \lexicographic{} \vec{x}$, 
-extended by the dummy value $0_T$:
-\begin{center}
- $(f \restr  \vec{x})(\vec{y}) = f(\vec{y})$ if $\vec{y} \lexicographic{} \vec{x}$ 
-\ \ \ 
-and 
-\ \ \ 
-$(f \restr  \vec{x})(\vec{y}) = 0_T$ otherwise
-\end{center}
+\ldots\ldots\ldots
 
-
-\begin{proposition}[Simultaneous lexicographic induction in $\systemT$]
-Assume $\vec{x}:\N^m$,
-and that we have any equation list in $\systemT$, in the meta-variables $f_1, \ldots, f_n$:
-$$
-f_i(\vec{x}) 
-\ \ \ 
-\sim_{\systemT} 
-\ \ \ 
-F_i(\vec{x}, f_1 \restr  \vec{x}, \ldots, f_n \restr  \vec{x})
-\ \ \ 
- : 
-\ \ \ 
-T_i
-$$
-This  equation list has solutions 
-$
-f_1:\N^m \rightarrow T_1, 
-\ldots, 
-f_n:\N^m \rightarrow T_n
-$ 
-in $\systemT$ and we can compute them. 
-\end{proposition}
-
-
-Assume $t:T$ is a cyclic term, represented as a cyclic tree with node $t_1$, \ldots, $t_n$.
-We translate it to a term of $\systemT$, obtained by solving an equation list whose meta-variables
-are the nodes the cyclic tree, with $\vec{x} = \vec{y},c$,
-and $\vec{y}$ the union of the $\N$-arguments of each node,
-and $c$ a variable used as a counter. The counter 
-$c$ starts from $n$, the number of nodes, and decreases
-of $1$ unit in each recursive call. 
-Within $n$ recursive calls, one or more value of $\vec{y}$ decreases by $1$,
-while all other values stay the same. In this case the varabile $c$ is reset to $n$: $c$ is the only
-variable which can increase during computation.
-
+%We require the following property of $\systemT$: we can define terms of $\systemT$ by $n$
+%simultaneous lexicographic inductions. If $\vec{n} \in \N^m$ are numeral, we define 
+%$\vec{n} \lexicographic{} \vec{m}$ if and only if $\vec{n} \not = \vec{m}$ and for the first $i \in [1,m]$
+%such that $n_i \not = m_i$ we have $n_i +1 = m_i$. 
+%If $T=\vec{A} \rightarrow \N$ is a functional type we define
+%$0_T = \lambda \vec{x}:\vec{A}.0$. If $f:T$ we define $f \restr  \vec{x}$
+%as the restriction of $f_i$ to the set of $\vec{y} \lexicographic{} \vec{x}$, 
+%extended by the dummy value $0_T$:
+%\begin{center}
+% $(f \restr  \vec{x})(\vec{y}) = f(\vec{y})$ if $\vec{y} \lexicographic{} \vec{x}$ 
+%\ \ \ 
+%and 
+%\ \ \ 
+%$(f \restr  \vec{x})(\vec{y}) = 0_T$ otherwise
+%\end{center}
 
 %
-%This is a first draft about how to do it.
+%\begin{proposition}[Simultaneous lexicographic induction in $\systemT$]
+%Assume $\vec{x}:\N^m$,
+%and that we have any equation list in $\systemT$, in the meta-variables $f_1, \ldots, f_n$:
+%$$
+%f_i(\vec{x}) 
+%\ \ \ 
+%\sim_{\systemT} 
+%\ \ \ 
+%F_i(\vec{x}, f_1 \restr  \vec{x}, \ldots, f_n \restr  \vec{x})
+%\ \ \ 
+% : 
+%\ \ \ 
+%T_i
+%$$
+%This  equation list has solutions 
+%$
+%f_1:\N^m \rightarrow T_1, 
+%\ldots, 
+%f_n:\N^m \rightarrow T_n
+%$ 
+%in $\systemT$ and we can compute them. 
+%\end{proposition}
 %
-%%%%%%%%%%%%%%
-% % TO BE IMPROVED
-%%%%%%%%%%%%%%
 %
-%\begin{enumerate}
+%Assume $t:T$ is a cyclic term, represented as a cyclic tree with node $t_1$, \ldots, $t_n$.
+%We translate it to a term of $\systemT$, obtained by solving an equation list whose meta-variables
+%are the nodes the cyclic tree, with $\vec{x} = \vec{y},c$,
+%and $\vec{y}$ the union of the $\N$-arguments of each node,
+%and $c$ a variable used as a counter. The counter 
+%$c$ starts from $n$, the number of nodes, and decreases
+%of $1$ unit in each recursive call. 
+%Within $n$ recursive calls, one or more value of $\vec{y}$ decreases by $1$,
+%while all other values stay the same. In this case the varabile $c$ is reset to $n$: $c$ is the only
+%variable which can increase during computation.
 %
-%\item
-%We first move all nodes to a context with the same number on type $\N$ variables, 
-%by adding dummy variables and dummy arguments.
-%This operation preserves regularity and global trace condition.
-%Now $t_1$, \ldots, $t_n$ all have context $\Gamma$ and type $A$.
 %
-%\item
-%We merge all buds into the same term, defined by some $u$ such that $u(i)=t_i$, for $i=1, \ldots, n$,
-%and $u(i)=$ some dummy term of type $A$ otherwise. We replace each $t_i$ with $u(i)$, 
-%for $i=1, \ldots, n$.
-%This operation preserves regularity and global trace condition.
-%Now we have $n$ buds, all are the same $u$ with context $\Gamma$ and type $\N \rightarrow A$.
-%Each bud $b$ defines a partial bijection between the occurrence of $\N$ in its context and type
-%$\Gamma \vdash \N \rightarrow A$, and the occurrences of $\N$ in the context and type
-%$\Gamma \vdash \N \rightarrow A$ of its companion. 
-%We extend this partial bijection to any total bijection $\tau$, depending on the but $b$.
-%
-%\item
-%We close the partial bijections defined by each bud by composition. The number of partial 
-%bijections can grow in an exponential  way.
-%
-%\item
-%Assume we have $m$ occurrences of $\N$ inside the context and type 
-%$\Gamma \vdash \N \rightarrow A$ of $u$.
-%We fix a permutation $\sigma:\{1, \ldots, m\}$ 
-%and we label them by variables $x_1, \ldots, x_n$ of $\systemT$,
-%with $x_i$ label of the argument with type $\N$ and number $i$.
-%We will define a translation $t^\sigma \in \systemT$ of  $t \in \CTlambda$.
-%
-%\item
-%All traces move from $u$ to any of the occurrences of $u$ inside $u$. 
-%Some traces of some $\N$
-%in $\Gamma \vdash \N \rightarrow A$ disappear, some other are moved to some other $\N$,
-%in an injective way. Two traces never merge.
-%We label each trace in the bud $u$ with the name $x_i$ of the corresponding trace, if any.
-%All those corresponding to no trace are labeled at random using the remaining variable names.
-%
-%At least one trace progresses, otherwise by repeating infinitely many times this step we would get a
-%path with no progressing trace. The same is true for any combination of one or more movements
-%from $u$ to $u$. 
-%
-%%After $m$ movements to any $u$ inside $u$, 
-%%each of the $m$ traces either disappeared or cycles. After $m!$ steps, all
-%%cycles are back to their original point. 
 %%
-%%All traces are now restarted or move from one $\N$ to the same $\N$, with or without progression.
-%
-%\item
-%At least one trace $x_i$ progresses and it is not erased by any other trace. Otherwise we could follow a path
-%in which each progress is erased in some new step, and so there is no infinite progressing trace.
-%We use this trace as the main variable $x_i$ of the recursion. In all steps, either $x_i$ is constant or decreases,
-%and in at least one case it decreases. In all cases in which $x_i$ decrease we use primitive
-%recursion on $x_i$ in $\systemT$, as main variable. 
-%In all other case, $x_i$ is not removed, therefore it stays the same. 
-%We isolate the main variable $x_j$ of the recursion for these steps, it is progressing therefore $j \not = i$.
-%We use primitive recursion on $x_j$: this is the second variable of primitive recursion. 
-%We continue in this way and we define a primitive recursion in $\systemT$, with pairwise distinct 
-%indexes $x_{i_1} = x_i$, $x_{i_2} = x_j$, \ldots, $x_{i_k}$ for some $k \ge 1$. We extend 
-%$x_{i_1}, \ldots, x_{i_k}$ to $x_{i_1}, \ldots, x_{i_n}$ in a random way: we defined in this way a
-%permutation $\sigma$ on $\{1, \ldots, m\}$ by $\sigma(j) = i_j$ for $j \in \{1, \ldots, m\}$
-%We define in this way a closed primitive recursive term 
-%$\lambda \vec{x}.t^\sigma \in \systemT$. Each bud $u$
-%defining a permutation $\tau$ is replaced by $\exch_{\tau}(f)$.
-%The term $\exch_\tau \in \systemT$ applies the permutation $\tau$ to the arguments of $f$,
-%and during the recursive call $f$ is replaced by $\lambda \vec{x}.u^\sigma$.
-%\end{enumerate}
-%
-%We claim that the infinite term $t^\sigma \in \systemT$ 
-%is equivalent to the cyclic recursive term $t \in \CTlambda$ we started from.
+%%This is a first draft about how to do it.
+%%
+%%%%%%%%%%%%%%%
+%% % TO BE IMPROVED
+%%%%%%%%%%%%%%%
+%%
+%%\begin{enumerate}
+%%
+%%\item
+%%We first move all nodes to a context with the same number on type $\N$ variables, 
+%%by adding dummy variables and dummy arguments.
+%%This operation preserves regularity and global trace condition.
+%%Now $t_1$, \ldots, $t_n$ all have context $\Gamma$ and type $A$.
+%%
+%%\item
+%%We merge all buds into the same term, defined by some $u$ such that $u(i)=t_i$, for $i=1, \ldots, n$,
+%%and $u(i)=$ some dummy term of type $A$ otherwise. We replace each $t_i$ with $u(i)$, 
+%%for $i=1, \ldots, n$.
+%%This operation preserves regularity and global trace condition.
+%%Now we have $n$ buds, all are the same $u$ with context $\Gamma$ and type $\N \rightarrow A$.
+%%Each bud $b$ defines a partial bijection between the occurrence of $\N$ in its context and type
+%%$\Gamma \vdash \N \rightarrow A$, and the occurrences of $\N$ in the context and type
+%%$\Gamma \vdash \N \rightarrow A$ of its companion. 
+%%We extend this partial bijection to any total bijection $\tau$, depending on the but $b$.
+%%
+%%\item
+%%We close the partial bijections defined by each bud by composition. The number of partial 
+%%bijections can grow in an exponential  way.
+%%
+%%\item
+%%Assume we have $m$ occurrences of $\N$ inside the context and type 
+%%$\Gamma \vdash \N \rightarrow A$ of $u$.
+%%We fix a permutation $\sigma:\{1, \ldots, m\}$ 
+%%and we label them by variables $x_1, \ldots, x_n$ of $\systemT$,
+%%with $x_i$ label of the argument with type $\N$ and number $i$.
+%%We will define a translation $t^\sigma \in \systemT$ of  $t \in \CTlambda$.
+%%
+%%\item
+%%All traces move from $u$ to any of the occurrences of $u$ inside $u$. 
+%%Some traces of some $\N$
+%%in $\Gamma \vdash \N \rightarrow A$ disappear, some other are moved to some other $\N$,
+%%in an injective way. Two traces never merge.
+%%We label each trace in the bud $u$ with the name $x_i$ of the corresponding trace, if any.
+%%All those corresponding to no trace are labeled at random using the remaining variable names.
+%%
+%%At least one trace progresses, otherwise by repeating infinitely many times this step we would get a
+%%path with no progressing trace. The same is true for any combination of one or more movements
+%%from $u$ to $u$. 
+%%
+%%%After $m$ movements to any $u$ inside $u$, 
+%%%each of the $m$ traces either disappeared or cycles. After $m!$ steps, all
+%%%cycles are back to their original point. 
+%%%
+%%%All traces are now restarted or move from one $\N$ to the same $\N$, with or without progression.
+%%
+%%\item
+%%At least one trace $x_i$ progresses and it is not erased by any other trace. Otherwise we could follow a path
+%%in which each progress is erased in some new step, and so there is no infinite progressing trace.
+%%We use this trace as the main variable $x_i$ of the recursion. In all steps, either $x_i$ is constant or decreases,
+%%and in at least one case it decreases. In all cases in which $x_i$ decrease we use primitive
+%%recursion on $x_i$ in $\systemT$, as main variable. 
+%%In all other case, $x_i$ is not removed, therefore it stays the same. 
+%%We isolate the main variable $x_j$ of the recursion for these steps, it is progressing therefore $j \not = i$.
+%%We use primitive recursion on $x_j$: this is the second variable of primitive recursion. 
+%%We continue in this way and we define a primitive recursion in $\systemT$, with pairwise distinct 
+%%indexes $x_{i_1} = x_i$, $x_{i_2} = x_j$, \ldots, $x_{i_k}$ for some $k \ge 1$. We extend 
+%%$x_{i_1}, \ldots, x_{i_k}$ to $x_{i_1}, \ldots, x_{i_n}$ in a random way: we defined in this way a
+%%permutation $\sigma$ on $\{1, \ldots, m\}$ by $\sigma(j) = i_j$ for $j \in \{1, \ldots, m\}$
+%%We define in this way a closed primitive recursive term 
+%%$\lambda \vec{x}.t^\sigma \in \systemT$. Each bud $u$
+%%defining a permutation $\tau$ is replaced by $\exch_{\tau}(f)$.
+%%The term $\exch_\tau \in \systemT$ applies the permutation $\tau$ to the arguments of $f$,
+%%and during the recursive call $f$ is replaced by $\lambda \vec{x}.u^\sigma$.
+%%\end{enumerate}
+%%
+%%We claim that the infinite term $t^\sigma \in \systemT$ 
+%%is equivalent to the cyclic recursive term $t \in \CTlambda$ we started from.

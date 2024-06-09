@@ -1,20 +1,51 @@
+
 \section{Safe Church-Rosser for Infinite Lambda Terms}
 \label{section-safe-church-rosser}
-%15:12 16/04/2024
-We prove a form of Church-Rosser for the safe part of a term: 
-if $t \reduces u$ and $t \reduces v$ then there are $w$, $z$ such that 
-$u \reduces w$ and $v \reduces z$ and $w$, $v$ are equal outside the right-hand side of all $\cond$-
-sub-terms.
 
-\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
-\\
-\bfColor{red}{(Here we should fill this part by adapting the proof of Church Rosser for the type $\N$- Stefano)}
-\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
-%15:46 24/04/2024
+%15:12 16/04/2024
+In this section prove a result for the safe part of a term, which we call Safe Church-Rosser: 
+if $t,u,v \in \LAMBDA$ and $t \reduces u$ and $t \reduces v$ and $u, v$ are safe-normal 
+then $u$, $v$ are equal outside the right-hand side of all $\cond$-sub-terms.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
+%\\
+%\bfColor{red}{(Here we should fill this part by adapting the proof of Church Rosser for the type $\N$- Stefano)}
+%\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
+%%15:46 24/04/2024
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Our first idea is to prove a full Church-Rosser property for $\LAMBDA$: 
+if $t,u,v \in \LAMBDA$ and $t \reduces u$ and $t \reduces v$ then for some $w \in \LAMBDA$
+we have $u \reduces w$ and $v \reduces w$. However this property is false: for some $t$, finding a 
+common reduction of $u,v$ takes infinitely many steps, even for terms of $\CTlambda$,
+as the next example shows.
+
+\begin{Eg}
+Let $b = \cond(x^{\N},b):\N \rightarrow \N$ 
+and $t = (\lambda x^{\N}.b)(r)$, with $r = (\lambda x^{\N}.x^{\N})(3)$. Then $t \in \CTlambda$.
+Indeed, $t$ is regular by construction.
+We have $t \in \GTC$ because the unique infinite path is $t, \lambda x^{\N}.b, b, b, b, \ldots$, and the
+unique unnamed argument of $b:\N \rightarrow \N$ progresses infinitely many times.
+
+Now consider the reductions: $t \reduces b[r/x^\N]$ and $t \reduces  (\lambda x^{\N}.b)(3)$.
+We expect $b[3/x^\N]$ as common reduction. But we have $b[r/x^\N] = \cond(r,b[r/x^\N]$,
+that is, we have replicated the redex $r$ infinitely many times in $b[r/x^\N]$. Therefore to reduce 
+$b[r/x^\N]$ to $b[3/x^\N]$ takes infinitely many steps, and for \emph{no finite reduction we have}
+$b[r/x^\N] \reduces b[3/x^\N]$.
+\end{Eg}
+
+In order to recover Church-Rosser we have to consider a more general notion of reduction $\reduces_X$, 
+which allow to reduce in one step infinitely many redexes, all those in a decidable set $X$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ldots\ldots\ldots\ldots\ldots\ldots
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 We define the safe trunk of a term as the part of the term which we can normalize with safe reductions only.
 In the rest of this section we will
-prove that Safe Church-Rosser implies that if the safe trunk exists then it is unique. 
+prove that Church-Rosser for infinite reductions implies that if the safe trunk exists then it is unique. 
 
 Safe Church-Rosser and Safe strong Normalization together imply that after finitely many steps
 all safe reductions reach the same safe trunk.

@@ -22,7 +22,6 @@
 
 \documentclass{lmcs}
 \usepackage{hyperref}
-%\usepackage{amsmath}heoremstyle{plain}\newtheorem{satz}[thm]{Satz} %\crefname{satz}{Satz}{\Succ    atze}
 \usepackage{graphicx}
 
 \fi
@@ -32,9 +31,9 @@
 \usepackage[pdftex,outline]{contour}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% AGGIUNGO TEOREMA LEMMA PROPOSIZIONE COROLLARIO PROVA % 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% WE ADD THE COMMANDS theorem lemma proposition corollary definition % 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
@@ -48,6 +47,7 @@
 \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
 \newenvironment{remark}[1][Remark]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
 
 
 \begin{document}
@@ -69,7 +69,7 @@
 
 \input{section-subject-reduction-infinite-lambda-terms}
 
-\input{section-safe-church-rosser}
+%\input{section-safe-church-rosser} %DRAFT
 
 \input{section-finite-safe-reductions}
 
@@ -87,50 +87,17 @@ Anupam Das. arXiv:2012.14421v2 [cs.LO] 16 Jan 2021.
 
 
 
+%\input{section-weak-normalization}        %SUBSUMED IN THE SN SECTION
+
+%\input{section-uniqueness-normal-form} % SUBSUMED IN THE CHURCH-ROSSER SECTION
+
+%\input{section-infinite-reductions}          % DRAFT
+
+%\input{section-normalization-fairness}    %DRAFT
+
+\input{section-equivalence-cyclic-non-cyclic-T} %WORKING DRAFT
 
 
-
-\section{Appendix: Weak normalization for closed terms of $\GTC$ of type $\N$}
-\label{section-weak-normalization}
-%\Daisuke{WN start}
-This section is now subsumed in the section about Strong Normalization for safe-reductions
-(\S \ref{section-finite-safe-reductions}). We only maintain
-it as an example of proof using the global trace condition.
-\\
-
-\input{section-weak-normalization}
-
-
-\section{Appendix: Uniqueness of normal form for closed terms of $\CTlambda$ of type $\N$}
-\label{section-uniqueness-normal-form}
-\bfColor{red}{(This section is but a draft)}
-%\bfColor{red}
-% {Incomplete section: uncomment the input command (below in the source code) to make this section visible}
-This section is now subsumed in the section about Church-Rosser for all terms 
-(\S \ref{section-safe-church-rosser}). 
-We only maintain it as an example of proof using the global trace condition.
-\\
-
-\input{section-uniqueness-normal-form}
-
-
-\section{Appendix: Infinite reductions}
-\label{section-infinite-reductions}
-\bfColor{red}{(This section is but a draft)}
-\input{section-infinite-reductions}
-
-
-
-\section{Appendix: Normalization and Fairness}
-\label{section-normalization-fairness}
-\bfColor{red}{(This section is but a draft)}
-\input{section-normalization-fairness}
-
-
-\section{Appendix: Equivalence between cyclic and non-cyclic system $T$} 
-\label{section-equivalence-cyclic-non-cyclic-T}
-\bfColor{red}{(This section is but a draft)}
-\input{section-equivalence-cyclic-non-cyclic-T}
 
 %
 %\section{appendix}
