@@ -3,7 +3,7 @@
 
 \section{Appendix: Equivalence Between Cyclic and non-Cyclic System T} 
 \label{section-equivalence-cyclic-non-cyclic-T}
-\bfColor{red}{(This section is but a draft)}
+%\bfColor{red}{(This section is but a draft)}
 In this section we prove that the two systems $\systemT$ and $\CTlambda$ 
 are each interpretable into the other. 
 Both interpretations preserve the reduction relation, applications, $0$ and $\Succ$ and contexts.
@@ -42,7 +42,7 @@ we define an interpretation from $\systemT$ into $\CTlambda$,
 preserving reductions, applications, $0$ and $\Succ$ and contexts.
 \\
 
-
+\bfColor{red}{The rest of the section if but an early draft}
 The opposite interpretation, from $\CTlambda$ to $\systemT$, it has been defined by proof-theory for the
 combinatorial version of circular $\systemT$. For $\CTlambda$, instead we will define an algorithm
 taking an infinite term in  $\CTlambda$, described as a finite circular tree, 
@@ -107,7 +107,7 @@ $(t \sim_{\CTlambda} u)
 \end{enumerate}
 \end{definition}
 
-Our goal is now to prove that there is a partial isomorphism from the types of $\N$-functionals in 
+Our goal is now to prove that there is an embedding from the types of $\N$-functionals in 
 $(\CTlambda/ \!\! \sim_{\CTlambda}, 0, \Succ, \ap)$ to the entire
 $(\systemT/ \!\! \sim_{\systemT}, 0, \Succ, \ap)$.
 We ignore types of $\CTlambda$ including type variables, they have no corresponding in $\systemT$.
@@ -128,15 +128,24 @@ $\phi(\Succ(t)) \sim_{\systemT} \Succ(\phi(t))$
 
 \end{enumerate}
 
+We will define an embedding from $\CTlambda$ to $\systemT$ extended with $+,\times$-types.
+There is an embedding from  $\systemT$ extended with $+,\times$-types to  $\systemT$ with only
+$\N, \rightarrow$, therefore it is enough to embed $\CTlambda$ to $\systemT$ extended with $+,\times$-types.
+
 We suppose be fixed a cyclic $\lambda$-term $t \in \CTlambda$, $t : T$,
- and we use several ingredients. 
+ and we use several ingredients. First we consider all $\Gamma_i \vdash u_i : U_i$ for $u_i$ sub-term of $t$,
+we turn it into a simple type $\Gamma_i \rightarrow U_i$, then we consider a single type
+$S = \Sigma_i \Gamma_i \rightarrow U_i$. 
 
 %14:47 11/06/2024
 
 \begin{enumerate}
 \item
-We suppose be given a map $\trunk_t:\N \rightarrow T$, such that $\trunk_t(n)$ is
+We suppose be given a map $\trunk_t:\N \rightarrow S = \Sigma_i \Gamma_i \rightarrow U_i$, 
+such that $\trunk_t(n)$ is 
 the unfolding of $t$ with all subterms $u:U$ in the level number $n$ replaced by a dummy term $0_U$.
+We use the type $S$ in order to have a common type and context for all sub-terms $u$.
+
 \item
 For each pair of subterms $u,v$ of $t$ and each path $\pi$ from $u$ to $v$. 
 we suppose be given a one-to-many trace
@@ -162,6 +171,7 @@ of length $cp+1$, therefore at least one homogeneous set of length $p+1$. If we 
 $\phi_c(p)+1$ times some relations $R_\pi$, there is some homogeneous set of $(p+1)$ elements
 decorated with a single $R_\pi$, and for some $i$ some variable starting from some value $\le p$ 
 and decreasing $p$ times. 
+
 This means that each branch terminates and the whole computation of $\trunk_{t'}(\phi(p))$ terminates.
 
 For a $c$-color tree, the value of $\phi_c(p)$ is $1+c+c^2+\ldots+c^{p-1} = (c^{p}-1)/(c-1)$.
@@ -170,7 +180,24 @@ there is some Erdos tree including some branch including some $f$-homogeneous se
 homogeneous set with first point $h$ followed by $f(h)$ more points. We
 want to define a functional in $\systemT$ such that all Erdos trees with $\ge F(f)$ nodes
 include some $f$-homogeneous set.
-We define $x_1 = 0$, $x_{h+1} = 1+ (c^{f(x_h)}-1)/(c-1)$ and $F(f) = x_{c+1}$.
+
+We call a Ramsey functional any functional $F(\vec{x},c)$ associated to $e$
+any functional taking weakly increasing functionals $\vec{x}$,
+and returning an upper bound for the size of a $c$-color Erdos tree including some homogeneous set
+with first node $l$ with value $\le e(\vec{x},\vec{F},l)$, 
+followed by $\le e(\vec{x},\vec{F},l)$ more nodes, in which some variable $i$ decreases by $1$
+each $n$ steps ($n$ number of sub-terms of the cyclic term). 
+
+We require that $e$ is any primitive recursive
+functional, that is, $e$ is 
+defined by simply typed lambda calculus plus recursion on $\Seq(\N)$, and $\vec{F}$ are Ramsey functionals.
+
+We claim that all sub-terms of $t$ have a computation time bounded by some Ramsey functional.
+If this is not the case, we define some infinite path with a infinitely progressing trace
+associated to some infinitely decreasing numeral, contradiction.
+
+%17:03 12/06/2024
+
 %?????????????????????
 %22:31 10/06/2024
 
