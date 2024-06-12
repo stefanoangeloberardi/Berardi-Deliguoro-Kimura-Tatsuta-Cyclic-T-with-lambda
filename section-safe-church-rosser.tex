@@ -59,7 +59,7 @@ We formally state Infinite Church-Rosser as follows.
 \quotationMarks{\emph{For all $t,u,v \in \LAMBDA_\bot$, all decidable sets $X$ of redexes of $t$, 
 if $t \reduces_X u$ and $t \reduces_Y v$, 
 then for some $w \in \LAMBDA_\bot$, some decidable set $Z, T$ of redexes of $u, v$
-we have $u \reduces_Z w$ and $v  \reduces_T w$}}.
+we have $u \reduces_Z w$ and $v  \reduces_T w$ and $t \reduces{X \cup Y} w$}}.
 
 %08:00 10/06/2024
 
@@ -98,37 +98,57 @@ and $\phi_X((i) \conc l) = \phi_{X_i}(l)$.
 We define $t \reduces_X u$ as the limit of a map $\rho(t,X,n)$ for $n \rightarrow \infty$. 
 $\rho(t,X,n)$ start with the undefined value $\bot$, then either holds the value $\bot$ forever,
 or at some step the root of $\rho(t,X,n)$ becomes some constructor of $\LAMBDA$ and never
-changes again. At each step, if $t$ itself is a redex in $X$ then we reduce it and we update $X$ accordingly,
-if $t$ is not a redex in $X$ then we move to the subterms of $t$.
+changes again. At each step, if $t$ itself is a redex in $X$ then we reduce it, 
+if $t$ is not a redex in $X$ then we move to the subterms of $t$. 
+In both case we update $X$ accordingly to some set of labels $Y$.
+We update any other set $Z$ of labels in $t$ in the same way to some $\sigma(t,X,n,Z)$,
+where $Y = \sigma(t,X,n,X)$.
 
 \begin{definition}
-Assume $t \in \LAMBDA_\bot$ and $X$ is a decidable set of redexes of $t$.
+Assume $t \in \LAMBDA_\bot$ and $X,Z$ are decidable sets of redexes of $t$.
 
 We set $\rho(t,X,0)=\bot$. Now assume  $\phi_X(t) = \True$. Then we set:
 
 \begin{enumerate}
 \item
-If $t = (\lambda x^T.b)(a)$, then $\rho(t,X,n+1) = \rho(b[a/x],Y,n)$ with $Y = (X_1)_1[X_2/x]$
+If $t = (\lambda x^T.b)(a)$, then $\rho(t,X,n+1) = \rho(b[a/x],Y,n)$ with $Y = (X_1)_1[X_2/x]$.
+We set $\sigma(t,X,n,Z) = (Z_1)_1[Z_2/x]$.
 \item
-If $t = \cond(f,g)(0)$, then $\rho(t,X,n+1) = \rho(f,Y,n)$ with $Y = (X_1)_1$
+If $t = \cond(f,g)(0)$, then $\rho(t,X,n+1) = \rho(f,Y,n)$ with $Y = (X_1)_1$.
+We set $\sigma(t,X,n,Z) = (Z_1)_1$.
 \item
-If $t = \cond(f,g)(\Succ(u))$, then $\rho(t,X,n+1) = \rho(g(u),Y,n)$ with $Y = \ap((X_1)_2, (X_2)_1)$
+If $t = \cond(f,g)(\Succ(u))$, then $\rho(t,X,n+1) = \rho(g(u),Y,n)$ with $Y = \ap((X_1)_2, (X_2)_1)$.
+We set $\sigma(t,X,n,Z) =  \ap((Z_1)_2, (Z_2)_1)$
 \end{enumerate}
 
 Assume  $\phi_X(t) = \False$ 
 and $t=c(t_1)\ldots(t_h)$ for some $h=0,1,2$ some $t_1, \ldots, t_h \in \LAMBDA_\bot$.
-Then $\rho(t,X,n+1) = c(\rho(t_1,X_1,n)\ldots(\rho(t_h,X_h,n))$.
+Then we set 
+$$
+\rho(t,X,n+1) = c(\rho(t_1,X_1,n)\ldots(\rho(t_h,X_h,n))
+$$
+We define $\rho(t,X) = \lim_{n \rightarrow \infty} \rho(t,X,n)$,  
+$\sigma(t,X,Z) = \lim_{n \rightarrow \infty} \sigma(t,X,n,Z)$
+and $t \reduces_X \rho(t,X)$.
 \end{definition}
 
 
 \begin{theorem}[Infinite Church-Rosser]
 \label{theorem-infinite-church-rosser}
-For all $t,u,v \in \LAMBDA_\bot$, all decidable sets $X$ of redexes of $t$, 
+For all $t,u,v \in \LAMBDA_\bot$, all decidable sets $X$ of redexes of $t$:
 if $t \reduces_X u$ and $t \reduces_Y v$, 
-then for some $w \in \LAMBDA_\bot$, some decidable set $Z, T$ of redexes of $u, v$
-we have $u \reduces_Z w$ and $v  \reduces_T w$
+then for some $w \in \LAMBDA_\bot$, for some sets
+$Z=\sigma(t,X,n,Y)$, $T = \sigma(t,Y,n,X)$ of redexes of $u, v$
+we have $u \reduces_Z w$ and $v  \reduces_T w$ and $t \reduces_{X \cup Y} w$.
 \end{theorem}
 
+\begin{proof}
+We have to prove that $\rho(\rho(t,X),Y))  = \rho(t,X \cup Y)$.
+We prove that for all $n,m \in \N$
+there is some $p=n+m \in \N$ such that  $\rho(\rho(t,X,n),Y,m))  = \rho(t,X \cup Y,p)$,
+and conversely that for all $p \in \N$ there are $n,m\in\N$ such that $p=n+m$ and
+$\rho(\rho(t,X,n),Y,m))  = \rho(t,X \cup Y,p)$.
+\end{proof}
 
 We define the safe trunk of a term as the part of the term which we can normalize with safe reductions only.
 In the rest of this section we will

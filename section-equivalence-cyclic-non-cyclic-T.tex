@@ -1,28 +1,60 @@
-\section{Appendix: Equivalence between cyclic and non-cyclic system $T$} 
+
+\section{Appendix: Equivalence Between Cyclic and non-Cyclic System T} 
 \label{section-equivalence-cyclic-non-cyclic-T}
 \bfColor{red}{(This section is but a draft)}
-In this section we prove that the set of total functionals on $\N$ definable in 
-$\systemT$ and $\CTlambda$ are the same.
+In this section we prove that the two systems $\systemT$ and $\CTlambda$ 
+are each interpretable into the other. 
+Both interpretations preserve the reduction relation, applications, $0$ and $\Succ$ and contexts.
 
-The inclusion from $\systemT$ and $\CTlambda$ is easy to prove.
-For any type $T$ we can define a term $\Rec:T,(\N,T \rightarrow T)\rightarrow T$ such that
+In both interpretations 
+we neglect the terms of $\CTlambda$ including type variables in their type or in their context,
+because these terms have no corresponding in $\systemT$.
+\\
+
+We first provide the interpretation from $\systemT$ to $\CTlambda$, which has a short definition.
+
+For any type $T$ we define a term $\Rec:T,(\N,T \rightarrow T),\N\rightarrow T$ such that
 $\Rec(a,f,0) = a$ and $\Rec(a,f)(n+1) = f(n,\Rec(a,f,n))$, for all numeral $n \in \Num$.
 The definition is $\Rec = \lambda a,f.\rec$ 
 with $\rec = \cond (a,\lambda x^{\N}.f(x,\rec(x))) : \N \rightarrow T$.
 
-The opposite inclusion, from $\CTlambda$ to $\systemT$, it has been proved by proof-theory for the
-combinatorial version of circular $\systemT$. For $\CTlambda$, we will define instead an algorithm
+\begin{proposition}
+$\Rec$ is a term of $\CTlambda$.
+\end{proposition}
+
+\begin{proof}
+\begin{enumerate}
+\item
+ $\Rec$ is regular by construction.
+\item 
+The only infinite path of $\Rec$ loops from $\rec$ to $\rec$ infinitely many times, and it includes
+an infinitely progressing trace. Here it is: from the first unnamed argument of $\rec$ to 
+to the first unnamed argument of $\lambda x^{\N}.f(x,\rec(x))$, then to $x^\N$ 
+in the context of $f(x,\rec(x))$, to $x^\N$ in the context of $\rec(x)$,
+and eventually to the first unnamed argument of $\rec$ again.
+\end{enumerate}
+\end{proof}
+
+If we replace each primitive recursion in $\systemT$ with the term $\Rec$ in $\CTlambda$
+we define an interpretation from $\systemT$ into $\CTlambda$, 
+preserving reductions, applications, $0$ and $\Succ$ and contexts.
+\\
+
+
+The opposite interpretation, from $\CTlambda$ to $\systemT$, it has been defined by proof-theory for the
+combinatorial version of circular $\systemT$. For $\CTlambda$, instead we will define an algorithm
 taking an infinite term in  $\CTlambda$, described as a finite circular tree, 
-and returning a term in $\systemT$. 
+and returning a term in $\systemT$ with the required properties. 
 
-We need a notion of extensional equality for  functionals on $\N$ of $\CTlambda$ and of $\systemT$. 
+First, we need a notion of confluence and of extensional equality 
+for  functionals of $\CTlambda$ and of $\systemT$.
 
-We define $t \sim_{\beta,\rec} u$ if and and only if $t, u \in \systemT$ and $t,u$ have the same type
-and for some $v \in \systemT$: $t \reduces_{\beta,\rec} v$ and $t \reduces_{\beta,\rec} v$
-normal forms of type $\N$ if and only if they normalize to the same numeral.
+We define $t \sim_{\beta,\rec} u$ (a syntactical confluence for $\systemT$) 
+if and and only if $t, u \in \systemT$ and $t,u$ have the same type
+and for some $v \in \systemT$: $t \reduces_{\beta,\rec} v$ and $u \reduces_{\beta,\rec} v$.
 
-We define an equivalence relation (in fact and extensional equality) 
-$\sim_{\systemT}$ on $\systemT$, by induction on the type 
+We define an equivalence relation (an extensional equality for $\systemT$) 
+$\sim_{\systemT}$ on $\systemT$, by induction on the type. 
 
 
 \begin{definition}[An extensional equality on $\systemT$]
@@ -34,24 +66,24 @@ $(t \sim_{\systemT} u) \Leftrightarrow  (t \sim_{\beta,\rec} u)$.
 \item
 If $t,u:A,\vec{A}\rightarrow\N$ and $t,u$ are closed then we set: 
 $(t \sim_{\systemT} u) \Leftrightarrow  
-\forall a \in \systemT. (a:A), (\mbox{ $a$ closed}) \Rightarrow (t(a) \sim_{\systemT} u(a))$.
+\forall a \in \systemT. (a:A), (\mbox{$a$ closed}) \Rightarrow (t(a) \sim_{\systemT} u(a))$.
 \item
 If $t,u:\vec{A}\rightarrow\N$ and $\FV(t), \FV(u) \subseteq \vec{x}$ then we set:
 $$
 (t \sim_{\systemT} u) 
 \Leftrightarrow  
 \forall \vec{a} \in \systemT. 
-(\vec{a}:\vec{A}), (\mbox{ $\vec{a}$ closed})  
+(\vec{a}:\vec{A}), (\mbox{$\vec{a}$ closed})  
 \Rightarrow 
-(t[\vec{a}/vec{x}] \sim_{\systemT} u[\vec{a}/vec{x}])
+(t[\vec{a}/\vec{x}] \sim_{\systemT} u[\vec{a}/\vec{x}])
 $$
 \end{enumerate}
 \end{definition}
 
 Then we can consider $\systemT$ as a structure $(\systemT/\sim_{\systemT}, 0, \Succ, \ap)$
 with natural numbers, functionals and extensional equality. 
-In the same way we define an equivalence relation on terms of $\CTlambda$ which denote functionals
-(whose type $T$ only include the atomic type $\N$). 
+In the same way we define an equivalence relation on terms of $\CTlambda$ which denote functionals.
+We only consider terms whose type and context only include the atomic type $\N$, and no type variables. 
 
 
 \begin{definition}[An extensional equality on $\CTlambda$]
@@ -63,19 +95,19 @@ $(t \sim_{\CTlambda} u) \Leftrightarrow  (t \sim_{\CTlambda} u)$.
 \item
 If $t,u:A,\vec{A}\rightarrow\N$ and $t,u$ are closed then we set: 
 $(t \sim_{\CTlambda} u) \Leftrightarrow  
-\forall a \in \CTlambda. (a:A), (\mbox{ $a$ closed}) \Rightarrow (t(a) \sim_{\CTlambda} u(a))$.
+\forall a \in \CTlambda. (a:A), (\mbox{$a$ closed}) \Rightarrow (t(a) \sim_{\CTlambda} u(a))$.
 \item
 If $t,u:\vec{A}\rightarrow\N$ and $\FV(t), \FV(u) \subseteq \vec{x}$ then we set:
 $(t \sim_{\CTlambda} u) 
 \Leftrightarrow  
 \forall \vec{a} \in \CTlambda. 
-(\vec{a}:\vec{A}), (\mbox{ $\vec{a}$ closed})  \Rightarrow (t[\vec{a}/vec{x}] \sim_{\CTlambda} u[\vec{a}/vec{x}])$.
+(\vec{a}:\vec{A}), (\mbox{$\vec{a}$ closed})  \Rightarrow (t[\vec{a}/\vec{x}] \sim_{\CTlambda} u[\vec{a}/\vec{x}])$.
 \end{enumerate}
 \end{definition}
 
 Our goal is now to prove that there is a partial isomorphism from the types of $\N$-functionals in 
-$(\CTlambda/\sim_{\CTlambda}, 0, \Succ, \ap)$ to the entire
-$(\systemT/\sim_{\systemT}, 0, \Succ, \ap)$.
+$(\CTlambda/ \!\! \sim_{\CTlambda}, 0, \Succ, \ap)$ to the entire
+$(\systemT/ \!\! \sim_{\systemT}, 0, \Succ, \ap)$.
 We ignore types of $\CTlambda$ including type variables, they have no corresponding in $\systemT$.
 
 For each $\N$-functional type $T$ we have to define a map $\phi_T$ from terms of type $T$ of $\CTlambda$
@@ -83,16 +115,62 @@ to terms of type $T$ of $\systemT$. We abbreviate $\phi_T$ with $\phi$ and we re
 
 \begin{enumerate}
 \item
-If $t \sim_{\CTlambda} u$ then $\phi(t) \sim_{\systemT} \phi(u)$
+If $t \sim_{\CTlambda} u$ \ \ \ \ \ \ \ \ \ \ \ \ \ then $\phi(t) \sim_{\systemT} \phi(u)$
 
 \item
-If $t: A \rightarrow B$, $u:A$ then $\phi(t(u)) \sim_{\systemT} \phi(t)(\phi(u))$
+If $t: A \rightarrow B$, $u:A$ \ \ \ then $\phi(t(u)) \sim_{\systemT} \phi(t)(\phi(u))$
 
 \item
 $\phi(0) \sim_{\systemT} 0$ and
 $\phi(\Succ(t)) \sim_{\systemT} \Succ(\phi(t))$
 
 \end{enumerate}
+
+We suppose be fixed a cyclic $\lambda$-term $t \in \CTlambda$, $t : T$,
+ and we use several ingredients. 
+
+%14:47 11/06/2024
+
+\begin{enumerate}
+\item
+We suppose be given a map $\trunk_t:\N \rightarrow T$, such that $\trunk_t(n)$ is
+the unfolding of $t$ with all subterms $u:U$ in the level number $n$ replaced by a dummy term $0_U$.
+\item
+For each pair of subterms $u,v$ of $t$ and each path $\pi$ from $u$ to $v$. 
+we suppose be given a one-to-many trace
+relation $R_\pi$ between the indexes of $\N$-arguments of $u$ and of the $\N$-arguments of $v$. 
+We close the set of relations $R_\pi$ by composition 
+and we obtain a finite set (of exponential size in $t$).
+\end{enumerate}
+
+By the global trace condition for each infinite composition of $R_\pi$ there is some infinitely progressing
+trace. This means that there is some index $i$ in the domain of $R_\pi$ such that for some $n \in \N$
+we have $R^n_\pi(i,i)$ and the variable $i$ progresses.
+
+
+We consider any assignment $t' \equiv t[\vec{n},\vec{x}](\vec{m},\vec{y})$ of the arguments of $t$.
+The idea is to find map $\phi$ such that for all $p \ge \vec{n}, \vec{n}$ we have
+$\trunk_{t'}(m)$ stationary for all $m \ge \phi(p)$, therefore $t' = \trunk_{t'}(\phi(p))$.
+
+$\phi_c(p)$ is the map computing the maximum number of nodes for an Erdos tree in $c$
+colors with height $\le p$ and branching $\le c$ (there is at most one child per color).
+Whenever an Erdos tree has at least a branch of length $cp+1$ and $c$ colors, 
+then we have a monotonically colored sequence
+of length $cp+1$, therefore at least one homogeneous set of length $p+1$. If we take any composition of 
+$\phi_c(p)+1$ times some relations $R_\pi$, there is some homogeneous set of $(p+1)$ elements
+decorated with a single $R_\pi$, and for some $i$ some variable starting from some value $\le p$ 
+and decreasing $p$ times. 
+This means that each branch terminates and the whole computation of $\trunk_{t'}(\phi(p))$ terminates.
+
+For a $c$-color tree, the value of $\phi_c(p)$ is $1+c+c^2+\ldots+c^{p-1} = (c^{p}-1)/(c-1)$.
+Suppose $f:\N \rightarrow \N$ is some weakly increasing map. We want to prove that
+there is some Erdos tree including some branch including some $f$-homogeneous set: some
+homogeneous set with first point $h$ followed by $f(h)$ more points. We
+want to define a functional in $\systemT$ such that all Erdos trees with $\ge F(f)$ nodes
+include some $f$-homogeneous set.
+We define $x_1 = 0$, $x_{h+1} = 1+ (c^{f(x_h)}-1)/(c-1)$ and $F(f) = x_{c+1}$.
+%?????????????????????
+%22:31 10/06/2024
 
 \ldots\ldots\ldots
 
