@@ -1,0 +1,194 @@
+
+I read the part of your comment about ackermann function. Indeed, you pointed out a weakness of simply type theory versus formal arithmetic. in the definition of ackermann, in the clause
+
+Ack(m + 1, n + 1) = Ack(m, Ack(m + 1, n))
+
+ is it essential that in the left-hand-side you have m+1 and not, say, m+2. therefore if you define:
+
+λmn.cond(Sn, λm′ .cond(ack1(m′ , 1), λn′ .ack1(m′ , ack1(Sm′ , n′ )))(n))(m)
+
+you have to comunicate to the algorithm the information that m=Sm'. If you where writing a cyclic formal proof in arithmetic, it would be natural to use the assumption m=Sm', and this would guide the algorithm checking the GTC. Simple type theory includes much less information about the relations between variables. In this case you should insert an hint for the algorithm that indeed we have m=Sm'.
+
+The only way I can imagine to insert such a hint is replacing Sm' with m whenever you know that indeed you have m=Sm':
+
+λmn.cond(Sn, λm′ .cond(ack1(m′ , 1), λn′ .ack1(m′ , ack1(m , n′ )))(n))(m)
+
+I should check the details, but I can tell you my impression. Looking to the page 2 of your notes, if you replace Sm' with m in step 3 there is no cut for the trace chasing of the red N (of the variable m) therefore any infinite path includes some infinite number of cases 1,2,3 for red N. in cases 1,2 the  red N  progresses . If there are infinitely many cases 1,2 then the red N progresses infinitely many times, if there are finitely many cases 1,2 then from some point on there are only cases 3. In this case there is a grace for the golden N (for the variable n) progressing infinitely many times.
+
+If you want, I can insert a full checking for the ackermann function.
+
+best, stefano
+
+Il 02/05/2024 15:23, Daisuke Kimura ha scritto:
+> Dear Stefano,
+>
+> Thank you for your list of your changes.
+> They are helpful for me.
+>
+> So far I read until Sec.3 of the document.
+>
+> > 1. In the eta-rule,
+>
+> I think both the eta-rule and the ap_v rule are problematic.
+> I added discussion directory in the repository and git pushed.
+> It contains 2 pdf files (ap_v.pdf and ack.pdf) with their source.
+>
+> ap_v.pdf discusses a problem of the ap_v rule.
+>
+> ack.pdf discusses Ackermann function.
+> In this file Ackermann function failed to satisfy GTC
+> in two systems (one is with eta, the other is with ap_v).
+>
+>
+> > 2. I explicitly say that contexts are list.
+> OK.
+>
+>
+> > 3. I consider binary trees as set of lists over {1,2}, I add any extra information as a
+> > labeling on such lists.
+> OK.
+>
+>
+> > 4. I consider variables with type superscript x^T,
+> OK.
+>
+>
+> > 5. I changed the rule
+>
+> I have no strong opinion on choosing the two versions of cond.
+> But I don't see your reason. Let me confirm it.
+>
+> > The reason is that in the case contexts are lists the rule does not work.
+> > it cannot derive
+> > Gamma|-cond(x,lambda x:T,x):N-->N
+>
+> We often implicitly identify two alpha-equivalent terms.
+> Under this, cond(x,lambda x:N,x) and cond(x,lambda y:N,y) are the same.
+> Then we have the following.
+>
+>                    Gamma,x:N,y:N|-y:N
+>                   ------------------------------
+> Gamma,x:N|-x:N     Gamma,x:N|-lambda y:N,y:N-->N
+> ------------------------------------
+> Gamma,x:N|-cond(x,lambda y:N,y):N-->N
+>
+> For the previous version, the situation is similar:
+> cond x.(x,x) and cond y.(x,y) are identified, and it is derived by
+>
+> Gamma,x:N|-x:N     Gamma,x:N,y:N|-y:N
+> ------------------------------------
+> Gamma,x:N|-cond y.(x,y):N-->N
+>
+> I'm not sure that the current version solves some problem of the previous version.
+> Do I miss something?
+>
+>
+> Best regards,
+> Daisuke
+>
+>
+>
+> On 5/1/24 13:32, Berardi Stefano wrote:
+>>
+>> I list some changes I made.
+>>
+>> 1. In the eta-rule, I have the impression that the clause (x not in FV(Gamma)) was never used. there is nothing wrong with this hypothesis, but if it is never used I would drop it. I changes the rule name to ap_v (appplication to a variable x, without assuming that (x not in FV(Gamma)))
+>>
+>> 2. I explicitly say that contexts are list. in this way I found easier to precise the trace of each argument. I think that Brotherston and Simpson have contexts as sets, but for type theory we need to be very precise about formalization of the notion of trace, and I think that formalization with lists is easier.
+>>
+>> 3. I consider binary trees as set of lists over {1,2}, I add any extra information as a labeling on such lists.
+>>
+>> 4. I consider variables with type superscript x^T, in order to make easier to recover the type of a term. This means that
+>> we should write x^T:T, this is redundant, but we can avoid writing the superscript T in this case.
+>>
+>> 5. I changed the rule
+>>
+>> Gamma|-f:A        Gamma,x:N|-g:A
+>> ---------------------------------------------
+>> Gamma|-cond(f,g):N-->A
+>>
+>> to the rule
+>>
+>> Gamma|-f:A        Gamma|-g:N-->A
+>> ---------------------------------------------
+>> Gamma|-cond(f,g):N-->A
+>>
+>> The reason is that in the case contexts are lists the rule does not work. it cannot derive
+>>
+>> Gamma|-cond(x,lambda x:T,x):N-->N
+>>
+>> because if x:N is in Gamma then the variable x occurs twice in the list Gamma,x:N, that is,
+>> Gamma,x:N is not a context. Remark that the rule
+>>
+>> Gamma|-f:A        Gamma,x:N|-g:A
+>> ---------------------------------------------
+>> Gamma|-cond(f,g):N-->A
+>>
+>> is fine if we take contexts as sets instead. But I prefer lists, in order to make simpler the clauses for traces.
+>>
+>> We can meet online if you wish
+>> Best Stefano
+>>
+>> Il 30/04/2024 21:24, Berardi Stefano ha scritto:
+>>>
+>>> I finished my changes, we can discuss them if you wish
+>>> stefano
+>>>
+>>> Il 09/04/2024 19:21, Daisuke Kimura ha scritto:
+>>>> Dear all,
+>>>>
+>>>> I hope you enjoyed the vacation.
+>>>>
+>>>> I updated the WN part (still unfinished).
+>>>> I couldn't find enough time since I was busy preparing for
+>>>> the new semester (it was more than I expected, sorry).
+>>>> Gradually the situation becomes normal.
+>>>>
+>>>>
+>>>> Best regards,
+>>>> Daisuke
+>>>>
+>>>>
+>>>> On 4/3/24 21:50, Berardi Stefano wrote:
+>>>>>
+>>>>> a nice vacation to all of you
+>>>>> stefano
+>>>>>
+>>>>> Il 29/03/2024 03:58, Daisuke Kimura ha scritto:
+>>>>>> Dear Stefano,
+>>>>>>
+>>>>>> > Perhaps daisuke has time to do insert it from his notes ???
+>>>>>>
+>>>>>> I'll take time this weekend.
+>>>>>>
+>>>>>>
+>>>>>> Please enjoy your vacations.
+>>>>>>
+>>>>>> Best regards,
+>>>>>> Daisuke
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 3/28/24 19:15, Berardi Stefano wrote:
+>>>>>>>
+>>>>>>>      Dear all, I uploaded a first draft of the paper  on cyclic lambda in the repository:
+>>>>>>>
+>>>>>>> https://github.com/stefanoangeloberardi/Berardi-Deliguoro-Kimura-Tatsuta-Cyclic-T-with-lambda
+>>>>>>>
+>>>>>>>      I unlock it. I had no enough time for inserting in the draft paper the proof of weak normalization done in torino (this is section 6 of the paper). Perhaps daisuke has time to do insert it from his notes ??? There is also to check there is no inconsistency between notes and the draft paper.
+>>>>>>>
+>>>>>>>      Anyway, I can start again working on the paper in two weeks, after Easter vacations and after April 10.
+>>>>>>>
+>>>>>>>
+>>>>>>>      Best wishes and happy Easter
+>>>>>>>
+>>>>>>>      Stefano
+>>>>>>>
+>>>>>
+>>>
+>>
+
+-- 
+Prof. Stefano Berardi
+Computer Science Dept. Torino University - Italy
+http://www.di.unito.it/~stefano/

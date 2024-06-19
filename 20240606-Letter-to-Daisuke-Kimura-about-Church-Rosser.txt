@@ -1,0 +1,24 @@
+06/06/2024 Questo tentativo non sembra funzionare.
+forse church-rosser vale solo al limite e non dopo un numero finito di riduzioni,
+neppure se si consentono infinite contrazioni simultanee ad ogni passo
+
+t|=_{n} t
+
+t|=_{n} t'                                     implies  S(t)            |=_{n+1} S(t') 
+t|=_{n} t'                                     implies  lambda x.t      |=_{n+1} lambda x.t'
+t|=_{n} t' and u|=_{n} u'                      imply    t(u)            |=_{n+1} t'(u')
+t|=_{n} t' and u|=_{n} u'                      imply    cond(t,u)       |=_{n+1} cond(t',u')
+
+t|=_{n} t' and u|=_{n} u'                      imply    cond(t,u)(0)    |=_{n+1} t'
+t|=_{n} t' and u|=_{n} u' and S(v)|=_{n} S(v') imply    cond(t,u)(S(v)) |=_{n+1} u'(v')
+t|=_{n} t' and u|=_{n} u'                      imply    (lambda x.t)(u) |=_{n+1} t'[u'/x]
+
+Church-Rosser for level n:
+
+for all a,b,c, if 
+	a|=_{n} b and a|=_{n} c 
+there are d,e such that:
+ 	b |=_{n} d and c |=_{n} e and d =_{n} e (equality up to the first n levels)
+
+Church-Rosser for all levels n implies unicity of the safe trunk of a term 
+and unicity of normal form in the limit (whenever a limit normal form exists)

@@ -1,0 +1,574 @@
+\documentclass{article}
+
+\usepackage{amssymb,amsmath,proof,graphicx,color}
+
+\newcommand{\bfColor}[2]{{\bf \color{#1}{#2}}}
+\definecolor{oldgold}{rgb}{0.81, 0.71, 0.23}
+\definecolor{purple}{rgb}{0.8, 0.2, 0.8}
+
+\newcommand{\Rapv}{\hbox{$(\text{ap}_{\text{v}})$}}
+\newcommand{\RapNv}{\hbox{$(\text{ap}_{\lnot\text{v}})$}}
+\newcommand{\Reta}{\hbox{$(\eta)$}}
+\newcommand{\Rap}{\hbox{$(\text{ap})$}}
+\newcommand{\Rcond}{\hbox{$(\text{cond})$}}
+\newcommand{\FV}[1]{\text{FV}(#1)}
+\newcommand{\Ack}{{\tt ack}}
+\newcommand{\AckA}{{\tt ack1}}
+\newcommand{\AckB}{{\tt ack2}}
+\newcommand{\ACK}{{\rm Ack}}
+\newcommand{\Cond}[2]{\text{cond}(#1,#2)}
+\newcommand{\Suc}[1]{{\tt S}#1}
+\newcommand{\N}{N}
+\newcommand{\gN}{\bfColor{oldgold}{N}}
+\newcommand{\rN}{\bfColor{red}{N}}
+\newcommand{\bN}{\bfColor{blue}{N}}
+\newcommand{\rbN}{\bfColor{red}{N}\hspace{-1em}\bfColor{blue}{N}}
+\newcommand{\rM}{\bfColor{red}{m}}
+\newcommand{\bN}{\bfColor{blue}{n}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+
+\newenvironment{proof}[1][Proof]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{example}[1][Example]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{remark}[1][Remark]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{claim}[1][Claim]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+
+\begin{document}
+
+{\bf On Ackermann function and inference rules $\Reta$ and $\Rapv$}
+
+\begin{align*}
+  \ACK(0,n) &= n+1
+  \\
+  \ACK(m+1,0) &= \ACK(m,1)
+  \\
+  \ACK(m+1,n+1) &= \ACK(m,\ACK(m+1,n))
+\end{align*}
+
+Remark that this is defined by the lexicographic order of $(m,n)$. 
+
+\section{First term representation: $\AckA$}
+
+We first give the first representation $\AckA$ of Ackermann function. 
+In this article, we sometimes write $f(x,y)$ instead of $f(x)(y)$, for readability.
+
+\begin{definition}[$\AckA$]\rm
+  We define $\AckA$ by the following equation.
+  \[
+  \AckA = \lambda \rM\bN.\Cond{\Suc{\bN}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(\bN)}(\rM)
+  \]
+\end{definition}
+
+\noindent{\bf Checking the behavior of $\AckA$}
+\begin{align*}
+  \AckA(0,n)
+  &\mapsto
+  \Cond{\Suc{n}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n)}(0)
+  \\
+  &\mapsto
+  \Suc{n}
+\end{align*}
+%%%%%%%
+\begin{align*}
+  \AckA(\Suc{m},0)
+  &\mapsto
+  \Cond{\Suc{0}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(0)}(\Suc{m})
+  \\
+  &\mapsto
+  (\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(0))(m)
+  \\
+  &\mapsto
+  \Cond{\AckA(m,1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(0)
+  \\
+  &\mapsto
+  \AckA(m,1)
+\end{align*}
+%%%%%%%
+\begin{align*}
+  \AckA(\underline{\Suc{m}},\Suc{n})
+  &\mapsto
+  \Cond{\Suc{\Suc{n}}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(\Suc{n})}(\underline{\Suc{m}})
+  \\
+  &\mapsto
+  (\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(\Suc{n}))(\underline{m})
+  \\
+  &\mapsto
+  \Cond{\AckA(m,1)}{\lambda n'.\AckA(m,\AckA(\Suc{\underline{m}},n'))}(\Suc{n})
+  \\
+  &\mapsto
+  (\lambda n'.\AckA(m,\AckA(\Suc{\underline{m}},n')))(n)
+  \\
+  &\mapsto
+  \AckA(m,\AckA(\Suc{\underline{m}},n))
+\end{align*}
+
+The point of $\AckA$ is the last case. The term $\underline{\Suc{m}}$ of the first line and $\Suc{\underline{m}}$ of the last line are slightly diffelent: $\underline{\Suc{m}}$ is decomposed into $\underline{m}$ by the $\text{cond}$-reduction, then $\Suc{\underline{m}}$ is constructed by substituting $m'$ of $\Suc{m'}$ by $\underline{m}$. 
+
+\subsection{$\AckA:\N\to\N\to\N$ is not in GTC (with $\Reta$)}
+
+\begin{claim}
+  $\AckA:\N\to\N\to\N$ is well-typed, but does not satisfy GTC in the system with $\Reta$.
+\end{claim}
+
+{\footnotesize
+  \hspace{-3cm}
+  $\infer{
+    \vdash \AckA:\rN\to\gN\to\N\ (\dagger)
+  }{
+    \infer[\Reta]{
+      m:\rN, n:\gN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n)}(m): \N
+    }{
+      \infer[\Rcond]{
+        n:\gN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n)}: \rN\to\N
+      }{
+        \infer{
+          n:\N \vdash \Suc{n}: \N
+        }{
+          \infer{
+            n:\N \vdash n: \N
+          }{}
+        }
+        &
+        \infer{
+          n:\gN \vdash \lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n): \rN\to\N
+        }{
+          \infer[\Reta]{
+            n:\gN, m':\rN \vdash \Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n): \N
+          }{
+            \infer[\Rcond]{
+              m':\rN \vdash \Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}: \gN\to\N
+            }{
+              \infer{
+                m':\rN \vdash \AckA(m',1):\N
+              }{
+                \infer[\Reta]{
+                  m':\rN \vdash \AckA(m'):\N\to\N
+                }{
+                  \deduce{
+                    \vdash \AckA:\rN\to\N\to\N
+                  }{(\dagger1)}
+                }
+                &
+                \infer{
+                  \vdash 1:\N
+                }{}
+              }
+              &
+              \infer{
+                m':\rN \vdash \lambda n'.\AckA(m',\AckA(\Suc{m'},n')): \gN\to\N
+              }{
+                \infer{
+                  m':\rN, n':\gN \vdash \AckA(m',\AckA(\Suc{m'},n')): \N
+                }{
+                  \infer[\Reta]{
+                    m':\rN \vdash \AckA(m'): \gN\to\N
+                  }{
+                    \deduce{
+                      \vdash \AckA: \rN\to\gN\to\N
+                    }{(\dagger2)}
+                  }
+                  &
+                  \infer[\Reta]{
+                    m':\rN, n':\gN \vdash \AckA(\Suc{m'},n'): \N
+                  }{
+                    \infer[(*)]{
+                      m':\rN \vdash \AckA(\Suc{m'}): \gN\to\N
+                    }{
+                      \deduce{
+                        \vdash \AckA:\N\to\gN\to\N
+                      }{
+                        (\dagger3)
+                      }
+                      &
+                      \infer{
+                        m':\rN \vdash \Suc{m'}:\N
+                      }{
+                        \infer{
+                          m':\rN \vdash m':\N
+                        }{}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }$  
+}
+
+The problem is $\Rap$.
+This cuts the trace chasing of $\rN$. 
+The infinite path $(\dagger)\rightsquigarrow(\dagger1)\rightsquigarrow(\dagger)\rightsquigarrow(\dagger3)\rightsquigarrow(\dagger)\rightsquigarrow(\dagger1)\rightsquigarrow(\dagger)\rightsquigarrow(\dagger3)\rightsquigarrow\cdots$ does not contains progressing trace. 
+
+\subsection{$\AckA:\N\to\N\to\N$ is not in GTC (with $\Rapv$)}
+
+\begin{claim}
+  $\AckA:\N\to\N\to\N$ is well-typed, but does not satisfy GTC in the system with $\Rapv$.
+\end{claim}
+
+The situation is the same as before. In the following, weakening is implicitly applied. 
+
+{\scriptsize
+  \hspace{-3cm}
+  $\infer{
+    \vdash \AckA:\rN\to\gN\to\N\ (\dagger)
+  }{
+    \infer[\Rapv]{
+      m:\rN, n:\gN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n)}(m): \N
+    }{
+      \infer[\Rcond]{
+        m:\N, n:\gN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n)}: \rN\to\N
+      }{
+        \infer{
+          n:\N \vdash \Suc{n}: \N
+        }{
+          \infer{
+            n:\N \vdash n: \N
+          }{}
+        }
+        &
+        \infer{
+          n:\gN \vdash \lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n): \rN\to\N
+        }{
+          \infer[\Rapv]{
+            n:\gN, m':\rN \vdash \Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n): \N
+          }{
+            \infer[\Rcond]{
+              n:\N, m':\rN \vdash \Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}: \gN\to\N
+            }{
+              \infer{
+                m':\rN \vdash \AckA(m',1):\N
+              }{
+                \infer[\Rapv]{
+                  m':\rN \vdash \AckA(m'):\N\to\N
+                }{
+                  \infer{
+                    m':\N \vdash \AckA:\rN\to\N\to\N
+                  }{
+                    \deduce{
+                      \vdash \AckA:\rN\to\N\to\N
+                    }{(\dagger1)}
+                  }
+                }
+                &
+                \infer{
+                  \vdash 1:\N
+                }{}
+              }
+              &
+              \infer{
+                m':\rN \vdash \lambda n'.\AckA(m',\AckA(\Suc{m'},n')): \gN\to\N
+              }{
+                \infer{
+                  m':\rN, n':\gN \vdash \AckA(m',\AckA(\Suc{m'},n')): \N
+                }{
+                  \infer[\Rapv]{
+                    m':\rN \vdash \AckA(m'): \N\to\N
+                  }{
+                    \infer{
+                      m':\N \vdash \AckA: \rN\to\N\to\N
+                    }{
+                      \deduce{
+                        \vdash \AckA: \rN\to\N\to\N
+                      }{(\dagger2)}
+                    }
+                  }
+                  &
+                  \infer[\Rapv]{
+                    m':\N, n':\gN \vdash \AckA(\Suc{m'},n'): \N
+                  }{
+                    \infer[\RapNv]{
+                      m':\N, n':\N \vdash \AckA(\Suc{m'}): \gN\to\N
+                    }{
+                      \deduce{
+                        \vdash \AckA:\N\to\gN\to\N
+                      }{
+                        (\dagger3)
+                      }
+                      &
+                      \infer{
+                        m':\N \vdash \Suc{m'}:\N
+                      }{
+                        \infer{
+                          m':\N \vdash m':\N
+                        }{}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }$  
+}
+
+\section{Second term representation: $\AckB$}
+
+We give the second representation $\AckB$ of Ackermann function. 
+
+\begin{definition}[$\AckB$]\rm
+  We define $\AckB$ by the following equation.
+  \[
+  \AckB = \lambda \rM\bN.\Cond{\Suc{\bN}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(\rM,n'))}(\bN)}(\rM)
+  \]
+\end{definition}
+
+\noindent{\bf Checking the behavior of $\AckB$}
+
+We check only the last case. 
+\begin{align*}
+  \AckB(\underline{\Suc{m}},\Suc{n})
+  &\mapsto
+  \Cond{\Suc{\Suc{n}}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(\underline{\Suc{m}},n'))}(\Suc{n})}(\underline{\Suc{m}})
+  \\
+  &\mapsto
+  (\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(\underline{\Suc{m}},n'))}(\Suc{n}))(\underline{m})
+  \\
+  &\mapsto
+  \Cond{\AckB(m,1)}{\lambda n'.\AckB(m,\AckB(\underline{\Suc{m}},n'))}(\Suc{n})
+  \\
+  &\mapsto
+  (\lambda n'.\AckB(m,\AckB(\underline{\Suc{m}},n')))(n)
+  \\
+  &\mapsto
+  \AckB(m,\AckB(\underline{\Suc{m}},n))
+\end{align*}
+
+The point of $\AckB$ is that $\underline{\Suc{m}}$ at the first line and the one at the last line are exactly the same.
+
+\subsection{$\AckB:\N\to\N\to\N$ is not in GTC (with $\Reta$)}
+
+\begin{claim}
+  $\AckB:\N\to\N\to\N$ is well-typed, but does not satisfy GTC in the system with $\Reta$.
+\end{claim}
+
+{\scriptsize
+  \hspace{-3cm}
+  $\infer{
+    \vdash \AckB:\rN\to\gN\to\N\ (\dagger)
+  }{
+    \infer[\Rap]{
+      m:\rN, n:\gN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n)}(m): \N
+    }{
+      \infer[\Rcond]{
+        m:\rN, n:\gN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n)}: \N\to\N
+      }{
+        \infer{
+          n:\N \vdash \Suc{n}: \N
+        }{
+          \infer{
+            n:\N \vdash n: \N
+          }{}
+        }
+        &
+        \infer{
+          m:\rN, n:\gN \vdash \lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n): \N\to\N
+        }{
+          \infer[\Reta]{
+            m:\rN, n:\gN, m':\N \vdash \Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n): \N
+          }{
+            \infer[\Rcond]{
+              m:\rN, m':\N \vdash \Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}: \gN\to\N
+            }{
+              \infer{
+                m':\N \vdash \AckB(m',1): \N
+              }{
+                \infer[\Reta]{
+                  m':\N \vdash \AckB(m'): \N\to\N
+                }{
+                  \deduce{
+                    \vdash \AckB: \N\to\N\to\N
+                  }{(\dagger1)}
+                }
+                &
+                \infer{
+                  \vdash 1:\N
+                }{}
+              }
+              &
+              \infer{
+                m:\rN, m':\N \vdash \lambda n'.\AckB(m',\AckB(m,n')): \gN\to\N
+              }{
+                \infer{
+                  m:\rN, m':\N, n':\gN \vdash \AckB(m',\AckB(m,n')): \N
+                }{
+                  \infer[\Reta]{
+                    m':\N \vdash \AckB(m'): \N\to\N
+                  }{
+                    \deduce{
+                      \vdash \AckB: \N\to\N\to\N
+                    }{(\dagger2)}
+                  }
+                  &
+                  \infer[\Reta]{
+                    m:\rN, n':\gN \vdash \AckB(m,n'): \N
+                  }{
+                    \infer[\Reta]{
+                      m:\rN \vdash \AckB(m): \gN\to\N
+                    }{
+                      \deduce{
+                        \vdash \AckB: \rN\to\gN\to\N
+                      }{(\dagger3)}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      &
+      \infer{
+        m:\rN \vdash m:\N
+      }{}
+    }
+  }$
+}
+
+The problem is $\Rap$.
+This cuts the trace chasing of $\rN$. 
+The infinite path $(\dagger)\rightsquigarrow(\dagger1)\rightsquigarrow(\dagger)\rightsquigarrow(\dagger1)\rightsquigarrow\cdots$ does not contains progressing trace. 
+
+\subsection{$\AckB:\N\to\N\to\N$ is not in GTC (with $\Rapv$)}
+
+\begin{proposition}
+  $\AckB:\N\to\N\to\N$ has a proof that satisfis GTC in the system with $\Rapv$.
+\end{proposition}
+
+{\scriptsize
+  \hspace{-3cm}
+  $\infer{
+    \vdash \AckB:\rbN\to\gN\to\N\ (\dagger)
+  }{
+    \infer[\Rapv]{
+      m:\rbN, n:\gN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n)}(m): \N
+    }{
+      \infer[\Rcond]{
+        m:\rN, n:\gN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n)}: \bN\to\N
+      }{
+        \infer{
+          n:\N \vdash \Suc{n}: \N
+        }{
+          \infer{
+            n:\N \vdash n: \N
+          }{}
+        }
+        &
+        \infer{
+          m:\rN, n:\gN \vdash \lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n): \bN\to\N
+        }{
+          \infer[\Rapv]{
+            m:\rN, n:\gN, m':\bN \vdash \Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n): \N
+          }{
+            \infer[\Rcond]{
+              m:\rN, n:\N, m':\bN \vdash \Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}: \gN\to\N
+            }{
+              \infer{
+                m':\bN \vdash \AckB(m',1): \N
+              }{
+                \infer[\Rapv]{
+                  m':\bN \vdash \AckB(m'): \N\to\N
+                }{
+                  \infer{
+                    m':\N \vdash \AckB: \bN\to\N\to\N
+                  }{
+                    \deduce{
+                      \vdash \AckB: \bN\to\N\to\N
+                    }{(\dagger1)}
+                  }
+                }
+                &
+                \infer{
+                  \vdash 1:\N
+                }{}
+              }
+              &
+              \infer{
+                m:\rN, m':\bN \vdash \lambda n'.\AckB(m',\AckB(m,n')): \gN\to\N
+              }{
+                \infer{
+                  m:\rN, m':\bN, n':\gN \vdash \AckB(m',\AckB(m,n')): \N
+                }{
+                  \infer[\Rapv]{
+                    m':\bN \vdash \AckB(m'): \N\to\N
+                  }{
+                    \infer{
+                      m':\N \vdash \AckB: \bN\to\N\to\N
+                      }{
+                      \deduce{
+                        \vdash \AckB: \bN\to\N\to\N
+                      }{(\dagger2)}
+                    }
+                  }
+                  &
+                  \infer[\Rapv]{
+                    m:\rN, n':\gN \vdash \AckB(m,n'): \N
+                  }{
+                    \infer{
+                      m:\rN, n':\gN \vdash \AckB(m): \gN\to\N
+                    }{
+                      \infer[\Rapv]{
+                        m:\rN \vdash \AckB(m): \gN\to\N
+                      }{
+                        \infer{
+                          m:\N \vdash \AckB: \rN\to\gN\to\N
+                        }{
+                          \deduce{
+                            \vdash \AckB: \rN\to\gN\to\N
+                          }{(\dagger3)}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }$
+}
+
+This proof satisfies the global trace condition.
+Note that:
+\begin{itemize}
+\item
+  The path $(\dagger)\rightsquigarrow(\dagger1)$ contains a progressing trace $\tau_1 = (\rbN,\rbN,\bN,\ldots,\bN)$.
+\item
+  The path $(\dagger)\rightsquigarrow(\dagger2)$ contains a progressing trace $\tau_2 = (\rbN,\rbN,\bN,\ldots,\bN)$.
+\item
+  The path $(\dagger)\rightsquigarrow(\dagger3)$ contains a progressing trace $\tau'_3 = (\gN,\ldots,\gN)$ and a non-progressing trace $\tau_3 = (\rbN,\rbN,\rN,\ldots,\rN)$. 
+\end{itemize}
+Take an infinite path $\pi$ from this proof.
+If $\pi$ passes through $(\dagger1)$ (or $(\dagger2)$) infinitely many times,
+take its infinitely progressing trace by combining $\tau_1$, $\tau_2$, and $\tau_3$. 
+If $\pi$ passes through $(\dagger1)$ and $(\dagger2)$ finitely many times,
+namely it eventually becomes a loop of $(\dagger)$ and $(\dagger3)$,
+take its infinitely progressing trace by combining $\tau_1$, $\tau_2$, and $\tau'_3$. 
+
+\vspace{1cm}
+
+
+
+  
+\end{document}
+
+\infer{}{}
+
+\lambda mn.\Cond{\Suc{n}}{\lambda m'.\Cond{\Ack(m')(1)}{\lambda n'.\Ack(m')(\Ack(\Suc{m'})(n'))}(n)}(m)
