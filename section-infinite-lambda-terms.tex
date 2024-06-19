@@ -289,7 +289,7 @@ and $\apnotvar$, according if $u$ is a variable or is not a variable.
 %$\apvar$ corresponds to an $\eta$-expansion and it introduces a global variable name $x^T$
 %for the first argument of $t$. 
 %As we said, 
-We need to insert this extra information $t$ in typing because it is importat for checking termination
+We need to insert this extra information $t$ in typing because it is important for checking termination
 of the computation of $t(u)$, as we will explain later.
 
 Remark that we introduced a unique \emph{term notation}
@@ -307,6 +307,8 @@ $(\lambda \vec{x}.t[\vec{x}])(\vec{x'})$.
 Therefore we do not assume having a primitive rule for renaming. 
 The lack of a renaming rule is a 
 \emph{difference with the circular syntax for inductive \underline{proofs}}.
+
+
 
 %11:56 29/04/2024
 
@@ -409,7 +411,21 @@ of $\LAMBDA$.
 
 %12:55 29/04/2024
 
-This is the formal definition of proof.
+The next definition is the formal definition of proof.
+We mention that we will introduce a restriction we call \emph{Almost-left-finite} on proof trees. 
+The restriction Almost-left-finite is used to prevent trivial proofs, 
+for instance a proof cyclically switching the variables $x$ and $y$ in the context of a term:
+ \[
+  \infer[\weak]{
+    (x^T:T, y^U:U) \prove t : A
+  }{
+    \infer[\weak]{
+    (y^U:U,  x^T:T) \prove t : A
+  }{\ldots}
+  }
+  \]
+These proof trees are meaningless and should be ruled out. The Almost-Left-Finite condition will ask
+that all leftmost branches in any sub-proof are finite. 
 %12:54 03/06/2024
 
 
@@ -447,12 +463,32 @@ $
     \Delta_p  \prove u_p:B_p
   }
   \]
+\item
+A path $\pi$ in a proof tree $\Pi$ is \emph{almost-leftmost} if there are only finitely many rules with two
+ premises in $\pi$ such that $\pi$ does \emph{not} choose the leftmost premise.
+\item
+A proof $\Pi$ is Almost-left-finite if all almost-lefmost paths $\pi$ in $\Pi$ are finite
 \end{enumerate}
 
 \end{definition}
 
+We can check that a proof is almost-left-finite if and only if all leftmost paths of all sub-proofs are finite.
 
-Eventually we define the well-typed terms of $\LAMBDA$.
+In the case of a regular proof, we can decide in polynomial time in the number of sub-proofs whether a
+proof is almost-left-finite. Here is the algorithm. Suppose a possibly infinite proof has $n$ subproofs.
+For each sub-proof we follow the leftmost path, after $n$ steps either we reach some rule without
+premises (either a $\var$-rule or a $0$-rule), or we loop. Then:
+\begin{enumerate}
+\item
+If for all sub-proofs we stop then the proof is almost-left-finite
+\item
+If for some sub-proof we loop, then there is infinite leftmost path and the proof is \emph{not} almost-left-finite.
+\end{enumerate}
+We estimate the computation time to $O(n)$ for each of the $n$ sub-proofs, 
+and the total computation time to $O(n^2)$.
+\\
+
+Eventually we define the well-typed terms of $\LAMBDA$ using almost-left-finite proofs.
 
 \begin{definition}[Well-typed term of $\LAMBDA$]
 \mbox{}
@@ -460,8 +496,9 @@ Eventually we define the well-typed terms of $\LAMBDA$.
 \item
 $\Gamma \vdash t:A$ is true if and only if $\Pi:\Gamma \vdash t:A$ for some $\Pi$.
 \item
-$t \in \LAMBDA$ is well-typed if and only if $\Pi:\Gamma \vdash t:A$ for some \emph{unique} $A$
-and some context $\Gamma \supseteqsim \FV(t)$.
+$t \in \LAMBDA$ is well-typed if and only if 
+$\Pi:\Gamma \vdash t:A$ for some \emph{almost-left-finite} proof $\Pi$,
+for some $A$ and some context $\Gamma \supseteqsim \FV(t)$.
 \item
 $\WTyped$ is the set of well-typed $t \in \LAMBDA$.
 \end{enumerate}
@@ -474,14 +511,80 @@ $\WTyped$ is the set of well-typed $t \in \LAMBDA$.
 %\end{enumerate}
 \end{definition}
 
+Well-typed terms are closed by substitution.
+
+We prove that the type assigned to a term by an Almost-Left-Finite proof is \emph{unique}: 
+if two Almost-Left-Finite proofs assign two types $T$, $T'$ to the same possibly infinite term $t$,
+then $T = T'$.
+
+\begin{proposition}[Uniqueness of almost-left-finite type]
+If $t \in \LAMBDA$, $\Pi:\Gamma \vdash t:A$ and  $\Pi':\Gamma' \vdash t:A'$ are two almost-left-finite
+proofs then $A = A'$.
+\end{proposition}
+
+%08:56 19/06/2024
+\begin{proof}
+By induction on the sum of the length of the leftmost branch in $\Pi$ and $\Pi'$. These lengths are finite
+because $\Pi$ and $\Pi'$ are assumed to be almost-left-finite. Let $r$ be the last rule of $\Pi$ and $r'$ be the
+last rule of $\Pi'$.
+\begin{enumerate}
+\item
+Assume $r = \weak$. Then $\Pi$ is obtained from a proof $\Pi_1:\Gamma_1 \vdash t:A$. 
+By induction hypothesis on $\Pi_1$ and $\Pi'$ we conclude that $A = A'$.
+
+\item
+Assume $r \not = \weak$ and $r' = \weak$. 
+Then $\Pi'$ is obtained from a proof $\Pi'_1:\Gamma_1 \vdash t:A$. 
+By induction hypothesis on $\Pi$ and $\Pi'_1$ we conclude that $A = A'$.
+
+\item
+Assume  $r \not = \weak$ and $r' \not = \weak$. Then both $r$ and $r'$ are the typing rule for
+the outermost constructor of $t$ and for some
+$h=0,1,2$ the proof $\Pi$ has premises $\Pi_1, \ldots, \Pi_h$
+and the proof $\Pi'$ has premises $\Pi'_1, \ldots, \Pi'_h$ (for the same $h$). 
+We distinguish one case for each constructor.
+
+\begin{enumerate}
+\item
+Assume $t = x^T$. Then $r=r'=\var$-rule and $A = A' = T$.
+
+\item
+Assume $t =0^\N$. Then $r=r'=0$-rule and $A = A' = \N$.
+
+\item
+Assume $t =\Succ(u)$. Then $r=r'=\Succ$-rule  and $\Pi_1:\Gamma \vdash u: \N$
+and $\Pi_2:\Gamma' \vdash u:\N$ and $A = A' = \N$.
+
+\item
+Assume $t = f(u)$. Then $r=r'=\ap$-rule and $\Pi_1:\Gamma \vdash f:U \rightarrow A$
+and $\Pi_2:\Gamma' \vdash f:U' \rightarrow A'$. By induction hypothesis on $\Pi_1$ and
+$\Pi'_1$ we deduce that $(U \rightarrow A) = (U' \rightarrow A')$, in particular that $A = A'$.
+
+\item
+Assume $t = \lambda x^T.b$. Then $r=r'=\lambda$-rule and 
+$\Pi_1:\Gamma \vdash b:B$
+and $\Pi_2:\Gamma' \vdash b:B'$. By induction hypothesis on $\Pi_1$ and
+$\Pi'_1$ we deduce that $B=B'$, in particular that $A = T \rightarrow B = T \rightarrow B' = A'$.
+
+\item
+Assume $t = \cond(f,g)$. Then $r=r'=\cond$-rule and $\Pi_1:\Gamma \vdash f:A$
+and $\Pi_2:\Gamma' \vdash f:A'$. By induction hypothesis on $\Pi_1$ and
+$\Pi'_1$ we deduce that $A = A'$.
+
+\end{enumerate}
+\end{enumerate}
+\end{proof}
+
+
 We provide some examples of well-typed and not well-typed terms.
 %23:30 23/04/2024
 Some term in $\LAMBDA$ has no type, like the application $0(0)$ of the non-function $0$. 
 
 \begin{Eg}
 We provide a term in $\LAMBDA$ having more than one type.
-Let $t=u(0)$ and $u=\cond(t,u)$ 
-we can prove $\vdash t:A$ for all types $A \in \Type$. 
+Let $t=u(0)$ and $u=\cond(t,u)$.
+$t$ is not almost-left-finite and it has no \emph{almost-left-finite typing proof}.
+We can prove $\vdash t:A$ for all types $A \in \Type$. 
 The subterms of $t$ are $\{t, u, 0\}$ and a proof $\Pi: \emptyset \vdash t:A$ is
 \[
 \infer[\apnotvar]{
@@ -523,10 +626,15 @@ $\Label(\Pi,l) = (\vdash \N \rightarrow A)$  for all $l \in \universe{t}$ such t
 
 
 A term with at least two types has the leftmost branch infinite, as it is the case for $t$ above.
-We will prove that if \emph{all} subterms of a term have the leftmost branch finite, then the term 
-has at most one type. If the term is also regular then we can decide if the typing proof exists and 
-if it exists we can compute it, in quadratic time in the size of the graph representing the term.
-Well-typed terms are closed by substitution.
+We proved that if \emph{all} subterms of a term have the leftmost branch finite, then the term 
+has at most one type.
+
+\emph{Claim (existence of a polynomial-time typing algorithm)}.
+We claim without proof that if a term $t$ is regular then we can decide if an almost-left-finite proof 
+$\Pi:\Gamma \vdash A$ exists. If  an almost-left-finite proof $\Pi$ exists 
+then $\Pi$ is regular and we can compute one of such proofs. 
+The computation requires quadratic time in the size of the graph representing the term.
+
 
 %10:26 20/04/2024
 %13:49 29/04/2024
