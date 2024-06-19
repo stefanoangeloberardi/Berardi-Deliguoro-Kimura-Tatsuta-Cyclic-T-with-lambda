@@ -10,15 +10,16 @@
 \newcommand{\Rap}{\hbox{$(\text{ap})$}}
 \newcommand{\Rcond}{\hbox{$(\text{cond})$}}
 %\newcommand{\FV}[1]{\text{FV}(#1)}
-\newcommand{\Ack}{{\tt ack}}
+\newcommand{\Ack}{{\tt Ack}}
 \newcommand{\AckA}{{\tt ack1}}
 \newcommand{\AckB}{{\tt ack2}}
 \newcommand{\ACK}{{\redM Ack}}
 \newcommand{\Cond}[2]{\text{cond}(#1,#2)}
-\newcommand{\Suc}[1]{{\tt S}#1}
+\newcommand{\Suc}[1]{{\tt S}(#1)}
 %\newcommand{\N}{N}
 \newcommand{\goldN}{{\bfColor{oldgold}{N}}}
 \newcommand{\redN}{{\bfColor{red}{N}}}
+\newcommand{\bluen}{{\bfColor{blue}{n}}}
 \newcommand{\blueN}{{\bfColor{blue}{N}}}
 \newcommand{\redblueN}{{\bfColor{red}{N}\hspace{-1em}\bfColor{blue}{N}}}
 \newcommand{\redM}{{\bfColor{red}{m}}}
@@ -48,65 +49,74 @@
 
 
 \section{An example of \quotationMarks{interactive use} of $\CTlambda$}
-Our thesis is that we can have two very similar definitions $f_1$, $f_2$ of the same map $\phi$
-by a regular well-typed term of $\LAMBDA$. However, $f_1$ does not satisfies the Global
+Our thesis is that we can have two very similar definitions $f_1$, $f_2$ 
+of the same map $F:\N,\N \rightarrow \N$
+by two regular well-typed terms of $\LAMBDA$. However, $f_1$ does not satisfies the Global
 Trace Condition, therefore $f_1 \not \in \CTlambda$ is \emph{not} automatically recognized as total, 
 while $f_2$ satisfies the Global Trace condition and is automatically recognized as total.
 \\
 
-Why does it happen? The global trace condition for $\CTlambda$ requires to follow the trace of some
-type -$\N$variable, for instance it can follow the trace of the input $x^\N$ for $g(x)$, but it cannot
+Why does it happen? The global trace condition for $\CTlambda$ follows the trace of some
+type-$\N$variables, for instance it can follow the trace of the input $x^\N$ for $g(x)$, but it cannot
 follow the trace of a non-variable $u$ used as input for $g(u)$. This means that for the
-global trace algorithm can follow the trace of $x$ in $(\lambda x^\N.g(x))(u)$,
-while cannot follow the trace of $u$ in $g(u)$. If $x$ is infinitely decreasing the globla trace algorithm
+global trace algorithm can follow the trace of the local name $x$ of $u$ in $(\lambda x^\N.g(x))(u)$,
+while cannot follow the trace of $u$ itself in $g(u)$. If $x$ is infinitely decreasing the global trace algorithm
 can deduce termination in the first case, cannot deduce termination in the second case.
- 
-In a sense, the $\GTC$-algorithm is \emph{interactive} for $\CTlambda$: when we believe that the
-fact that $u:\N$ is infinitely decreasing in every infinite computation, we should to assign to $u$
-a local name $x^\N$, in order to order to the $\GTC$-algorithm to follow the trace of $x^\N$ in any
-computation. This way of using the algorithm is similar to the way of using the Size-Change-Termination
-in Neil Jones.
+
+In a sense, the $\GTC$-algorithm is \emph{interactive} for $\CTlambda$. When we believe that 
+$u:\N$ is infinitely decreasing in every infinite computation, and that this fact is crucial to insure termination,
+we should to assign to $u$ a local name $x^\N$. In this way the $\GTC$-algorithm can follow the trace of 
+$x^\N$ in any computation. This way of using the global trace algorithm 
+is similar to the way of using the Size-Change-Termination algorithm in Neil Jones.
 
 
 \subsection{The Ackermann Function}
 The Ackermann function is a good example if we want to test the global trace 
 condition in a case in which it is difficult to prove the convergence of a map. We check that the
-global trace condition can prove that the Ackermann function is convergent provided we
-use local names to denote the sub-expressions which are infinitely progressing toward $0$.
+global trace condition can prove that a definition of Ackermann function in $\LAMBDA$ 
+is convergent, provided we use local names to denote the sub-expressions  ofour definition 
+which are infinitely progressing toward $0$.
 \\
 
-The Ackermann function $\ACK:\N,\N\rightarrow \N$ is a map whose convergence can be
+The Ackermann function $\Ack:\N,\N\rightarrow \N$ is a map whose convergence can be
  proved in$\PA$, but only if we use induction over formulas with at least two unbounded quantifiers. 
-For a similar reason, $\ACK$ can be defined in system $\systemT$, but only if we use primitive recursion over
-terms whose type has degree $ \ge 2$. $\ACK$ is not primitive recursive.
+For a similar reason, $\Ack$ can be defined in system $\systemT$, but only if we use primitive recursion over
+terms whose type has degree $ \ge 2$. $\Ack$ grows faster than all primitive recursive maps.
 
 
-Here is a fixed point definition of $\ACK$ in $\CTlambda$ using a nested conditional.
+Here is a fixed point definition of $\Ack$. We will express it in $\CTlambda$ using a nested conditional.
 \begin{align*}
-  \ACK(0,n) &= n+1
+  \Ack(0,n) &= n+1
   \\
-  \ACK(m+1,0) &= \ACK(m,1)
+  \Ack(m+1,0) &= \Ack(m,1)
   \\
-  \ACK(m+1,n+1) &= \ACK(m,\ACK(m+1,n))
+  \Ack(m+1,n+1) &= \Ack(m,\Ack(m+1,n))
 \end{align*}
 
 We can prove that $\Ack$ is convergent by induction on the lexicographic order on $(m,n)$. 
 In the next subsections we try to prove convergence of $\Ack$ using $\GTC$.
 
 
-\subsection{A term representation $\AckA$ \emph{without} the global trace condition}
+\subsection{A Term Representation of Ackermann \emph{without} the Global Trace Condition}
 
-We first give the first representation $\AckA$ of Ackermann function. 
-In this article, we sometimes write $f(x,y)$ instead of $f(x)(y)$, for readability.
+We give a first representation $\AckA \in \LAMBDA$ of the Ackermann function. 
+In this article, we sometimes abbreviate $f(x)(y)$ with $f(x,y)$, in this way we also improve readability.
 
-\begin{definition}[$\AckA$]\redM
-  We define $\AckA$ by the following equation.
+\begin{definition}[$\AckA$]
+  We define $\AckA \in \LAMBDA$ by the following infinite regular term .
   \[
-  \AckA = \lambda \redM\blueN.\Cond{\Suc{\blueN}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(\blueN)}(\redM)
+  \AckA = \lambda \redM\bluen.\Cond{\Suc{\bluen}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(\bluen)}(\redM)
   \]
 \end{definition}
 
-\noindent{\bf Checking the behavior of $\AckA$}
+We check that $\AckA$ almost-left-finite. 
+Any infinite path in $\AckA$ must move infinitely many times from $\AckA$ to $\AckA$, and whenever we 
+do so we move to the right-hand-side of a $\cond$. Therefore any infinite path in $\AckA$ is 
+not almost-leftmost, by taking the contrapositive we prove that all almost-leftmost paths in $\AckA$
+are finite. $\AckA$ has (unique) type $\N,\N\rightarrow \N$.
+\\
+
+\noindent{\bf Checking the fixed point equation for $\AckA$}
 \begin{align*}
   \AckA(0,n)
   &\mapsto
@@ -149,17 +159,28 @@ In this article, we sometimes write $f(x,y)$ instead of $f(x)(y)$, for readabili
   \AckA(m,\AckA(\Suc{\underline{m}},n))
 \end{align*}
 
-The point of $\AckA$ is the last case. The term $\underline{\Suc{m}}$ of the first line and $\Suc{\underline{m}}$ of the last line are slightly diffelent: $\underline{\Suc{m}}$ is decomposed into $\underline{m}$ by the $\text{cond}$-reduction, then $\Suc{\underline{m}}$ is constructed by substituting $m'$ of $\Suc{m'}$ by $\underline{m}$. 
+
+The global trace algorithm will fail to prove that $\AckA$ is terminating. The reason is in the last case. 
+The term $\underline{\Suc{m}}$ of the first line and $\Suc{\underline{m}}$ of the last line are slightly 
+different: $\underline{\Suc{m}}$ is decomposed into $\underline{m}$ by the $\text{cond}$-reduction, 
+then $\Suc{\underline{m}}$ is constructed by substituting $m'$ of $\Suc{m'}$ by $\underline{m}$. 
+When we loop from the rightmost occurrence of $\AckA$ 
+in the picture above back to the root of $\AckA$, the input $\Suc{m}$ of $\AckA$ is sent without any change to the first argument of $\AckA$. The globale trace algorithm fails to notice this: 
+in order to notice it, the two terms $\Suc{m}$ should have the same local name $\redM$.
+As a consequence, the trace of $\Suc{m}$ is cut in this point and some infinitely progressing trace
+disappears.
 
 
 
 \subsection{$\AckA:\N\to\N\to\N$ is not in $\GTC$}
 
 \begin{claim}
-  $\AckA:\N\to\N\to\N$ is well-typed, but does not satisfy GTC in the system.
+  $\AckA:\N\to\N\to\N$ is well-typed, but $\AckA \not \in \GTC$.
 \end{claim}
 
 In the following, weakening is implicitly applied. 
+
+\begin{center}
 
 {\scriptsize
   \hspace{-3cm}
@@ -170,13 +191,13 @@ In the following, weakening is implicitly applied.
       m:\redN, n:\goldN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n)}(m): \N
     }{
       \infer[\Rcond]{
-        m:\N, n:\goldN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n)}: \redN\to\N
+        m:\redN, n:\goldN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n)}: \redN\to\N
       }{
         \infer{
-          n:\N \vdash \Suc{n}: \N
+          n:\goldN \vdash \Suc{n}: \N
         }{
           \infer{
-            n:\N \vdash n: \N
+            n:\goldN \vdash n: \N
           }{}
         }
         &
@@ -187,7 +208,7 @@ In the following, weakening is implicitly applied.
             n:\goldN, m':\redN \vdash \Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n): \N
           }{
             \infer[\Rcond]{
-              n:\N, m':\redN \vdash \Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}: \goldN\to\N
+              n:\goldN, m':\redN \vdash \Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}: \goldN\to\N
             }{
               \infer{
                 m':\redN \vdash \AckA(m',1):\N
@@ -196,7 +217,7 @@ In the following, weakening is implicitly applied.
                   m':\redN \vdash \AckA(m'):\N\to\N
                 }{
                   \infer{
-                    m':\N \vdash \AckA:\redN\to\N\to\N
+                    m':\redN \vdash \AckA:\redN\to\N\to\N
                   }{
                     \deduce{
                       \vdash \AckA:\redN\to\N\to\N
@@ -219,7 +240,7 @@ In the following, weakening is implicitly applied.
                     m':\redN \vdash \AckA(m'): \N\to\N
                   }{
                     \infer{
-                      m':\N \vdash \AckA: \redN\to\N\to\N
+                      m':\redN \vdash \AckA: \redN\to\N\to\N
                     }{
                       \deduce{
                         \vdash \AckA: \redN\to\N\to\N
@@ -228,10 +249,10 @@ In the following, weakening is implicitly applied.
                   }
                   &
                   \infer[\Rapv]{
-                    m':\N, n':\goldN \vdash \AckA(\Suc{m'},n'): \N
+                    m':\redN, n':\goldN \vdash \AckA(\Suc{m'},n'): \N
                   }{
                     \infer[\RapNv]{
-                      m':\N, n':\N \vdash \AckA(\Suc{m'}): \goldN\to\N
+                      m':\redN, n':\goldN \vdash \AckA(\Suc{m'}): \goldN\to\N
                     }{
                       \deduce{
                         \vdash \AckA:\N\to\goldN\to\N
@@ -240,10 +261,10 @@ In the following, weakening is implicitly applied.
                       }
                       &
                       \infer{
-                        m':\N \vdash \Suc{m'}:\N
+                        m':\redN \vdash \Suc{m'}:\N
                       }{
                         \infer{
-                          m':\N \vdash m':\N
+                          m':\redN \vdash m':\N
                         }{}
                       }
                     }
@@ -258,18 +279,39 @@ In the following, weakening is implicitly applied.
   }$  
 }
 
+\end{center}
+
+The problem is with the rightmost rule $\RapNv$ in the picture above. 
+The same value $\Suc{m'} = m$ is send to the first argument of $\AckA$, but this fact 
+is not reported in the trace.
+This cuts the trace chasing of $\redN$ (red color). A similar situation arises with the leftmost rule
+$\RapNv$  in the picture above: the trace chasing of $\goldN$ (gold color) is cut.
+
+As a consequence, the infinite path $(\dagger)\rightsquigarrow(\dagger1)\rightsquigarrow(\dagger)
+\rightsquigarrow(\dagger3)\rightsquigarrow(\dagger)\rightsquigarrow(\dagger1)
+\rightsquigarrow(\dagger)\rightsquigarrow(\dagger3)\rightsquigarrow\cdots$ 
+does not contains any infinite trace, and with more reason any infinitely progressing trace. 
+
+
+
 \subsection{Second term representation: $\AckB$}
 
-We give the second representation $\AckB$ of Ackermann function. 
+We give the second representation $\AckB$ of Ackermann function. In this case we inform
+the global trace algorithm that the local term $\Suc{m'}$ is equal to $m$ in any computation
+by writing $m$ in the place of $\Suc{m'}$.
 
 \begin{definition}[$\AckB$]\redM
-  We define $\AckB$ by the following equation.
+  We define $\AckB$ by the following infinite regular term of $\LAMBDA$.
   \[
-  \AckB = \lambda \redM\blueN.\Cond{\Suc{\blueN}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(\redM,n'))}(\blueN)}(\redM)
+  \AckB = \lambda \redM\bluen.
+\Cond{\Suc{\bluen}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(\redM,n'))}(\bluen)}(\redM)
   \]
 \end{definition}
 
-\noindent{\bf Checking the behavior of $\AckB$}
+Again, the term $\AckB$ is almost-left-finite and has type $\N, \N \rightarrow \N$.
+\\
+
+\noindent{\bf Checking the fixed point equation for $\AckB$}
 
 We check only the last case. 
 \begin{align*}
@@ -290,107 +332,26 @@ We check only the last case.
   \AckB(m,\AckB(\underline{\Suc{m}},n))
 \end{align*}
 
-The point of $\AckB$ is that $\underline{\Suc{m}}$ at the first line and the one at the last line are exactly the same.
+The point of $\AckB$ is that the global trace algorithm by checking the
+traces discover that $\underline{\Suc{m}}$ 
+at the first line and the one at the last line are exactly the same, thanks to the fact that
+they have the same local name $m$.
 
-\subsection{$\AckB:\N\to\N\to\N$ is not in GTC (with $\Reta$)}
 
-\begin{claim}
-  $\AckB:\N\to\N\to\N$ is well-typed, but does not satisfy GTC in the system with $\Reta$.
-\end{claim}
-
-{\scriptsize
-  \hspace{-3cm}
-  $\infer{
-    \vdash \AckB:\redN\to\goldN\to\N\ (\dagger)
-  }{
-    \infer[\Rap]{
-      m:\redN, n:\goldN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n)}(m): \N
-    }{
-      \infer[\Rcond]{
-        m:\redN, n:\goldN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n)}: \N\to\N
-      }{
-        \infer{
-          n:\N \vdash \Suc{n}: \N
-        }{
-          \infer{
-            n:\N \vdash n: \N
-          }{}
-        }
-        &
-        \infer{
-          m:\redN, n:\goldN \vdash \lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n): \N\to\N
-        }{
-          \infer[\Reta]{
-            m:\redN, n:\goldN, m':\N \vdash \Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n): \N
-          }{
-            \infer[\Rcond]{
-              m:\redN, m':\N \vdash \Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}: \goldN\to\N
-            }{
-              \infer{
-                m':\N \vdash \AckB(m',1): \N
-              }{
-                \infer[\Reta]{
-                  m':\N \vdash \AckB(m'): \N\to\N
-                }{
-                  \deduce{
-                    \vdash \AckB: \N\to\N\to\N
-                  }{(\dagger1)}
-                }
-                &
-                \infer{
-                  \vdash 1:\N
-                }{}
-              }
-              &
-              \infer{
-                m:\redN, m':\N \vdash \lambda n'.\AckB(m',\AckB(m,n')): \goldN\to\N
-              }{
-                \infer{
-                  m:\redN, m':\N, n':\goldN \vdash \AckB(m',\AckB(m,n')): \N
-                }{
-                  \infer[\Reta]{
-                    m':\N \vdash \AckB(m'): \N\to\N
-                  }{
-                    \deduce{
-                      \vdash \AckB: \N\to\N\to\N
-                    }{(\dagger2)}
-                  }
-                  &
-                  \infer[\Reta]{
-                    m:\redN, n':\goldN \vdash \AckB(m,n'): \N
-                  }{
-                    \infer[\Reta]{
-                      m:\redN \vdash \AckB(m): \goldN\to\N
-                    }{
-                      \deduce{
-                        \vdash \AckB: \redN\to\goldN\to\N
-                      }{(\dagger3)}
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      &
-      \infer{
-        m:\redN \vdash m:\N
-      }{}
-    }
-  }$
-}
-
-The problem is with the use of $\Rap$.
-This cuts the trace chasing of $\redN$. 
-The infinite path $(\dagger)\rightsquigarrow(\dagger1)\rightsquigarrow(\dagger)\rightsquigarrow(\dagger1)\rightsquigarrow\cdots$ does not contains progressing trace. 
 
 
 \subsection{$\AckB:\N\to\N\to\N$ is in $\GTC$}
 
 \begin{proposition}
-  $\AckB:\N\to\N\to\N$ has a proof that satisfies $\GTC$ in the system with $\Rapv$.
+  $\AckB:\N\to\N\to\N$ has a proof $\Pi$ that satisfies $\GTC$.
 \end{proposition}
+
+\begin{proof}
+Below is a proof $\Pi$ of $\AckB:\N\to\N\to\N$. 
+In the following, weakening is implicitly applied. 
+
+
+\begin{flushright}
 
 {\scriptsize
   \hspace{-3cm}
@@ -404,10 +365,10 @@ The infinite path $(\dagger)\rightsquigarrow(\dagger1)\rightsquigarrow(\dagger)\
         m:\redN, n:\goldN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n)}: \blueN\to\N
       }{
         \infer{
-          n:\N \vdash \Suc{n}: \N
+          n:\goldN \vdash \Suc{n}: \N
         }{
           \infer{
-            n:\N \vdash n: \N
+            n:\goldN \vdash n: \N
           }{}
         }
         &
@@ -418,7 +379,7 @@ The infinite path $(\dagger)\rightsquigarrow(\dagger1)\rightsquigarrow(\dagger)\
             m:\redN, n:\goldN, m':\blueN \vdash \Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n): \N
           }{
             \infer[\Rcond]{
-              m:\redN, n:\N, m':\blueN \vdash \Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}: \goldN\to\N
+              m:\redN, n:\goldN, m':\blueN \vdash \Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}: \goldN\to\N
             }{
               \infer{
                 m':\blueN \vdash \AckB(m',1): \N
@@ -427,7 +388,7 @@ The infinite path $(\dagger)\rightsquigarrow(\dagger1)\rightsquigarrow(\dagger)\
                   m':\blueN \vdash \AckB(m'): \N\to\N
                 }{
                   \infer{
-                    m':\N \vdash \AckB: \blueN\to\N\to\N
+                    m':\blueN \vdash \AckB: \blueN\to\N\to\N
                   }{
                     \deduce{
                       \vdash \AckB: \blueN\to\N\to\N
@@ -450,7 +411,7 @@ The infinite path $(\dagger)\rightsquigarrow(\dagger1)\rightsquigarrow(\dagger)\
                     m':\blueN \vdash \AckB(m'): \N\to\N
                   }{
                     \infer{
-                      m':\N \vdash \AckB: \blueN\to\N\to\N
+                      m':\blueN \vdash \AckB: \blueN\to\N\to\N
                       }{
                       \deduce{
                         \vdash \AckB: \blueN\to\N\to\N
@@ -468,7 +429,7 @@ The infinite path $(\dagger)\rightsquigarrow(\dagger1)\rightsquigarrow(\dagger)\
                         m:\redN \vdash \AckB(m): \goldN\to\N
                       }{
                         \infer{
-                          m:\N \vdash \AckB: \redN\to\goldN\to\N
+                          m:\redN \vdash \AckB: \redN\to\goldN\to\N
                         }{
                           \deduce{
                             \vdash \AckB: \redN\to\goldN\to\N
@@ -487,24 +448,45 @@ The infinite path $(\dagger)\rightsquigarrow(\dagger1)\rightsquigarrow(\dagger)\
   }$
 }
 
-This proof satisfies the global trace condition.
-Note that:
-\begin{itemize}
-\item
-  The path $(\dagger)\rightsquigarrow(\dagger1)$ contains a progressing trace $\tau_1 = (\redblueN,\redblueN,\blueN,\ldots,\blueN)$.
-\item
-  The path $(\dagger)\rightsquigarrow(\dagger2)$ contains a progressing trace $\tau_2 = (\redblueN,\redblueN,\blueN,\ldots,\blueN)$.
-\item
-  The path $(\dagger)\rightsquigarrow(\dagger3)$ contains a progressing trace $\tau'_3 = (\goldN,\ldots,\goldN)$ and a non-progressing trace $\tau_3 = (\redblueN,\redblueN,\redN,\ldots,\redN)$. 
-\end{itemize}
-Take an infinite path $\pi$ from this proof.
-If $\pi$ passes through $(\dagger1)$ (or $(\dagger2)$) infinitely many times,
-take its infinitely progressing trace by combining $\tau_1$, $\tau_2$, and $\tau_3$. 
-If $\pi$ passes through $(\dagger1)$ and $(\dagger2)$ finitely many times,
-namely it eventually becomes a loop of $(\dagger)$ and $(\dagger3)$,
-take its infinitely progressing trace by combining $\tau_1$, $\tau_2$, and $\tau'_3$. 
+\end{flushright}
 
 \vspace{1cm}
+
+We check that this proof $\Pi$ satisfies the global trace condition.
+We first note that:
+
+\begin{itemize}
+\item
+  The path $(\dagger)\rightsquigarrow(\dagger1)$ contains a progressing blue trace $\tau_1 = (\redblueN,\redblueN,\blueN,\ldots,\blueN)$. The gold trace is cut in $(\dagger1)$.
+\item
+  The path $(\dagger)\rightsquigarrow(\dagger2)$ contains a progressing blue trace $\tau_2 = (\redblueN,\redblueN,\blueN,\ldots,\blueN)$. The gold trace is cut in $(\dagger2)$.
+\item
+  The path $(\dagger)\rightsquigarrow(\dagger3)$ contains a progressing gold trace 
+$\tau'_3 = (\goldN,\ldots,\goldN)$ and a non-progressing red trace 
+$\tau_3 = (\redblueN,\redblueN,\redN,\ldots,\redN)$. 
+\end{itemize}
+
+Each trace $\tau_i$, blue or red, can be composed with each trace $\tau_j$. 
+
+The first steps of each $\tau_i$ are in common and we write them with the blue and red colors superposed.
+Then the blue and the red traces fork.
+
+Take an infinite path $\pi$ from this proof $\Pi$ 
+in order to prove that it includes some infinitely progressing trace.
+
+\begin{enumerate}
+\item
+If $\pi$ passes through $(\dagger1)$ or $(\dagger2)$ infinitely many times,
+we take its infinitely progressing trace by combining $\tau_1$, $\tau_2$, and $\tau_3$,
+according if we pass through$(\dagger1)$ or $(\dagger2)$ or $(\dagger3)$. 
+
+\item
+If $\pi$ passes through $(\dagger1)$ and $(\dagger2)$ only finitely many times,
+namely it eventually becomes a loop of $(\dagger)$ and $(\dagger3)$,
+from this point on we take its infinitely progressing trace by repeating $\tau'_3$ for infinitely many times.
+\end{enumerate}
+
+\end{proof}
 
 
 
