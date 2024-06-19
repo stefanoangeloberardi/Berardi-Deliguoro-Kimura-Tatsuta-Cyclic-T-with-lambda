@@ -36,7 +36,7 @@ otherwise $\tau$ is not progressing in $i$.
 $t$ satisfies the global trace condition if for some typing proof $\Pi$,
 of $t$, for all infinite paths $\pi$ of $t$ in $\Pi$,
 there is some infinitely progressing path $\tau$ in $\pi$ and $\Pi$.
-$\GTC$ is the set of $t \in \LAMBDA$ satisfying the global trace condition.
+$\GTC$ is the set of well-typed terms $t \in \LAMBDA$ satisfying the global trace condition.
 
 \item
 $\CTlambda = \GTC \cap \Reg$: the cyclic $\lambda$-terms of 
@@ -55,7 +55,15 @@ the global trace condition then all proofs do, and for regular terms there is a 
 which is a finite graph and for which the global trace condition is decidable.
 
 We believe that the global trace condition is decidable quite fast
-for realistic $\lambda$-terms. We include now some examples of cyclic $\lambda$-terms.
+for realistic $\lambda$-terms. Another nice feature of the global trace condition is that for 
+$t \in \GTC$ we require that there is some proof $\Pi:\Gamma \prove t:A$ whose
+infinite paths all have some infinite progressing trace. This proof is almost-left-finite, because
+all leftmost paths from a sub-proof have no progress point and therefore are finite. 
+We conclude that $t \in \GTC$ implies that $t \in \WTyped$: we can assign a unique type to $t$
+with a \quotationMarks{meaningful proof}, that is, an almost-left-finite finite proof.
+
+We include now some examples of cyclic $\lambda$-terms. We recall that they have to satisfy
+$\GTC$, therefore they are almost-left-finite, and by definition they are regular.
 
 %18:05 03/06/2024
 

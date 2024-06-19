@@ -234,7 +234,8 @@ if there is a (unique) map $\phi:\{1,\ldots,n\} \rightarrow \{1,\ldots,n'\}$
 such that $x_{i}=x'_{\phi(i)}$ and $A_{i}=A'_{\phi(i)}$ for all $i \in \{1,\ldots,n\}$.
 We have  $\Gamma \sim \Gamma'$ if and only if  $\Gamma \subseteqsim \Gamma'$
 and  $\Gamma \supseteqsim \Gamma'$ if and only if $\Gamma$, $\Gamma'$ are permutation
-each other if and only if the map $\phi$ above is a bijection.
+each other if and only if the map $\phi$ above is a bijection. We do not identify two contexts
+which are one a permutation of the other, therefore we will need a rule to move from one to the other.
 
 
 %12:38 17/04/2024
@@ -339,7 +340,7 @@ the rules $\apvar$ and $\apnotvar$ are restricted.
 \begin{enumerate}
 
 \item
-$\weak$-rule (Weakening).
+$\weak$-rule (Weakening + Exchange).
 If $\Gamma \vdash t:T$ and $\Gamma \subseteqsim \Gamma'$
 then $\Gamma' \vdash t : T$
 
@@ -398,8 +399,8 @@ If $r, r'$ are weakening rules and $\Gamma \vdash t:A = \Gamma' \vdash t':A'$ th
 \item
 If $r, r'$ are non-weakening rules and $\Gamma \vdash t:A = \Gamma' \vdash' t':A'$ then $r = r'$.
 \item
-If $r$ is not a weakening and 
-the premises of $r$ are some $\Gamma_1 \vdash t_1:A_1, \ldots, \Gamma_p \vdash t_p:A_p$,
+If $r$ is not a weakening and the premises of $r$ are some 
+$\Gamma_1 \vdash t_1:A_1, \ldots, \Gamma_p \vdash t_p:A_p$,
 then the list of immediate subterms of $t$ is exactly $t_1, \ldots, t_p$.
 \end{enumerate}
 \end{proposition}
@@ -413,8 +414,9 @@ of $\LAMBDA$.
 
 The next definition is the formal definition of proof.
 We mention that we will introduce a restriction we call \emph{Almost-left-finite} on proof trees. 
-The restriction Almost-left-finite is used to prevent trivial proofs, 
-for instance a proof cyclically switching the variables $x$ and $y$ in the context of a term:
+The restriction Almost-left-finite is used to prevent trivial proofs. 
+For instance, we want to forbid a proof cyclically switching the variables $x$ and $y$ in the context of a term,
+by using the $\weak$-rule (Weakening + Exchange  rule):
  \[
   \infer[\weak]{
     (x^T:T, y^U:U) \prove t : A
@@ -425,7 +427,8 @@ for instance a proof cyclically switching the variables $x$ and $y$ in the conte
   }
   \]
 These proof trees are meaningless and should be ruled out. The Almost-Left-Finite condition will ask
-that all leftmost branches in any sub-proof are finite. 
+that all leftmost branches in any sub-proof are finite, in particular that no infinite branch made of
+$\weak$-rules exists. 
 %12:54 03/06/2024
 
 
@@ -582,9 +585,9 @@ Some term in $\LAMBDA$ has no type, like the application $0(0)$ of the non-funct
 
 \begin{Eg}
 We provide a term in $\LAMBDA$ having more than one type.
-Let $t=u(0)$ and $u=\cond(t,u)$.
+Let $t=u(0)$ and $u=\cond(t,u)$. $t$ has an infinite lefmost branch $t,u,t,u, \ldots$, therefore
 $t$ is not almost-left-finite and it has no \emph{almost-left-finite typing proof}.
-We can prove $\vdash t:A$ for all types $A \in \Type$. 
+Unicity fails and we can prove $\vdash t:A$ for all types $A \in \Type$. 
 The subterms of $t$ are $\{t, u, 0\}$ and a proof $\Pi: \emptyset \vdash t:A$ is
 \[
 \infer[\apnotvar]{
@@ -629,15 +632,22 @@ A term with at least two types has the leftmost branch infinite, as it is the ca
 We proved that if \emph{all} subterms of a term have the leftmost branch finite, then the term 
 has at most one type.
 
+
 \emph{Claim (existence of a polynomial-time typing algorithm)}.
 We claim without proof that if a term $t$ is regular then we can decide if an almost-left-finite proof 
-$\Pi:\Gamma \vdash A$ exists. If  an almost-left-finite proof $\Pi$ exists 
-then $\Pi$ is regular and we can compute one of such proofs. 
+$\Pi:\Gamma \vdash A$ exists. If an almost-left-finite proof $\Pi$ exists 
+then at least one of almost-left-finite proofs is regular and we can compute it. 
+We first check whether the term is almost-left-finite in time $O(n^2)$. If it is not we reject the term.
+Otherwise we start the standard recursive typing algorithm, until a type has been inferred consistently
+for each of the finitely many subterms, or some type inconsistency has been found.
+In the first case we accept the term and we return the time, in the second case we reject the term
+and we return no type.
 The computation requires quadratic time in the size of the graph representing the term.
 
 
 %10:26 20/04/2024
 %13:49 29/04/2024
+
 
 \subsection{Reduction Rules}
 Our goal is to provide a set of well-formed term for $\LAMBDA$ and interpret them as partial functionals.

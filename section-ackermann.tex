@@ -1,0 +1,516 @@
+
+
+%\newcommand{\bfColor}[2]{{\bf \color{#1}{#2}}}
+%\definecolor{oldgold}{rgb}{0.81, 0.71, 0.23}
+\definecolor{purple}{rgb}{0.8, 0.2, 0.8}
+
+\newcommand{\Rapv}{\hbox{$(\text{ap}_{\text{v}})$}}
+\newcommand{\RapNv}{\hbox{$(\text{ap}_{\lnot\text{v}})$}}
+\newcommand{\Reta}{\hbox{$(\eta)$}}
+\newcommand{\Rap}{\hbox{$(\text{ap})$}}
+\newcommand{\Rcond}{\hbox{$(\text{cond})$}}
+%\newcommand{\FV}[1]{\text{FV}(#1)}
+\newcommand{\Ack}{{\tt ack}}
+\newcommand{\AckA}{{\tt ack1}}
+\newcommand{\AckB}{{\tt ack2}}
+\newcommand{\ACK}{{\redM Ack}}
+\newcommand{\Cond}[2]{\text{cond}(#1,#2)}
+\newcommand{\Suc}[1]{{\tt S}#1}
+%\newcommand{\N}{N}
+\newcommand{\goldN}{{\bfColor{oldgold}{N}}}
+\newcommand{\redN}{{\bfColor{red}{N}}}
+\newcommand{\blueN}{{\bfColor{blue}{N}}}
+\newcommand{\redblueN}{{\bfColor{red}{N}\hspace{-1em}\bfColor{blue}{N}}}
+\newcommand{\redM}{{\bfColor{red}{m}}}
+
+%\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{proposition}[theorem]{Proposition}
+%\newtheorem{corollary}[theorem]{Corollary}
+%\newtheorem{definition}[theorem]{Definition}
+
+%
+%%\newenvironment{proof}[1][Proof]{\begin{trivlist}
+%%\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+%
+%%\newenvironment{example}[1][Example]{\begin{trivlist}
+%%\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+%
+%%\newenvironment{remark}[1][Remark]{\begin{trivlist}
+%%\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+%
+
+
+
+\newenvironment{claim}[1][Claim]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+
+
+\section{An example of \quotationMarks{interactive use} of $\CTlambda$}
+Our thesis is that we can have two very similar definitions $f_1$, $f_2$ of the same map $\phi$
+by a regular well-typed term of $\LAMBDA$. However, $f_1$ does not satisfies the Global
+Trace Condition, therefore $f_1 \not \in \CTlambda$ is \emph{not} automatically recognized as total, 
+while $f_2$ satisfies the Global Trace condition and is automatically recognized as total.
+\\
+
+Why does it happen? The global trace condition for $\CTlambda$ requires to follow the trace of some
+type -$\N$variable, for instance it can follow the trace of the input $x^\N$ for $g(x)$, but it cannot
+follow the trace of a non-variable $u$ used as input for $g(u)$. This means that for the
+global trace algorithm can follow the trace of $x$ in $(\lambda x^\N.g(x))(u)$,
+while cannot follow the trace of $u$ in $g(u)$. If $x$ is infinitely decreasing the globla trace algorithm
+can deduce termination in the first case, cannot deduce termination in the second case.
+ 
+In a sense, the $\GTC$-algorithm is \emph{interactive} for $\CTlambda$: when we believe that the
+fact that $u:\N$ is infinitely decreasing in every infinite computation, we should to assign to $u$
+a local name $x^\N$, in order to order to the $\GTC$-algorithm to follow the trace of $x^\N$ in any
+computation. This way of using the algorithm is similar to the way of using the Size-Change-Termination
+in Neil Jones.
+
+
+\subsection{The Ackermann Function}
+The Ackermann function is a good example if we want to test the global trace 
+condition in a case in which it is difficult to prove the convergence of a map. We check that the
+global trace condition can prove that the Ackermann function is convergent provided we
+use local names to denote the sub-expressions which are infinitely progressing toward $0$.
+\\
+
+The Ackermann function $\ACK:\N,\N\rightarrow \N$ is a map whose convergence can be
+ proved in$\PA$, but only if we use induction over formulas with at least two unbounded quantifiers. 
+For a similar reason, $\ACK$ can be defined in system $\systemT$, but only if we use primitive recursion over
+terms whose type has degree $ \ge 2$. $\ACK$ is not primitive recursive.
+
+
+Here is a fixed point definition of $\ACK$ in $\CTlambda$ using a nested conditional.
+\begin{align*}
+  \ACK(0,n) &= n+1
+  \\
+  \ACK(m+1,0) &= \ACK(m,1)
+  \\
+  \ACK(m+1,n+1) &= \ACK(m,\ACK(m+1,n))
+\end{align*}
+
+We can prove that $\Ack$ is convergent by induction on the lexicographic order on $(m,n)$. 
+In the next subsections we try to prove convergence of $\Ack$ using $\GTC$.
+
+
+\subsection{A term representation $\AckA$ \emph{without} the global trace condition}
+
+We first give the first representation $\AckA$ of Ackermann function. 
+In this article, we sometimes write $f(x,y)$ instead of $f(x)(y)$, for readability.
+
+\begin{definition}[$\AckA$]\redM
+  We define $\AckA$ by the following equation.
+  \[
+  \AckA = \lambda \redM\blueN.\Cond{\Suc{\blueN}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(\blueN)}(\redM)
+  \]
+\end{definition}
+
+\noindent{\bf Checking the behavior of $\AckA$}
+\begin{align*}
+  \AckA(0,n)
+  &\mapsto
+  \Cond{\Suc{n}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n)}(0)
+  \\
+  &\mapsto
+  \Suc{n}
+\end{align*}
+%%%%%%%
+\begin{align*}
+  \AckA(\Suc{m},0)
+  &\mapsto
+  \Cond{\Suc{0}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(0)}(\Suc{m})
+  \\
+  &\mapsto
+  (\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(0))(m)
+  \\
+  &\mapsto
+  \Cond{\AckA(m,1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(0)
+  \\
+  &\mapsto
+  \AckA(m,1)
+\end{align*}
+%%%%%%%
+\begin{align*}
+  \AckA(\underline{\Suc{m}},\Suc{n})
+  &\mapsto
+  \Cond{\Suc{\Suc{n}}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(\Suc{n})}(\underline{\Suc{m}})
+  \\
+  &\mapsto
+  (\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(\Suc{n}))(\underline{m})
+  \\
+  &\mapsto
+  \Cond{\AckA(m,1)}{\lambda n'.\AckA(m,\AckA(\Suc{\underline{m}},n'))}(\Suc{n})
+  \\
+  &\mapsto
+  (\lambda n'.\AckA(m,\AckA(\Suc{\underline{m}},n')))(n)
+  \\
+  &\mapsto
+  \AckA(m,\AckA(\Suc{\underline{m}},n))
+\end{align*}
+
+The point of $\AckA$ is the last case. The term $\underline{\Suc{m}}$ of the first line and $\Suc{\underline{m}}$ of the last line are slightly diffelent: $\underline{\Suc{m}}$ is decomposed into $\underline{m}$ by the $\text{cond}$-reduction, then $\Suc{\underline{m}}$ is constructed by substituting $m'$ of $\Suc{m'}$ by $\underline{m}$. 
+
+
+
+\subsection{$\AckA:\N\to\N\to\N$ is not in $\GTC$}
+
+\begin{claim}
+  $\AckA:\N\to\N\to\N$ is well-typed, but does not satisfy GTC in the system.
+\end{claim}
+
+In the following, weakening is implicitly applied. 
+
+{\scriptsize
+  \hspace{-3cm}
+  $\infer{
+    \vdash \AckA:\redN\to\goldN\to\N\ (\dagger)
+  }{
+    \infer[\Rapv]{
+      m:\redN, n:\goldN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n)}(m): \N
+    }{
+      \infer[\Rcond]{
+        m:\N, n:\goldN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n)}: \redN\to\N
+      }{
+        \infer{
+          n:\N \vdash \Suc{n}: \N
+        }{
+          \infer{
+            n:\N \vdash n: \N
+          }{}
+        }
+        &
+        \infer{
+          n:\goldN \vdash \lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n): \redN\to\N
+        }{
+          \infer[\Rapv]{
+            n:\goldN, m':\redN \vdash \Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(n): \N
+          }{
+            \infer[\Rcond]{
+              n:\N, m':\redN \vdash \Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}: \goldN\to\N
+            }{
+              \infer{
+                m':\redN \vdash \AckA(m',1):\N
+              }{
+                \infer[\Rapv]{
+                  m':\redN \vdash \AckA(m'):\N\to\N
+                }{
+                  \infer{
+                    m':\N \vdash \AckA:\redN\to\N\to\N
+                  }{
+                    \deduce{
+                      \vdash \AckA:\redN\to\N\to\N
+                    }{(\dagger1)}
+                  }
+                }
+                &
+                \infer{
+                  \vdash 1:\N
+                }{}
+              }
+              &
+              \infer{
+                m':\redN \vdash \lambda n'.\AckA(m',\AckA(\Suc{m'},n')): \goldN\to\N
+              }{
+                \infer{
+                  m':\redN, n':\goldN \vdash \AckA(m',\AckA(\Suc{m'},n')): \N
+                }{
+                  \infer[\Rapv]{
+                    m':\redN \vdash \AckA(m'): \N\to\N
+                  }{
+                    \infer{
+                      m':\N \vdash \AckA: \redN\to\N\to\N
+                    }{
+                      \deduce{
+                        \vdash \AckA: \redN\to\N\to\N
+                      }{(\dagger2)}
+                    }
+                  }
+                  &
+                  \infer[\Rapv]{
+                    m':\N, n':\goldN \vdash \AckA(\Suc{m'},n'): \N
+                  }{
+                    \infer[\RapNv]{
+                      m':\N, n':\N \vdash \AckA(\Suc{m'}): \goldN\to\N
+                    }{
+                      \deduce{
+                        \vdash \AckA:\N\to\goldN\to\N
+                      }{
+                        (\dagger3)
+                      }
+                      &
+                      \infer{
+                        m':\N \vdash \Suc{m'}:\N
+                      }{
+                        \infer{
+                          m':\N \vdash m':\N
+                        }{}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }$  
+}
+
+\subsection{Second term representation: $\AckB$}
+
+We give the second representation $\AckB$ of Ackermann function. 
+
+\begin{definition}[$\AckB$]\redM
+  We define $\AckB$ by the following equation.
+  \[
+  \AckB = \lambda \redM\blueN.\Cond{\Suc{\blueN}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(\redM,n'))}(\blueN)}(\redM)
+  \]
+\end{definition}
+
+\noindent{\bf Checking the behavior of $\AckB$}
+
+We check only the last case. 
+\begin{align*}
+  \AckB(\underline{\Suc{m}},\Suc{n})
+  &\mapsto
+  \Cond{\Suc{\Suc{n}}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(\underline{\Suc{m}},n'))}(\Suc{n})}(\underline{\Suc{m}})
+  \\
+  &\mapsto
+  (\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(\underline{\Suc{m}},n'))}(\Suc{n}))(\underline{m})
+  \\
+  &\mapsto
+  \Cond{\AckB(m,1)}{\lambda n'.\AckB(m,\AckB(\underline{\Suc{m}},n'))}(\Suc{n})
+  \\
+  &\mapsto
+  (\lambda n'.\AckB(m,\AckB(\underline{\Suc{m}},n')))(n)
+  \\
+  &\mapsto
+  \AckB(m,\AckB(\underline{\Suc{m}},n))
+\end{align*}
+
+The point of $\AckB$ is that $\underline{\Suc{m}}$ at the first line and the one at the last line are exactly the same.
+
+\subsection{$\AckB:\N\to\N\to\N$ is not in GTC (with $\Reta$)}
+
+\begin{claim}
+  $\AckB:\N\to\N\to\N$ is well-typed, but does not satisfy GTC in the system with $\Reta$.
+\end{claim}
+
+{\scriptsize
+  \hspace{-3cm}
+  $\infer{
+    \vdash \AckB:\redN\to\goldN\to\N\ (\dagger)
+  }{
+    \infer[\Rap]{
+      m:\redN, n:\goldN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n)}(m): \N
+    }{
+      \infer[\Rcond]{
+        m:\redN, n:\goldN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n)}: \N\to\N
+      }{
+        \infer{
+          n:\N \vdash \Suc{n}: \N
+        }{
+          \infer{
+            n:\N \vdash n: \N
+          }{}
+        }
+        &
+        \infer{
+          m:\redN, n:\goldN \vdash \lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n): \N\to\N
+        }{
+          \infer[\Reta]{
+            m:\redN, n:\goldN, m':\N \vdash \Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n): \N
+          }{
+            \infer[\Rcond]{
+              m:\redN, m':\N \vdash \Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}: \goldN\to\N
+            }{
+              \infer{
+                m':\N \vdash \AckB(m',1): \N
+              }{
+                \infer[\Reta]{
+                  m':\N \vdash \AckB(m'): \N\to\N
+                }{
+                  \deduce{
+                    \vdash \AckB: \N\to\N\to\N
+                  }{(\dagger1)}
+                }
+                &
+                \infer{
+                  \vdash 1:\N
+                }{}
+              }
+              &
+              \infer{
+                m:\redN, m':\N \vdash \lambda n'.\AckB(m',\AckB(m,n')): \goldN\to\N
+              }{
+                \infer{
+                  m:\redN, m':\N, n':\goldN \vdash \AckB(m',\AckB(m,n')): \N
+                }{
+                  \infer[\Reta]{
+                    m':\N \vdash \AckB(m'): \N\to\N
+                  }{
+                    \deduce{
+                      \vdash \AckB: \N\to\N\to\N
+                    }{(\dagger2)}
+                  }
+                  &
+                  \infer[\Reta]{
+                    m:\redN, n':\goldN \vdash \AckB(m,n'): \N
+                  }{
+                    \infer[\Reta]{
+                      m:\redN \vdash \AckB(m): \goldN\to\N
+                    }{
+                      \deduce{
+                        \vdash \AckB: \redN\to\goldN\to\N
+                      }{(\dagger3)}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      &
+      \infer{
+        m:\redN \vdash m:\N
+      }{}
+    }
+  }$
+}
+
+The problem is with the use of $\Rap$.
+This cuts the trace chasing of $\redN$. 
+The infinite path $(\dagger)\rightsquigarrow(\dagger1)\rightsquigarrow(\dagger)\rightsquigarrow(\dagger1)\rightsquigarrow\cdots$ does not contains progressing trace. 
+
+
+\subsection{$\AckB:\N\to\N\to\N$ is in $\GTC$}
+
+\begin{proposition}
+  $\AckB:\N\to\N\to\N$ has a proof that satisfies $\GTC$ in the system with $\Rapv$.
+\end{proposition}
+
+{\scriptsize
+  \hspace{-3cm}
+  $\infer{
+    \vdash \AckB:\redblueN\to\goldN\to\N\ (\dagger)
+  }{
+    \infer[\Rapv]{
+      m:\redblueN, n:\goldN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n)}(m): \N
+    }{
+      \infer[\Rcond]{
+        m:\redN, n:\goldN \vdash \Cond{\Suc{n}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n)}: \blueN\to\N
+      }{
+        \infer{
+          n:\N \vdash \Suc{n}: \N
+        }{
+          \infer{
+            n:\N \vdash n: \N
+          }{}
+        }
+        &
+        \infer{
+          m:\redN, n:\goldN \vdash \lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n): \blueN\to\N
+        }{
+          \infer[\Rapv]{
+            m:\redN, n:\goldN, m':\blueN \vdash \Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}(n): \N
+          }{
+            \infer[\Rcond]{
+              m:\redN, n:\N, m':\blueN \vdash \Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(m,n'))}: \goldN\to\N
+            }{
+              \infer{
+                m':\blueN \vdash \AckB(m',1): \N
+              }{
+                \infer[\Rapv]{
+                  m':\blueN \vdash \AckB(m'): \N\to\N
+                }{
+                  \infer{
+                    m':\N \vdash \AckB: \blueN\to\N\to\N
+                  }{
+                    \deduce{
+                      \vdash \AckB: \blueN\to\N\to\N
+                    }{(\dagger1)}
+                  }
+                }
+                &
+                \infer{
+                  \vdash 1:\N
+                }{}
+              }
+              &
+              \infer{
+                m:\redN, m':\blueN \vdash \lambda n'.\AckB(m',\AckB(m,n')): \goldN\to\N
+              }{
+                \infer{
+                  m:\redN, m':\blueN, n':\goldN \vdash \AckB(m',\AckB(m,n')): \N
+                }{
+                  \infer[\Rapv]{
+                    m':\blueN \vdash \AckB(m'): \N\to\N
+                  }{
+                    \infer{
+                      m':\N \vdash \AckB: \blueN\to\N\to\N
+                      }{
+                      \deduce{
+                        \vdash \AckB: \blueN\to\N\to\N
+                      }{(\dagger2)}
+                    }
+                  }
+                  &
+                  \infer[\Rapv]{
+                    m:\redN, n':\goldN \vdash \AckB(m,n'): \N
+                  }{
+                    \infer{
+                      m:\redN, n':\goldN \vdash \AckB(m): \goldN\to\N
+                    }{
+                      \infer[\Rapv]{
+                        m:\redN \vdash \AckB(m): \goldN\to\N
+                      }{
+                        \infer{
+                          m:\N \vdash \AckB: \redN\to\goldN\to\N
+                        }{
+                          \deduce{
+                            \vdash \AckB: \redN\to\goldN\to\N
+                          }{(\dagger3)}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }$
+}
+
+This proof satisfies the global trace condition.
+Note that:
+\begin{itemize}
+\item
+  The path $(\dagger)\rightsquigarrow(\dagger1)$ contains a progressing trace $\tau_1 = (\redblueN,\redblueN,\blueN,\ldots,\blueN)$.
+\item
+  The path $(\dagger)\rightsquigarrow(\dagger2)$ contains a progressing trace $\tau_2 = (\redblueN,\redblueN,\blueN,\ldots,\blueN)$.
+\item
+  The path $(\dagger)\rightsquigarrow(\dagger3)$ contains a progressing trace $\tau'_3 = (\goldN,\ldots,\goldN)$ and a non-progressing trace $\tau_3 = (\redblueN,\redblueN,\redN,\ldots,\redN)$. 
+\end{itemize}
+Take an infinite path $\pi$ from this proof.
+If $\pi$ passes through $(\dagger1)$ (or $(\dagger2)$) infinitely many times,
+take its infinitely progressing trace by combining $\tau_1$, $\tau_2$, and $\tau_3$. 
+If $\pi$ passes through $(\dagger1)$ and $(\dagger2)$ finitely many times,
+namely it eventually becomes a loop of $(\dagger)$ and $(\dagger3)$,
+take its infinitely progressing trace by combining $\tau_1$, $\tau_2$, and $\tau'_3$. 
+
+\vspace{1cm}
+
+
+
+  
+%\end{document}
+%
+%\infer{}{}
+%
+%\lambda mn.\Cond{\Suc{n}}{\lambda m'.\Cond{\Ack(m')(1)}{\lambda n'.\Ack(m')(\Ack(\Suc{m'})(n'))}(n)}(m)
