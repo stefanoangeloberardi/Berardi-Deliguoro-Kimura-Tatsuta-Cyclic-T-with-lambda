@@ -217,17 +217,16 @@ namely it satisfies the following:
 
 Formally we define the substitution as follows.
 \begin{definition}[Substitution for terms of $\LAMBDA$]
-  A {\em substitution} $\theta$ is a list of the form $u_1/x_1,\ldots,u_n/x_n$ with distinct variables $x_1,\ldots,x_n$.
-  A substitution is called {\em renaming} if $u_1,\ldots,u_n$ are distinct variables. 
+  A set $\theta=\{u_1/x_1,\ldots,u_n/x_n\}$ is called a {\em substitution}
+  if $x_1,\ldots,x_n$ are pairwise distinct variables.
+  It is called {\em renaming} if $u_1,\ldots,u_n$ are pairwise distinct variables. 
   We define $\theta(y)$ by $u_i$ if $y=x_i$, and by $y$ otherwise.
-  The set $\Dom(\theta)$ is $\{x_1,\ldots,x_n\}$. 
-  Let $X$ be a set of variables.
-  The substitution $\Restrict{\theta}{X}$ is the restriction of $\theta$ to $X\cap\Dom(\theta)$.
-  We abbreviate $\Restrict{\theta}{\Dom(\theta)\setminus\{x\}}$ by 
-  $\Restrict{\theta}{\overline{x}}$. 
+  We write $\theta,\theta'$ if $\theta\cup\theta'$ is a substitution.   
+  The substitution $\Restrict{\theta}{\overline{x}}$ is defined 
+  as the one obtained by removing $u/x$ (for some $u$) from $\theta$. 
   
   Let $t$ be a term of $\LAMBDA$, which is the labeled tree $(T_t,\phi_t)$,
-  and $\theta$ be $u_1/x_1,\ldots,u_n/x_n$, where each $u_i$ is $(T_{u_i},\phi_{u_i})$. 
+  and $\theta$ be $\{u_1/x_1,\ldots,u_n/x_n\}$, where each $u_i$ is $(T_{u_i},\phi_{u_i})$. 
   Then the term $t[\theta]$ is $(T,\phi)$, where 
   $T = T_t \cup \{l\conc m \mid \text{$\phi_t(l) = x_i \in \FV(t)$ and $m\in T_{u_i} $}\}$.
   For each $l\conc m$ in the latter part, $\phi(l\conc m) = \phi_{u_i}(m)$.  
@@ -252,6 +251,7 @@ Formally we define the substitution as follows.
     If $\phi_t(l) = \lambda z^T.$ and $z\in\FV(\vec{u})$,
     then $\phi(l) = \lambda z'^T.$ and $\theta_{l\conc(1)} = \Restrict{(\theta_l)}{\overline{z}},z'/z$, where $z'$ is the least variable such that $z' \not\in \FV(t\restr l\conc(1),\vec{u})$.
   \end{itemize}
+  We often abbreviate $t[\{u_1/x_1,\ldots,u_n/x_n\}]$ by $t[u_1/x_1,\ldots,u_n/x_n]$. 
 \end{definition}
 
 \Daisuke{end definition of substitution}
