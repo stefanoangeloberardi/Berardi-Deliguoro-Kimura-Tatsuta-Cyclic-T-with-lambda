@@ -478,8 +478,13 @@ Two rules are equal if they have the same assumptions and the same conclusion.
 Assume $r, r' \in \Rule$ have conclusion $\Gamma \vdash t:A$, $\Gamma' \vdash t':A'$
 respectively.
 \begin{enumerate}
-\item
-If $r, r'$ are weakening rules and $\Gamma \vdash t:A = \Gamma' \vdash t':A'$ then $r = r'$.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% NO THIS IS WRONG ASSUMPTIONS OF weak ARE NOT UNIQUE. 
+% Anyway we do not need this point.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\item
+%If $r, r'$ are weakening rules and $\Gamma \vdash t:A = \Gamma' \vdash t':A'$ then $r = r'$.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \item
 If $r, r'$ are non-weakening rules and $\Gamma \vdash t:A = \Gamma' \vdash' t':A'$ then $r = r'$.
 \item
