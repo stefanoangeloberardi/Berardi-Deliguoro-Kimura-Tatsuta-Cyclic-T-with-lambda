@@ -500,7 +500,7 @@ The next definition is the formal definition of proof.
 We mention that we will introduce a restriction we call \emph{Almost-left-finite} on proof trees. 
 The restriction Almost-left-finite is used to prevent trivial proofs. 
 For instance, we want to forbid a proof cyclically switching the variables $x$ and $y$ in the context of a term,
-by using the $\weak$-rule (Weakening + Exchange  rule):
+by an infinite nesting of $\weak$-rule (Weakening + Exchange  rule):
  \[
   \infer[\weak]{
     (x^T:T, y^U:U) \prove t : A
@@ -510,11 +510,26 @@ by using the $\weak$-rule (Weakening + Exchange  rule):
   }{\ldots}
   }
   \]
+Another example: we want to forbid an infinite left nesting of applications, as in a proof of 
+$t_{n}:A^n \rightarrow A$ where $t_{n} = t_{n+1}(t_0)$:
+ \[
+  \infer[\apnotvar]{
+   \prove t_n : A^n \rightarrow A
+  }{
+    \infer[]{
+   \prove t_{n+1} : A^{n+1} \rightarrow A
+  }{\ldots}
+   &
+   \infer[]{
+   \prove t_{0} : A
+  }{\ldots}
+  }
+  \]
 These proof trees are meaningless and should be ruled out. The Almost-Left-Finite condition will ask
-that all leftmost branches in any sub-proof are finite, in particular that no infinite branch made of
-$\weak$-rules exists. 
+that all leftmost branches in any sub-proof are finite, say, that no infinite leftmost branch made of
+$\weak$-rules or of $\apnotvar$ exists. 
 The idea is that when the main operation in a programming language is application, 
-then the leftmost branch uniquely  determines the type of the term and therefore it cannot be infinite.
+then the leftmost branch uniquely  determines the type of the term and therefore it should be finite.
 %12:54 03/06/2024
 
 
