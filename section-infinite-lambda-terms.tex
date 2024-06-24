@@ -172,6 +172,90 @@ The immediate sub-term chains of $t$ are all $(t,t,t,\ldots,t)$ and $(t,t,t,\ldo
 There is a unique infinite sub-term chain, which is $(t,t,t,\ldots)$. 
 \end{Eg}
 
+\Daisuke{begin definition of substitution}\\
+
+We define the term $t[u/x]$ obtained by substituting the infinite term $u$ for the free variable $x$ in $t$ 
+avoiding variable captures.
+Since the typing system (given later) does not have renaming rule,
+we do not assume implicit renaming for bound variables, namely $\alpha$-equivalence.
+In order to define the capture avoiding substitution under this assumption, 
+we implicitly fix a well-order on variables
+and define the simultaneous substitution,
+written $t[u_1/x_1,\ldots,u_n/x_n]$ or $t[\vec{u}/{\vec{x}}]$,
+namely it satisfies the following:
+\begin{itemize}
+\item
+  $x_i[u_1/x_1,\ldots,u_n/x_n] = u_i$ and $y[\vec{u}/\vec{x}] = y$, where $y\not\in\vec{x}$. 
+\item
+  $(f(a))[\vec{u}/\vec{x}] = f[\vec{u}/\vec{x}](a[\vec{u}/\vec{x}])$.
+\item
+  $(\lambda z^T.b)[\vec{u}/\vec{x}] =
+  \left\{
+  \begin{array}{ll}
+    \lambda z^T.(b[\Restrict{(\vec{u}/\vec{x})}{\overline{z}}]),
+    &
+    \text{if $z \not\in \FV(\vec{u})$},
+    \\
+    \lambda z'^T.(b[\Restrict{(\vec{u}/\vec{x})}{\overline{z}},z'/z]),
+    &
+    \text{otherwise},
+  \end{array}
+  \right.$
+  \\
+  where
+  $\Restrict{(\vec{u}/\vec{x})}{\overline{z}}$ is the one obtained by removing $u/z$ (for some $u$) from $\vec{u}/\vec{x}$,
+  and 
+  $z'$ is the least variable (with respect to the well-order)
+  such that $z' \not\in \FV(b,\vec{u})$.
+\item
+  $0[\vec{u}/\vec{x}] = 0$.
+\item
+  $\Succ(t)[\vec{u}/\vec{x}] = \Succ(t[\vec{u}/\vec{x}])$.
+\item
+  $\cond(f,g)[\vec{u}/\vec{x}] = \cond(f[\vec{u}/\vec{x}],g[\vec{u}/\vec{x}])$.
+\end{itemize}
+
+Formally we define the substitution as follows.
+\begin{definition}[Substitution for terms of $\LAMBDA$]
+  A set $\theta=\{u_1/x_1,\ldots,u_n/x_n\}$ is called a {\em substitution}
+  if $x_1,\ldots,x_n$ are pairwise distinct variables.
+  It is called {\em renaming} if $u_1,\ldots,u_n$ are pairwise distinct variables. 
+  We define $\theta(y)$ by $u_i$ if $y=x_i$, and by $y$ otherwise.
+  We write $\theta,\theta'$ if $\theta\cup\theta'$ is a substitution.   
+  The substitution $\Restrict{\theta}{\overline{x}}$ is defined 
+  as the one obtained by removing $u/x$ (for some $u$) from $\theta$. 
+  
+  Let $t$ be a term of $\LAMBDA$, which is the labeled tree $(T_t,\phi_t)$,
+  and $\theta$ be $\{u_1/x_1,\ldots,u_n/x_n\}$, where each $u_i$ is $(T_{u_i},\phi_{u_i})$. 
+  Then the term $t[\theta]$ is $(T,\phi)$, where 
+  $T = T_t \cup \{l\conc m \mid \text{$\phi_t(l) = x_i \in \FV(t)$ and $m\in T_{u_i} $}\}$.
+  For each $l\conc m$ in the latter part, $\phi(l\conc m) = \phi_{u_i}(m)$.  
+  For $l\in T_t$, we inductively define $\phi(l)$ and
+  $\theta_l$ (such that $\theta_l = \theta',\theta_{ren}$, where $\theta'\subseteq \theta$ and $\theta_{ren}$ is a renaming) as follows. 
+  \begin{itemize}
+  \item
+    $\theta_{\nil} = \theta$.
+  \item
+    If $\phi_t(l) = y^T \not\in\FV(t)$, then $\phi(l) = \theta_l(y^T)$.
+  \item
+    If $\phi_t(l) = 0$, then $\phi(l) = 0$. 
+  \item    
+    If $\phi_t(l) = \Succ$, then $\phi(l) = \Succ$ and $\theta_{l\conc (1)} = \theta_l$. 
+  \item    
+    If $\phi_t(l) \in \{\ap,\cond\}$, then $\phi(l) = \phi_t(l)$
+    and $\theta_{l\conc (1)} = \theta_{l\conc(2)} = \theta_l$.
+  \item
+    If $\phi_t(l) = \lambda z^T.$ and $z\not\in\FV(\vec{u})$,
+    then $\phi(l) = \lambda z^T.$ and $\theta_{l\conc(1)} = \Restrict{(\theta_l)}{\overline{z}}$. 
+  \item
+    If $\phi_t(l) = \lambda z^T.$ and $z\in\FV(\vec{u})$,
+    then $\phi(l) = \lambda z'^T.$ and $\theta_{l\conc(1)} = \Restrict{(\theta_l)}{\overline{z}},z'/z$, where $z'$ is the least variable such that $z' \not\in \FV(t\restr l\conc(1),\vec{u})$.
+  \end{itemize}
+  We often abbreviate $t[\{u_1/x_1,\ldots,u_n/x_n\}]$ by $t[u_1/x_1,\ldots,u_n/x_n]$. 
+\end{definition}
+
+\Daisuke{end definition of substitution}
+
 In order to define the type of an infinite term, we first 
 define contexts and sequences for any term of $\LAMBDA$.
 A context is a list of type assignments to variables: our variables already have a type superscript,
