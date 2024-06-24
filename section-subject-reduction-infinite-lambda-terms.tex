@@ -41,15 +41,20 @@ $(k_1,t_1) \simIndex (k_2,t_2)$ and $(k_1,t_1) \simIndex (k'_2,t_2)$ implies $k_
   \item[(a)]
     $\Gamma'_l\vdash t_l:A_l$ is the conclusion of $\phi'(l) \in \Rule$,
   \item[(b)]
-    $\Restrict{(\Gamma_l)}{\FV(t_l)} \subseteqsim \Gamma'_l \subseteqsim \Gamma_l$, and
+    $\Restrict{(\Gamma_l)}{\FV(t_l)} \subseteqsim \Gamma'_l \subseteqsim \Gamma_l$
+    and $\Gamma'_{\nil} = \Restrict{\Gamma}{\FV(t)}$, 
   \item[(c)]
     if $\tilde{k},t_{l\conc(i)}$ is the successor of $k,t_l$ in $\Pi$
     and $k$ is an index of some unname argument
     or a named argument of some name $z\in\FV(t_l)$, 
     then there are $\tilde{k'}$ and $k'$ such that
-    $\tilde{k'},t_{l\conc(i)}$ is the successor of $k',t_l$ in $\Pi'$
-    and $(k,t_l) \simIndex (k',t_l)$. 
+    $\tilde{k'},t_{l\conc(i)}$ is the successor of $k',t_l$ in $\Pi'$, 
+    $(k,t_l) \simIndex (k',t_l)$,
+    and $(\tilde{k},t_{l\conc(i)}) \simIndex (\tilde{k'},t_{l\conc(i)})$.
+    Moreover, if $k$ is an index of a progressing argument, then so is $k'$.
   \end{itemize}
+  Note that the proof is done if we construct $\Pi'$ that satisfies these requirements. 
+  
   We define $\Gamma'_{\nil} = \Restrict{\Gamma}{\FV(t)}$.
   Then it satisfies (b) since $t_\nil = t$. 
   Next, assuming the induction hypothesis that $\Gamma'_l$ that satisfies (b)
@@ -75,7 +80,7 @@ $(k_1,t_1) \simIndex (k_2,t_2)$ and $(k_1,t_1) \simIndex (k'_2,t_2)$ implies $k_
   Note that $\FV(\Gamma'_{l\conc(1)}) = \FV(\Gamma'_l)\cap\FV(\Gamma_{l\conc(1)})$. 
   Then it satisfies (b) since $\FV(t_l)\subseteq \FV(\Gamma'_l) \cap \FV(\Gamma_{l\conc(1)}) = \FV(\Gamma'_{l\conc(1)}) \subseteq \FV(\Gamma_{l\conc(1)})$ by (b) for $\Gamma'_l$.
   Define $\phi'(l) = (\Gamma'_{l\conc(1)}\vdash t_l:A_l,\Gamma'_{l}\vdash t_l:A_l)$
-  as $(\weak)$-rule.
+  as an instance of $(\weak)$. 
   Hence the requirement (a) holds.
   We can also show (c): if $k$ is an index in $\Gamma_l\vdash t_l:A_l$ for a name
   $z\in\FV(t_{l\conc(1)}) = \FV(t_l)$, then we can take an index $k'$
@@ -91,7 +96,7 @@ $(k_1,t_1) \simIndex (k_2,t_2)$ and $(k_1,t_1) \simIndex (k'_2,t_2)$ implies $k_
   This is possible since $\Gamma_l,z:C$ is consistent
   and $\Gamma'_l\subseteqsim \Gamma_l$ by (b) for $\Gamma'_l$.
   Then define
-  $\phi'(l) = (\Gamma'_{l},z:C\vdash b:\vec{B}\to N, \Gamma'_l\vdash \lambda z.b:C,\vec{B}\to N)$ as an instance of $(\lambda)$-rule.
+  $\phi'(l) = (\Gamma'_{l},z:C\vdash b:\vec{B}\to N, \Gamma'_l\vdash \lambda z.b:C,\vec{B}\to N)$ as an instance of $(\lambda)$. 
   Then we have (a). 
   We also have (b) for $\Gamma'_{l\conc(1)}$
   since $\FV(b) \subseteq \FV(\lambda z.b) \cup \{z\} \subseteq \FV(\Gamma'_l)\cup\{z\} = \FV(\Gamma'_{l\conc(1)}) \subseteq \FV(\Gamma_l)\cup\{z\} = \FV(\Gamma_{l\conc(1)})$.
@@ -104,23 +109,80 @@ $(k_1,t_1) \simIndex (k_2,t_2)$ and $(k_1,t_1) \simIndex (k'_2,t_2)$ implies $k_
   determined by $k$ and $k'$, respectively. 
   
   The case that $\phi(l)$ is an instance of $(\apvar)$-rule
-  whose conclusion is $\Gamma_l\vdash f(x^B):A_l$. 
-
-  
+  whose conclusion is $\Gamma_l\vdash f(x^B):\vec{C}\to N$ with $x:B\in \Gamma_l$.  
+  Define $\Gamma'_{l\conc(1)} = \Gamma'_l$.
+  This satisfies (b) by the induction hypothesis. 
+  Then define
+  $\phi'(l) = (\Gamma'_{l\conc(1)}\vdash f:B,\vec{C}\to N, \Gamma'_l\vdash f(x^B):\vec{C}\to N)$
+  as an instance of $(\apvar)$. This satisfies (a). 
+  In order to show (c), 
+  take an index $k$ for $\Gamma_l\vdash f(x^B):\vec{C}\to N$, which is the one for
+  a named argument $y \in \FV(f(x^B))$ in $\Gamma_l$
+  or for some unnamed argument of $\vec{C}$. 
+  For the latter case, the indexes $\tilde{k}$, $k'$ and $\tilde{k'}$ can be taken
+  as those of the unnamed argument in $\vec{C}$ at the same position as $k$.
+  For the former case, we take $k'$ as the index for $y$ in $\Gamma'_l$.
+  In order to take $\tilde{k'}$,
+  we further have two subcases according to $\tilde{k}$: 
+  The first one is $\tilde{k}$ is the index for the same named argument as $k$, 
+  and the second one is $\tilde{k}$ is the index for the unnamed argument, namely $B=N$.
+  In both subcases, we can take the equivalent $\tilde{k'}$ to $\tilde{k}$ as we wished.
+    
   The case that $\phi(l)$ is an instance of $(\apnotvar)$-rule
   whose conclusion is $\Gamma_l\vdash f(b^B):A_l$. 
+  Define $\Gamma'_{l\conc(1)} = \Gamma'_{l\conc(2)} = \Gamma'_l$.
+  This satisfies (b) by the induction hypothesis.
+  Then define $\phi'(l) = (S_1, S_2, \Gamma'_l\vdash f(b^B):\vec{C}\to N)$,
+  where $S_1$ is $\Gamma'_{l}\vdash f:B,\vec{C}\to N$
+  and $S_2$ is $\Gamma'_{l}\vdash b:B$, as an instance of $(\apnotvar)$.
+  This satisfies (a).
+  In order to show (c), 
+  take an index $k$ for $\Gamma_l\vdash f(x^B):\vec{C}\to N$, which is the one for
+  a named argument $y \in \FV(f(x^B))$ in $\Gamma_l$
+  or for some unnamed argument of $\vec{C}$.
+  For the former case, the successor $\tilde{k}$ of $k$ is uniquely taken.
+  By $\FV(f(b)) \subseteq \FV(\Gamma'_l)$, the index $k'$ equivalent to $k$ is uniquely taken. 
+  Then the successor $\tilde{k'}$ of $k'$ is also taken as we wished. 
+  For the latter case, the successor $\tilde{k}$ of $k$ is uniquely taken
+  as the one for unnamed argument at the same position as $k$. 
+  Then $k'$ equivalent to $k$ is uniquely taken, and 
+  its successor $\tilde{k'}$ is also taken as we wished. 
 
   The case that $\phi(l)$ is an instance of $(0)$-rule
-  whose conclusion is $\Gamma_l\vdash 0:N$ with $A_l=N$. 
+  whose conclusion is $\Gamma_l\vdash 0:N$. 
+  Define $\phi'(l) = \Gamma'_l\vdash 0:N$ as an instance of $(0)$.
+  This satisfies the requirements (a), (b), and (c). 
 
   The case that $\phi(l)$ is an instance of $(\Succ)$-rule
   whose conclusion is $\Gamma_l\vdash \Succ(t_{l\conc(1)}):N$ with $A_l=N$.
-
-
-  The case that $\phi(l)$ is an instance of $(\cond)$-rule
-  whose conclusion is $\Gamma_l\vdash \cond(f,g):N\to B$ with $A_l=N\to B$.
-
+  Define $\Gamma'_{l\conc(1)} = \Gamma'_l$, and 
+  $\phi'(l) = (\Gamma'_l\vdash t_{l\conc(1)}:N, \Gamma'_l\vdash \Succ(t_{l\conc(1)}):N)$
+  as an instance of $(\Succ)$. They satisfy (a) and (b). 
+  The requirement (c) is also satisfied:
+  Take an index $k$ for $\Gamma_l\vdash \Succ(t_{l\conc(1)}): N$,
+  which is the one for a named argument $y \in \FV(\Succ(t_{l\conc(1)})$ in $\Gamma_l$.
+  Then the successor $\tilde{k}$ of $k$ is uniquely taken.  
+  By $\FV(t_{l\conc(1)}) \subseteq \FV(\Gamma'_l)$, the index $k'$ equivalent to $k$ is uniquely taken. 
+  Then the successor $\tilde{k'}$ of $k'$ is also taken as we wished. 
   
+  The case that $\phi(l)$ is an instance of $(\cond)$-rule
+  whose conclusion is $\Gamma_l\vdash \cond(f,g):N,\vec{C}\to N$. 
+  Define $\Gamma'_{l\conc(1)} = \Gamma'_{l\conc(2)} = \Gamma'_l$, and 
+  $\phi'(l) = (S_1,S_2, \Gamma'_l\vdash \cond(f,g):N,\vec{C}\to N)$,
+  where $S_1$ is $\Gamma'_l\vdash f:\vec{C}\to N$ and $S_2$ is $\Gamma'_l \vdash g:N,\vec{C}\to N$, 
+  as an instance of $(\cond)$. They satisfy (a) and (b). 
+  To show (c), take an index $k$ for $\Gamma_l\vdash \cond(f,g): N,\vec{C}\to N$ as required. 
+  We need to consider three cases:
+  $k$ is the index for a named argument $y \in \FV(\cond(f,g))$ in $\Gamma_l$,
+  is the one for an unnamed argument in $\vec{C}$, or
+  is the one for an unnamed argument in $N$ (the first one of $N,\vec{C}\to N$). 
+  For the first and second cases, we can take $\tilde{k}$, $k'$, and $\tilde{k'}$
+  similar to the other cases.
+  For the last case, the successor $\tilde{k}$ of $k$ should be taken
+  as the index of the unnamed $N$-argument of $\Gamma'_l \vdash g:N,\vec{C}\to N$
+  at the same position as $k$. 
+  Then $k'$ and $\tilde{k'}$ are taken as those equivalent to $k$ and $\tilde{k}$, respectively.
+  Note that this $k$ is an index of a progressing argument $N$, and so is $k'$. 
 \end{proof}
 
 
