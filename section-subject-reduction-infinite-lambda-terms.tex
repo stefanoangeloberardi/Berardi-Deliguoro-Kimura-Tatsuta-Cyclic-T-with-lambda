@@ -11,7 +11,7 @@ We write $\Gamma_X$ be $\{x^T:T \in \Gamma \mid x^T \in X \}$.
 Let $\Gamma$ and $\Delta$ be contexts of $\LAMBDA$.
 We say that $\Gamma$ and $\Delta$ are {\em consistent} if 
 $\Gamma_{\FV(\Gamma)\cap\FV(\Delta)} \sim \Delta_{\FV(\Gamma)\cap\FV(\Delta)}$. 
-The merged context $\Gamma\sharp\Delta$
+The merged context $\mergeCtx{\Gamma}{\Delta}$
 is defined by $\Gamma\conc\Delta_{\FV(\Delta)\setminus\FV(\Gamma)}$
 if $\Gamma$ and $\Delta$ are consistent, and is undefined otherwise. 
 
@@ -24,7 +24,7 @@ in $\vec{B_1}$ and $\vec{B_2}$, respectively.
 Note that the index equivalent to $k_1$ is unique (if it exists), namely 
 $(k_1,t_1) \simIndex (k_2,t_2)$ and $(k_1,t_1) \simIndex (k'_2,t_2)$ implies $k_2=k'_2$. 
 
-\begin{lemma}
+\begin{lemma}\label{lem:thinning}
   Assume $\Pi:\Gamma\vdash t:A$.
   Then $\Pi':\Gamma_{\FV(t)}\vdash t:A$ for some $\Pi'$.
   Moreover if the global trace condition holds for $\Pi$, then it also holds for $\Pi'$. 
@@ -65,12 +65,12 @@ $(k_1,t_1) \simIndex (k_2,t_2)$ and $(k_1,t_1) \simIndex (k'_2,t_2)$ implies $k_
   It is done by the case analysis of $\phi(l)$.
 
   The case that $\phi(l) = \Gamma_l\vdash x:A_l$,
-  which is an instance of $(\var)$-rule with $x:A_l\in\Gamma_l$. 
-  Then define $\phi'(l) = \Gamma'_l\vdash x:A_l$. This is an instance of $(\var)$-rule
+  which is an instance of the rule $\var$ with $x:A_l\in\Gamma_l$. 
+  Then define $\phi'(l) = \Gamma'_l\vdash x:A_l$. This is an instance of $\var$
   because $\{x:A_l\} = \Restrict{(\Gamma_l)}{\{x\}} \subseteqsim \Gamma'_l$ by (b).
 
   The case that $\phi(l) = (\Gamma_{l\conc(1)}\vdash t_l:A_l,\Gamma_{l}\vdash t_l:A_l)$,
-  which is an instance of $(\weak)$-rule with
+  which is an instance of the rule $\weak$ with
   $t_{l\conc(1)} = t_l$, $A_{l\conc(1)} = A_{l}$, and
   $\Gamma_{l\conc(1)}\subseteqsim \Gamma_l$.
   Let $\psi$ be the unique map that determines $\Gamma_{l\conc(1)}\subseteqsim \Gamma_l$.
@@ -80,7 +80,7 @@ $(k_1,t_1) \simIndex (k_2,t_2)$ and $(k_1,t_1) \simIndex (k'_2,t_2)$ implies $k_
   Note that $\FV(\Gamma'_{l\conc(1)}) = \FV(\Gamma'_l)\cap\FV(\Gamma_{l\conc(1)})$. 
   Then it satisfies (b) since $\FV(t_l)\subseteq \FV(\Gamma'_l) \cap \FV(\Gamma_{l\conc(1)}) = \FV(\Gamma'_{l\conc(1)}) \subseteq \FV(\Gamma_{l\conc(1)})$ by (b) for $\Gamma'_l$.
   Define $\phi'(l) = (\Gamma'_{l\conc(1)}\vdash t_l:A_l,\Gamma'_{l}\vdash t_l:A_l)$
-  as an instance of $(\weak)$. 
+  as an instance of the rule $\weak$. 
   Hence the requirement (a) holds.
   We can also show (c): if $k$ is an index in $\Gamma_l\vdash t_l:A_l$ for a name
   $z\in\FV(t_{l\conc(1)}) = \FV(t_l)$, then we can take an index $k'$
@@ -89,14 +89,15 @@ $(k_1,t_1) \simIndex (k_2,t_2)$ and $(k_1,t_1) \simIndex (k'_2,t_2)$ implies $k_
   from $\Gamma'_{l\conc(1)}\vdash t_l:A_l$
   since $z \in \FV(t_l) \subseteq \FV(\Gamma'_{l\conc(1)})$. 
   
-  The case that $\phi(l)$ is an instance of $(\lambda)$-rule
+  The case that $\phi(l)$ is an instance of the rule $\lambda$
   whose conclusion is $\Gamma_l\vdash\lambda z^C.b:C,\vec{B}\to N$
   with $A_l=C,\vec{B}\to N$. 
   Define $\Gamma'_{l\conc(1)} = \Gamma'_l,z:C$.
   This is possible since $\Gamma_l,z:C$ is consistent
   and $\Gamma'_l\subseteqsim \Gamma_l$ by (b) for $\Gamma'_l$.
   Then define
-  $\phi'(l) = (\Gamma'_{l},z:C\vdash b:\vec{B}\to N, \Gamma'_l\vdash \lambda z.b:C,\vec{B}\to N)$ as an instance of $(\lambda)$. 
+  $\phi'(l) = (\Gamma'_{l},z:C\vdash b:\vec{B}\to N, \Gamma'_l\vdash \lambda z.b:C,\vec{B}\to N)$
+  as an instance of the rule $\lambda$. 
   Then we have (a). 
   We also have (b) for $\Gamma'_{l\conc(1)}$
   since $\FV(b) \subseteq \FV(\lambda z.b) \cup \{z\} \subseteq \FV(\Gamma'_l)\cup\{z\} = \FV(\Gamma'_{l\conc(1)}) \subseteq \FV(\Gamma_l)\cup\{z\} = \FV(\Gamma_{l\conc(1)})$.
@@ -108,13 +109,13 @@ $(k_1,t_1) \simIndex (k_2,t_2)$ and $(k_1,t_1) \simIndex (k'_2,t_2)$ implies $k_
   In both cases, their successors $\tilde{k}$ and $\tilde{k'}$ are uniquely
   determined by $k$ and $k'$, respectively. 
   
-  The case that $\phi(l)$ is an instance of $(\apvar)$-rule
+  The case that $\phi(l)$ is an instance of the rule $\apvar$
   whose conclusion is $\Gamma_l\vdash f(x^B):\vec{C}\to N$ with $x:B\in \Gamma_l$.  
   Define $\Gamma'_{l\conc(1)} = \Gamma'_l$.
   This satisfies (b) by the induction hypothesis. 
   Then define
   $\phi'(l) = (\Gamma'_{l\conc(1)}\vdash f:B,\vec{C}\to N, \Gamma'_l\vdash f(x^B):\vec{C}\to N)$
-  as an instance of $(\apvar)$. This satisfies (a). 
+  as an instance of the rule $\apvar$. This satisfies (a). 
   In order to show (c), 
   take an index $k$ for $\Gamma_l\vdash f(x^B):\vec{C}\to N$, which is the one for
   a named argument $y \in \FV(f(x^B))$ in $\Gamma_l$
@@ -128,13 +129,13 @@ $(k_1,t_1) \simIndex (k_2,t_2)$ and $(k_1,t_1) \simIndex (k'_2,t_2)$ implies $k_
   and the second one is $\tilde{k}$ is the index for the unnamed argument, namely $B=N$.
   In both subcases, we can take the equivalent $\tilde{k'}$ to $\tilde{k}$ as we wished.
     
-  The case that $\phi(l)$ is an instance of $(\apnotvar)$-rule
+  The case that $\phi(l)$ is an instance of the rule $\apnotvar$
   whose conclusion is $\Gamma_l\vdash f(b^B):A_l$. 
   Define $\Gamma'_{l\conc(1)} = \Gamma'_{l\conc(2)} = \Gamma'_l$.
   This satisfies (b) by the induction hypothesis.
   Then define $\phi'(l) = (S_1, S_2, \Gamma'_l\vdash f(b^B):\vec{C}\to N)$,
   where $S_1$ is $\Gamma'_{l}\vdash f:B,\vec{C}\to N$
-  and $S_2$ is $\Gamma'_{l}\vdash b:B$, as an instance of $(\apnotvar)$.
+  and $S_2$ is $\Gamma'_{l}\vdash b:B$, as an instance of $\apnotvar$.
   This satisfies (a).
   In order to show (c), 
   take an index $k$ for $\Gamma_l\vdash f(x^B):\vec{C}\to N$, which is the one for
@@ -148,16 +149,16 @@ $(k_1,t_1) \simIndex (k_2,t_2)$ and $(k_1,t_1) \simIndex (k'_2,t_2)$ implies $k_
   Then $k'$ equivalent to $k$ is uniquely taken, and 
   its successor $\tilde{k'}$ is also taken as we wished. 
 
-  The case that $\phi(l)$ is an instance of $(0)$-rule
+  The case that $\phi(l)$ is an instance of the rule $0$
   whose conclusion is $\Gamma_l\vdash 0:N$. 
-  Define $\phi'(l) = \Gamma'_l\vdash 0:N$ as an instance of $(0)$.
+  Define $\phi'(l) = \Gamma'_l\vdash 0:N$ as an instance of the rule $0$.
   This satisfies the requirements (a), (b), and (c). 
 
-  The case that $\phi(l)$ is an instance of $(\Succ)$-rule
+  The case that $\phi(l)$ is an instance of the rule $\Succ$
   whose conclusion is $\Gamma_l\vdash \Succ(t_{l\conc(1)}):N$ with $A_l=N$.
   Define $\Gamma'_{l\conc(1)} = \Gamma'_l$, and 
   $\phi'(l) = (\Gamma'_l\vdash t_{l\conc(1)}:N, \Gamma'_l\vdash \Succ(t_{l\conc(1)}):N)$
-  as an instance of $(\Succ)$. They satisfy (a) and (b). 
+  as an instance of $\Succ$. They satisfy (a) and (b). 
   The requirement (c) is also satisfied:
   Take an index $k$ for $\Gamma_l\vdash \Succ(t_{l\conc(1)}): N$,
   which is the one for a named argument $y \in \FV(\Succ(t_{l\conc(1)})$ in $\Gamma_l$.
@@ -165,12 +166,12 @@ $(k_1,t_1) \simIndex (k_2,t_2)$ and $(k_1,t_1) \simIndex (k'_2,t_2)$ implies $k_
   By $\FV(t_{l\conc(1)}) \subseteq \FV(\Gamma'_l)$, the index $k'$ equivalent to $k$ is uniquely taken. 
   Then the successor $\tilde{k'}$ of $k'$ is also taken as we wished. 
   
-  The case that $\phi(l)$ is an instance of $(\cond)$-rule
+  The case that $\phi(l)$ is an instance of the rule $\cond$
   whose conclusion is $\Gamma_l\vdash \cond(f,g):N,\vec{C}\to N$. 
   Define $\Gamma'_{l\conc(1)} = \Gamma'_{l\conc(2)} = \Gamma'_l$, and 
   $\phi'(l) = (S_1,S_2, \Gamma'_l\vdash \cond(f,g):N,\vec{C}\to N)$,
   where $S_1$ is $\Gamma'_l\vdash f:\vec{C}\to N$ and $S_2$ is $\Gamma'_l \vdash g:N,\vec{C}\to N$, 
-  as an instance of $(\cond)$. They satisfy (a) and (b). 
+  as an instance of $\cond$. They satisfy (a) and (b). 
   To show (c), take an index $k$ for $\Gamma_l\vdash \cond(f,g): N,\vec{C}\to N$ as required. 
   We need to consider three cases:
   $k$ is the index for a named argument $y \in \FV(\cond(f,g))$ in $\Gamma_l$,
@@ -188,8 +189,9 @@ $(k_1,t_1) \simIndex (k_2,t_2)$ and $(k_1,t_1) \simIndex (k'_2,t_2)$ implies $k_
 
 
 \begin{lemma}[Substitution lemma]
-  Assume that $\Pi_u: \Gamma \vdash u:A$ and $\Pi_t:\Gamma,x:A \vdash t:B$ hold.
-  Then there exists $\Pi^*$ such that $\Pi^*:\Gamma \vdash t[u/x]:B$. 
+  Assume that $\Pi_u: \Gamma_u \vdash u:A$ and $\Pi_t:\Gamma_t,x:A \vdash t:B$ hold,
+  and $\Gamma_u$ and $\Gamma_t$ are consistent. 
+  Then there exists $\Pi^*$ such that $\Pi^*:\mergeCtx{\Gamma_u}{\Gamma_t} \vdash t[u/x]:B$. 
   Moreover, if $\Pi_u$ and $\Pi_t$ satisfy the global trace condition,
   then $\Pi^*$ also satisfies it. 
 \end{lemma}
@@ -198,14 +200,104 @@ $(k_1,t_1) \simIndex (k_2,t_2)$ and $(k_1,t_1) \simIndex (k'_2,t_2)$ implies $k_
 
 \end{proof}
 
+\begin{lemma}\label{lem:inversion}
+  \begin{enumerate}
+  \item\label{lem:inversion1}
+    If $\Pi:\Gamma\vdash f(a):A$ and $\Pi$ satisfies the global trace condition, then
+    there exist $\Pi_1$, $\Pi_2$ and $B$ such that
+    $\Pi_1:\Gamma\vdash f:B\to A$, $\Pi_2:\Gamma\vdash a:B$,
+    and both $\Pi_1$ and $\Pi_2$ satisfy the global trace condition. 
+  \item\label{lem:inversion2}
+    If $\Pi:\Gamma\vdash \lambda x^T.b:A$, where $x\not\in\FV(\Gamma)$,
+    and $\Pi$ satisfies the global trace condition, then
+    there exist $\Pi_1$ and $B$ such that
+    $\Pi_1:\Gamma,x:T\vdash b:B$ and $A = T\to B$,
+    and $\Pi_1$ satisfies the global trace condition. 
+  \item\label{lem:inversion3}
+    If $\Pi:\Gamma\vdash \cond(f,g):A$ and $\Pi$ satisfies the global trace condition, then
+    there exist $\Pi_1$, $\Pi_2$ and $B$ such that
+    $\Pi_1:\Gamma \vdash f:B$, $\Pi_2:\Gamma \vdash g:N\to B$, $A = N\to B$,
+    and both $\Pi_1$ and $\Pi_2$ satisfy the global trace condition. 
+  \item\label{lem:inversion4}
+    If $\Pi:\Gamma\vdash \Succ(t):A$ and $\Succ(t) \in \GTC$, then    
+    there exists $\Pi_1$ such that $\Pi_1:\Gamma \vdash t:N$, $A=N$, 
+    and $\Pi_1$ satisfies the global trace condition. 
+  \end{enumerate}
+\end{lemma}
+\begin{proof}
+  We first claim that if $t\in\GTC$ and $\Pi:\Gamma\vdash t:A$ with $\Pi=(T,\phi)$, 
+  then there exists $l\in T$ such that $\phi(l) \neq \weak$ and $\phi(m) = \weak$ for all $m < l$.
+  Because, if not, the only infinite path in $\Pi$ is the consective use of $\weak$,
+  which does not contain progressing trace, this contradicts with $t\in\GTC$.
+
+  We show the point \ref{lem:inversion1}.
+  Assume that $\Pi:\Gamma\vdash f(a):A$ with $\Pi=(T,\phi)$ and $f(a) \in \GTC$.
+  By the claim, take $l\in T$ such that $\phi(l) \neq \weak$ and $\phi(m) = \weak$ for all $m < l$.
+  Let $\Gamma' \vdash f(a):A$ be the conclusion of $\phi(l)$. Then $\Gamma'\subseteqsim \Gamma$ holds
+  by the transitivity of $\subseteqsim$.
+  Now $\phi(l)$ is $\apvar$ or $\apnotvar$.
+  In the former case $\phi(l) = \apvar$, we have $\Pi\restr l\conc(1):\Gamma'\vdash f:B\to A$ for some $B$,
+  and $a = x^B \in \Gamma'$. Hence we have a proof $\Pi_1:\Gamma\vdash f:B\to A$ by $\weak$. 
+  We also obtain $\Pi_2:\Gamma\vdash a:B$ by $a = x^B \in \Gamma'$ and $\weak$. 
+  In the latter case $\phi(l) = \apnotvar$,
+  we have $\Pi\restr l\conc(1):\Gamma'\vdash f:B\to A$ and $\Pi\restr l\conc(2):\Gamma'\vdash a:B$ for some $B$. 
+  Hence we have a proof $\Pi_1:\Gamma\vdash f:B\to A$ and $\Pi_2:\Gamma\vdash a:B$ by $\weak$.
+  In both cases, if $t\in\GTC$, we have $f\in\GTC$ and $a\in\GTC$ by the construction of $\Pi_1$ and $\Pi_2$. 
+  
+  The points \ref{lem:inversion2}, \ref{lem:inversion3}, and \ref{lem:inversion4} are shown similarly. 
+\end{proof}
+
 
 \begin{theorem}[Subject reduction]
-  Assume that $\Pi_t:\Gamma\vdash t:A$ and $t\reduces u$.
-  Then there exists $\Pi_u$ such that $\Pi_u:\Gamma\vdash u:A$ holds. 
-  Moreover, if $\Pi_t$ satisfies the global trace condition,
-  then $\Pi_u$ also satisfies it. 
+  Assume that $\Pi_t:\Gamma\vdash t:A$, $\Pi_t$ satisfies the global trace condition, and $t\reduces u$.
+  Then there exists $\Pi_u$ such that $\Pi_u:\Gamma\vdash u:A$ and $\Pi_u$ satisfies the global trace condition. 
 \end{theorem}
 \begin{proof}
+  By the definition of $t\reduces u$, there is a context $\hat{t}[-]$ such that
+  $t=\hat{t}[t_0]$, $u=\hat{t}[u_0]$, and $t_0\reduces_\Box u_0$, where $\Box\in\{\beta,\cond\}$. 
+  Since $t_0$ is a subterm of $t$, there is $l$ such that $\Pi_t\restr l: \Gamma_0\vdash t_0:A_0$.
+  Note that $\Pi_t\restr l$ satisfies the global trace condition,
+  since it is a subtree of $\Pi_t$, which satisfies the global trace condition. 
+  Then, if we have $\Pi'_u:\Gamma_0\vdash u_0:A_0$ that satisfies the global trace condition,
+  the tree obtained from $\Pi_t$ by replacing the subtree $\Pi_t\restr l$ by $\Pi'_u$ is also
+  a proof of $\Gamma\vdash \hat{t}[u_0]:A$ that satisfies the global trace condition. 
+  Hence it is enough to show the following:
+  \begin{itemize}
+  \item[(a)]
+    If $\Pi:\Gamma \vdash (\lambda x^A.b)(a): B$ and it satisfies the global trace condition,
+    then $\Pi':\Gamma \vdash b[a/x]: B$ for some $\Pi'$ that satisfies the global trace condition.
+  \item[(b)]
+    If $\Pi:\Gamma \vdash \cond(f,g)(0): B$ and it satisfies the global trace condition,
+    then $\Pi':\Gamma \vdash f: B$ for some $\Pi'$ that satisfies the global trace condition. 
+  \item[(c)]
+    If $\Pi:\Gamma \vdash \cond(f,g)(\Succ(t)): B$ and it satisfies the global trace condition,
+    then $\Pi':\Gamma \vdash g(t): B$ for some $\Pi'$ that satisfies the global trace condition. 
+  \end{itemize}
+  (b) is shown immediately by Lemma~\ref{lem:inversion}~\ref{lem:inversion3}.
+  We show (c).
+  Assume $\Pi:\Gamma \vdash \cond(f,g)(\Succ(t)): B$.
+  Then by \ref{lem:inversion1}, \ref{lem:inversion3}, and \ref{lem:inversion4} of Lemma~\ref{lem:inversion},
+  we have
+  $\Pi_1:\Gamma \vdash g:N\to B$ and $\Pi_2:\Gamma \vdash t:N$,
+  where $\Pi_1$ and $\Pi_2$ satisfy the global trace condition. 
+  Hence, by applying $\apnotvar$ or $\apvar$ to $\Pi_1$ and $\Pi_2$, 
+  we have a proof $\Pi':\Gamma\vdash g(t):B$ that satisfies the global trace condition. 
+  In order to show (a), assume $\Pi:\Gamma \vdash (\lambda x^A.b)(a): B$.
+  Then by Lemma~\ref{lem:inversion}~\ref{lem:inversion1},
+  we have $\Pi_1:\Gamma \vdash \lambda x^A.b:A\to B$ and $\Pi_2:\Gamma \vdash a:A$,
+  where $\Pi_1$ and $\Pi_2$ satisty the global trace condition. 
+  Then, by Lemma~\ref{lem:thinning},
+  we have $\Pi'_1:\Restrict{\Gamma}{\FV(\lambda x.b)} \vdash \lambda x^A.b:A\to B$,
+  where $\Pi'$ satisfies the global trace condition. 
+  By Lemma~\ref{lem:inversion}~\ref{lem:inversion2},
+  we have a proof $\Pi''_1:\Restrict{\Gamma}{\FV(\lambda x.b)},x:A \vdash b:B$
+  that satisfies the global trace condition. 
+  Hence, by the substitution lemma, we have a proof $\Pi':\Gamma\vdash b[a/x]:B$
+  that satisfies the global trace condition, as we wished. 
+  
+  
+  
 
+  
 
 \end{proof}
