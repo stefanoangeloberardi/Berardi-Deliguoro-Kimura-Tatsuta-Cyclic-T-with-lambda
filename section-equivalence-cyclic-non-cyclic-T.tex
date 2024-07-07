@@ -1,4 +1,3 @@
-
 \newpage
 
 \section{Appendix: Equivalence Between Cyclic and non-Cyclic System T} 
@@ -8,39 +7,264 @@ In this section we prove that the two systems $\systemT$ and $\CTlambda$
 are each interpretable into the other. 
 Both interpretations preserve the reduction relation, applications, $0$ and $\Succ$ and contexts.
 
-In both interpretations 
-we neglect the terms of $\CTlambda$ including type variables in their type or in their context,
-because these terms have no corresponding in $\systemT$.
-\\
+The formal definition of the system $\systemT$ is as follows:
 
-We first provide the interpretation from $\systemT$ to $\CTlambda$, which has a short definition.
+Types (denoted by $A,B,\ldots$) of $\systemT$ are inductively defined by $\N$ and $A\to B$.
 
-For any type $T$ we define a term $\Rec:T,(\N,T \rightarrow T),\N\rightarrow T$ such that
-$\Rec(a,f,0) = a$ and $\Rec(a,f)(n+1) = f(n,\Rec(a,f,n))$, for all numeral $n \in \Num$.
-The definition is $\Rec = \lambda a,f.\rec$ 
-with $\rec = \cond (a,\lambda x^{\N}.f(x,\rec(x))) : \N \rightarrow T$.
+Terms (denoted by $t,u,\ldots$) of $\systemT$ are inductively defined by
+$x^A$, $\lambda x^A.t$, $tu$, $0$, $\Succ(t)$, $\Rec(t,u)$, and $\Ifz(t,u)$.
 
-\begin{proposition}
-$\Rec$ is a term of $\CTlambda$.
-\end{proposition}
+Sequents is $\Gamma\vdash t:A$, where $\Gamma$ is a context $x_1:A_1,\ldots,x_n:A_n$.
 
-\begin{proof}
+Typing rules are defined as follows:
 \begin{enumerate}
 \item
- $\Rec$ is regular by construction.
-\item 
-The only infinite path of $\Rec$ loops from $\rec$ to $\rec$ infinitely many times, and it includes
-an infinitely progressing trace. Here it is: from the first unnamed argument of $\rec$ to 
-to the first unnamed argument of $\lambda x^{\N}.f(x,\rec(x))$, then to $x^\N$ 
-in the context of $f(x,\rec(x))$, to $x^\N$ in the context of $\rec(x)$,
-and eventually to the first unnamed argument of $\rec$ again.
+  The $\var$ rule: $\Gamma\vdash x:A$, where $x:A\in\Gamma$.
+\item
+  The $\weak$ rule: $\Gamma\vdash t:A$ and $\Gamma\subseteqsim \Gamma'$, where $\Gamma'\vdash t:A$.
+\item
+  The $\lambda$ rule: $\Gamma,x:A\vdash t:B$ implies $\Gamma \vdash \lambda x.t:A\to B$.
+\item
+  The $\ap$ rule: $\Gamma\vdash t:A\to B$ and $\Gamma\vdash u:A$ implies $\Gamma \vdash tu:B$.
+\item
+  The $0$ rule: $\Gamma\vdash 0:\N$.
+\item
+  The $\Succ$ rule: $\Gamma\vdash t:\N$ implies $\Gamma\vdash \Succ(t):\N$.
+\item
+  The $\Rec$ rule: $\Gamma\vdash a:A$ and $\Gamma\vdash h:A,\N\to A$ implies $\Gamma\vdash \Rec(a,h):\N \to A$.
+\item
+  The $\Ifz$ rule: $\Gamma\vdash u:A$ and $\Gamma\vdash v:A$ implies $\Gamma\vdash \Ifz(u,v):\N \to A$.
 \end{enumerate}
+
+The basic reduction relation $\reduces_0$ is defined by:
+\begin{enumerate}
+\item
+  $(\lambda x.t)u \reduces_0 t[u/x]$, 
+\item
+  $\Rec(a,h)0 \reduces_0 a$, 
+\item
+  $\Rec(a,h)\Succ(u) \reduces_0 h(\Rec(a,h)u))u$, 
+\item
+  $\Ifz(u,v)0 \reduces_0 u$, 
+\item
+  $\Ifz(u,v)\Succ(u) \reduces_0 v$, 
+\end{enumerate}
+
+Then the reduction relation $\reduces_\systemT$ is the coontext and transitive closure of $\reduces_0$. 
+
+%In both interpretations 
+%we neglect the terms of $\CTlambda$ including type variables in their type or in their context,
+%because these terms have no corresponding in $\systemT$.\\
+
+We first provide the interpretation $\TtoCT{-}$ from $\systemT$ to $\CTlambda$
+that is inductively defined as follows. 
+\begin{center}
+  $\TtoCT{x^A} = x^A$, 
+  \qquad
+  $\TtoCT{\lambda x^A.t} = \lambda x^A.\TtoCT{t}$, 
+  \qquad
+  $\TtoCT{tu} = \TtoCT{t}\TtoCT{u}$, 
+  \qquad
+  $\TtoCT{0} = 0$, 
+  \qquad
+  $\TtoCT{\Succ(t)} = \Succ(\TtoCT{t})$, 
+  \\
+  $\TtoCT{\Ifz(u,v)} = \cond(\TtoCT{u},\lambda z.\TtoCT{v})$, where $z\not\in\FV(v)$, and 
+  \\
+  $\TtoCT{\Rec(a,h)} = f$, where $f = \cond(\TtoCT{a},\lambda n.\TtoCT{h}(fn)n)$. 
+\end{center}
+
+Note that the translated terms are regular.
+We can easiliy check that the translation preserves substitution,
+namely $\TtoCT{t[u/x]} = \TtoCT{t}[\TtoCT{u}/x]$. 
+
+The interpretation preserves typablity. 
+
+\begin{proposition}\label{prop:TtoCTproof}
+$\Gamma \vdash t:A$ holds in $\systemT$ implies $\Gamma\vdash \TtoCT{t}:A$ holds in $\CTlambda$. 
+\end{proposition}
+\begin{proof}
+  It is shown by induction on the derivation of $\Gamma \vdash t:A$.
+  We check only the two cases: the last rule is $\Ifz$ or $\Rec$.
+
+  The case of $\Ifz$:
+  the sequent $\Gamma\vdash\Ifz(u,v):\N\to A$ is obtained from subproofs of
+  $\Gamma\vdash u:A$ and $\Gamma\vdash v:A$. 
+  Then, by the induction hypothesis, we have proofs of $\Gamma\vdash \TtoCT{u}:A$ and $\Gamma\vdash \TtoCT{v}:A$
+  in $\CTlambda$.
+  Hence we have a proof of $\Gamma\vdash\cond(\TtoCT{u},\lambda z.\TtoCT{v}):\N\to A$
+  by $\weak$ and $\cond$, where $z$ is a fresh variable. 
+  This is a proof of $\Gamma\vdash \TtoCT{\Ifz(u,v)}:\N\to A$ in $\CTlambda$.
+  Note that this is an expected proof, since it satisfies the global trace condition and regularity. 
+
+  The case of $t = \Rec(a,h)$: 
+  the sequent $\Gamma\vdash\Rec(a,h):\N\to A$ is obtained from subproofs of
+  $\Gamma\vdash a:A$ and $\Gamma\vdash h:A,\N\to A$.
+  By the definition, $\TtoCT{\Rec(a,h)} = \cond(\TtoCT{a},\lambda n.\TtoCT{h}(\TtoCT{\Rec(a,h)}n)n)$ holds.
+  Then we have the following proof in $\CTlambda$. 
+  \begin{center}\small
+    $\infer[\cond]{
+      \Gamma \vdash \TtoCT{\Rec(a,h)}:\redN\to A\quad(\dagger)
+    }{
+      \infer*[\Pi_a]{
+        \Gamma \vdash \TtoCT{a}:A
+      }{}
+      &
+      \infer{
+        \Gamma \vdash \lambda n.\TtoCT{h}(\TtoCT{\Rec(a,h)}n)n:\redN\to A
+      }{
+        \infer[\apvar]{
+          \Gamma,n:\redN \vdash \TtoCT{h}(\TtoCT{\Rec(a,h)}n)n: A
+        }{
+          \infer{
+            \Gamma,n:\redN \vdash \TtoCT{h}(\TtoCT{\Rec(a,h)}n): \N\to A
+          }{
+            \infer{
+              \Gamma,n:\N \vdash \TtoCT{h}: A,\N\to A
+            }{
+              \infer*[\Pi_h]{
+                \Gamma \vdash \TtoCT{h}: A,\N\to A
+              }{}
+            }
+            &
+            \infer[\apvar]{
+              \Gamma,n:\redN \vdash \TtoCT{\Rec(a,h)}n: A
+            }{
+              \infer{
+                \Gamma,n:\N \vdash \TtoCT{\Rec(a,h)}: \redN\to A
+              }{
+                \Gamma \vdash \TtoCT{\Rec(a,h)}: \redN\to A\quad(\dagger)
+              }
+            }
+          }
+        }
+      }
+    }$
+  \end{center}
+  This proof satisfies the global trace condition:
+  Its infinite path is either
+  one that eventually an infinite path of $\Pi_a$,
+  one that eventually an infinite path of $\Pi_h$, or 
+  one that loops between the upper $(\dagger)$ and the lower $(\dagger)$. 
+  Then paths of the former two cases contains a progressing trace by the induction hypothesis, and
+  the last case contains a progressing trace (the trace consists of the red $\N$s). 
+  Hence we obtain a proof of $\Gamma \vdash \TtoCT{\Rec(a,h)}:\N\to A$ as we wished. 
 \end{proof}
 
-If we replace each primitive recursion in $\systemT$ with the term $\Rec$ in $\CTlambda$
-we define an interpretation from $\systemT$ into $\CTlambda$, 
-preserving reductions, applications, $0$ and $\Succ$ and contexts.
-\\
+For considering the corresponding reduction relation of $\systemT$ and the safe reduction of $\CTlambda$,
+we need to introduce a reduction strategy, namely the call-by-name strategy,
+that prevents reductions of terms inside $\Rec$ and $\Ifz$ that require
+to reduce terms inside $\cond$ of translated $\CTlambda$. 
+
+\begin{definition}
+  The call-by-name reduction relation $\reduces_n$ is inductively defined as follows:
+  \begin{enumerate}
+  \item
+    If $t \reduces_0 t'$, then $t \reduces_n u$, 
+  \item
+    $t \reduces_n t'$ implies $tu \reduces_n t'u$,
+  \item
+    $t \reduces_n t'$ implies $\Rec(a,h)t \reduces_n \Rec(a,h)t'$, and 
+  \item
+    $t \reduces_n t'$ implies $\Ifz(u,v)t \reduces_n \Ifz(u,v)t'$. 
+  \end{enumerate}
+\end{definition}
+
+The call-by-name reduction and the 
+
+\begin{lemma}\label{lem:cbnT}
+  Assume that $t$ has a closed term of type $\N$. Then the following claims hold. 
+  \begin{enumerate}
+  \item\label{lem:cbnT1}
+    If $t$ is not a numeral, then $t \reduces_n u$ for some $u$. 
+  \item\label{lem:cbnT2}
+    $t\reduces n$ if and only-if $t \reduces_n n$.
+  \end{enumerate}
+\end{lemma}
+\begin{proof}
+  The claim \ref{lem:cbnT1} is shown by induction on $t$. 
+  By the assumption, $t$ has a form of either $\Succ(t')$, $(\lambda x.t_1)t_2\vec{t}$,
+  $\Rec(a,h)t'\vec{t}$, or $\Ifz(v_1,v_2)t'\vec{t}$.
+  For the first case, there is $u'$ such that $t\reduce_n u'$ by the induction hypothesis. 
+  Then, take $u = \Succ(u')$.
+  For the second case, take $u = t_1[t_2/x]\vec{t}$.
+  For the third case, take $u = a\vec{t}$ if $t'=0$, take $u=h(\Rec(a,h)t'')t''\vec{t}$ if $t'=\Succ(t'')$, and
+  take $\Rec(a,h)u'\vec{t}$ otherwise, where $t'\reduces_n u'$ by the induction hypothesis.
+  For the last case, take $u = v_1\vec{t}$ if $t'=0$, take $u=v_2\vec{t}$ if $t'=\Succ(t'')$, and
+  take $\Ifz(v_1,v_2)u'\vec{t}$ otherwise, where $t'\reduces_n u'$ by the induction hypothesis.
+
+  We show the claim \ref{lem:cbnT2}.
+  The right-to-left direction is trivially shown. The left-to-right direction 
+  is shown by \ref{lem:cbnT1} and the confluency of $\reduces$: 
+  Assume that $t\reduces n$. By the first claim, $t \reduces_n n'$ for some numeral $n'$.
+  Then we have $n=n'$ by the confluency. Hence $t\reduces_n n$ holds as we wished. 
+\end{proof}
+
+\begin{proposition}\label{prop:TtoCTreduction}
+  Let $t$ and $u$ be terms of $\systemT$.  
+  \begin{enumerate}
+  \item\label{prop:TtoCTreduction1}
+    $t\reduces_n u$ implies $\TtoCT{t} \safeReduces \TtoCT{u}$. 
+  \item\label{prop:TtoCTreduction2}
+    If $t$ is a closed term of type $\N$ and $t\reduces n$, then $\TtoCT{t} \safeReduces n$. 
+  \end{enumerate}
+\end{proposition}  
+\begin{proof}
+  The point \ref{prop:TtoCTreduction1} is shown by induction on $\reduces_n$.
+  It is enough to check the base cases.
+
+  The case of $(\lambda x.t)u \reduces_n t[u/x]$ is shown by 
+  $\TtoCT{(\lambda x.t)u} = (\lambda x.\TtoCT{t})\TtoCT{u} \safeReduces \TtoCT{t}[\TtoCT{u}/x] = \TtoCT{t[u/x]}$. 
+
+  The case of $\Rec(a,h)0 \reduces_n a$ is shown by
+  $\TtoCT{\Rec(a,h)0} = \cond(\TtoCT{a},\lambda n.\TtoCT{h}(\TtoCT{\Rec(a,h)}n)n)0 \safeReduces \TtoCT{a}$.
+
+  The case of $\Rec(a,h)\Succ(u) \reduces_n h(\Rec(a,h)u)u$ is shown by
+  \begin{align*}
+    \TtoCT{\Rec(a,h)\Succ(u)}
+    &= \cond(\TtoCT{a},\lambda n.\TtoCT{h}(\TtoCT{\Rec(a,h)}n)n)\Succ(\TtoCT{u})
+    \safeReduces (\lambda n.\TtoCT{h}(\TtoCT{\Rec(a,h)}n)n)\TtoCT{u}
+    \\
+    &\safeReduces \TtoCT{h}(\TtoCT{\Rec(a,h)}\TtoCT{u})\TtoCT{u})
+    = \TtoCT{h(\Rec(a,h)u)u}
+  \end{align*}
+  
+  The case of $\Ifz(u,v)0 \reduces_n u$ is shown by
+  $\TtoCT{\Ifz(u,v)0} = \cond(\TtoCT{u},\lambda z.\TtoCT{v})0 \safeReduces \TtoCT{u}$.
+
+  The case of $\Ifz(u,v)\Succ(t) \reduces_n u$ is shown by
+  $\TtoCT{\Ifz(u,v)\Succ(t)} = \cond(\TtoCT{u},\lambda z.\TtoCT{v})\Succ(t) \safeReduces (\lambda z.\TtoCT{v})t \safeReduces \TtoCT{v}$.
+
+  Hence we have the point \ref{prop:TtoCTreduction1}.
+  The point \ref{prop:TtoCTreduction2} is obtained by the point \ref{prop:TtoCTreduction1}
+  and Lemma~\ref{lem:cbnT}~\ref{lem:cbnT2}. 
+\end{proof}
+
+%For any type $T$ we define a term $\Rec:T,(\N,T \rightarrow T),\N\rightarrow T$ such that
+%$\Rec(a,f,0) = a$ and $\Rec(a,f)(n+1) = f(n,\Rec(a,f,n))$, for all numeral $n \in \Num$.
+%The definition is $\Rec = \lambda a,f.\rec$ 
+%with $\rec = \cond (a,\lambda x^{\N}.f(x,\rec(x))) : \N \rightarrow T$.
+
+%\begin{proposition}
+%$\Rec$ is a term of $\CTlambda$.
+%\end{proposition}
+%% \begin{proof}
+%% \begin{enumerate}
+%% \item
+%%  $\Rec$ is regular by construction.
+%% \item 
+%% The only infinite path of $\Rec$ loops from $\rec$ to $\rec$ infinitely many times, and it includes
+%% an infinitely progressing trace. Here it is: from the first unnamed argument of $\rec$ to 
+%% to the first unnamed argument of $\lambda x^{\N}.f(x,\rec(x))$, then to $x^\N$ 
+%% in the context of $f(x,\rec(x))$, to $x^\N$ in the context of $\rec(x)$,
+%% and eventually to the first unnamed argument of $\rec$ again.
+%% \end{enumerate}
+%% \end{proof}
+
+%% If we replace each primitive recursion in $\systemT$ with the term $\Rec$ in $\CTlambda$
+%% we define an interpretation from $\systemT$ into $\CTlambda$, 
+%% preserving reductions, applications, $0$ and $\Succ$ and contexts.
+%% \\
 
 \bfColor{red}{The rest of the section if but an early draft}
 The opposite interpretation, from $\CTlambda$ to $\systemT$, it has been defined by proof-theory for the
