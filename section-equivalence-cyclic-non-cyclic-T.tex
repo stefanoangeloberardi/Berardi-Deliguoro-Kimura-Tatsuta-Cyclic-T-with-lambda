@@ -185,7 +185,7 @@ The call-by-name reduction and the
   The claim \ref{lem:cbnT1} is shown by induction on $t$. 
   By the assumption, $t$ has a form of either $\Succ(t')$, $(\lambda x.t_1)t_2\vec{t}$,
   $\Rec(a,h)t'\vec{t}$, or $\Ifz(v_1,v_2)t'\vec{t}$.
-  For the first case, there is $u'$ such that $t\reduce_n u'$ by the induction hypothesis. 
+  For the first case, there is $u'$ such that $t\reduces_n u'$ by the induction hypothesis. 
   Then, take $u = \Succ(u')$.
   For the second case, take $u = t_1[t_2/x]\vec{t}$.
   For the third case, take $u = a\vec{t}$ if $t'=0$, take $u=h(\Rec(a,h)t'')t''\vec{t}$ if $t'=\Succ(t'')$, and
