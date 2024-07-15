@@ -9,7 +9,7 @@ and also show the global trace condition is preserved by reductions.
 We first introduce some auxiliary notations for proofs of them.
 
 Let $X$ be a set of variables.
-We write $\Gamma_X$ be $\{x^T:T \in \Gamma \mid x^T \in X \}$.
+We write $\Gamma_X$ for the sublist of $\Gamma$ consisting of all $x^T:T$ such that $x^T\in X$. 
 Let $\Gamma$ and $\Delta$ be contexts of $\LAMBDA$.
 We say that $\Gamma$ and $\Delta$ are {\em consistent} if 
 $\Gamma_{\FV(\Gamma)\cap\FV(\Delta)} \sim \Delta_{\FV(\Gamma)\cap\FV(\Delta)}$. 
@@ -28,8 +28,10 @@ Note that the index equivalent to $k_1$ is unique (if it exists), namely
 $(k_1,t_1) \simIndex{\theta} (k_2,t_2)$ and $(k_1,t_1) \simIndex{\theta} (k'_2,t_2)$ implies $k_2=k'_2$.
 We write $(k_1,t_1) \simIndex{} (k_2,t_2)$ if $\theta$ is the identity renaming. 
 
-Due to our assumption of not implicit identifying $\alpha$-equivalent terms,
-proofs of this section requires some delicate treatment of variables. 
+In this paper we do not implicitly identify $\alpha$-equivalent terms,
+in order to make simpler to state the global trace condition.
+For this reason, proofs of this section requires some delicate treatment of variables.
+
 We consider the following restricted $\lambda$ rule (called $\lambda'$) as follows:
 \begin{itemize}
 \item
