@@ -8,14 +8,11 @@ We show the subject reduction for well-typed terms of $\LAMBDA$,
 and also show the global trace condition is preserved by reductions. 
 We first introduce some auxiliary notations for proofs of them.
 
-Let $X$ be a set of variables.
+Let $X$ be a set of variables of the form $x^T$.
 We write $\Gamma_X$ for the sublist of $\Gamma$ consisting of all $x^T:T$ such that $x^T\in X$. 
 Let $\Gamma$ and $\Delta$ be contexts of $\LAMBDA$.
-We say that $\Gamma$ and $\Delta$ are {\em consistent} if 
-$\Gamma_{\FV(\Gamma)\cap\FV(\Delta)} \sim \Delta_{\FV(\Gamma)\cap\FV(\Delta)}$. 
 The merged context $\mergeCtx{\Gamma}{\Delta}$
-is defined by $\Gamma\conc\Delta_{\FV(\Delta)\setminus\FV(\Gamma)}$
-if $\Gamma$ and $\Delta$ are consistent, and is undefined otherwise. 
+is defined by $\Gamma\conc(\Delta_{\FV(\Delta)\setminus\FV(\Gamma)})$. 
 
 Let $\theta$ be a renaming, and 
 $S_1 = \Gamma_1\vdash t_1:\vec{B_1}\rightarrow N$
@@ -48,7 +45,8 @@ even if the rule $\lambda$ is restricted to $\lambda'$.
 
 \begin{lemma}\label{lem:thinning}
   Assume $\Pi:\Gamma\vdash t:A$.
-  Then $\Pi':\Gamma_{\FV(t)}\vdash t:A$ for some $\Pi'$ that have $\lambda'$ and not have $\lambda$.
+  Then $\Pi':\Gamma_{\FV(t)}\vdash t:A$ for some $\Pi'$ that may have instances of the rule $\lambda'$
+  and not have those of the rule $\lambda$.
   Moreover if the global trace condition holds for $\Pi$, then it also holds for $\Pi'$. 
 \end{lemma}
 \begin{proof}
@@ -222,15 +220,13 @@ even if the rule $\lambda$ is restricted to $\lambda'$.
 
 
 \begin{lemma}[Substitution lemma]
-  Assume that $\Pi_u: \Delta \vdash u:A$ and $\Pi_t:\Gamma,x:A \vdash t:B$ hold,
-  and $\Delta$ and $\Gamma$ are consistent. 
+  Assume that $\Pi_u: \Delta \vdash u:A$ and $\Pi_t:\Gamma,x:A \vdash t:B$ hold. 
   Then there exists $\Pi^\circ$ such that $\Pi^\circ:\mergeCtx{\Delta}{\Gamma} \vdash t[u/x]:B$. 
   Moreover, if both $\Pi_u$ and $\Pi_t$ satisfy the global trace condition,
   then $\Pi^\circ$ also satisfies it. 
 \end{lemma}
 \begin{proof}
-  Assume that $\Pi_u: \Delta \vdash u:A$ and $\Pi_t:\Gamma,x:A \vdash t:B$ hold,
-  and $\Delta$ and $\Gamma$ are consistent. 
+  Assume that $\Pi_u: \Delta \vdash u:A$ and $\Pi_t:\Gamma,x:A \vdash t:B$ hold. 
   By Lemma~\ref{lem:thinning}, without loss of generality,
   we can assume $\FV(\Delta) = \FV(u)$ and $\Pi_t$ is a proof with the restricted $\lambda$ rule (the $\lambda'$ rule). 
   Let $\Pi_u=(T_u,\phi_u)$ and $\Pi_t=(T_t,\phi_t)$.
@@ -287,8 +283,7 @@ even if the rule $\lambda$ is restricted to $\lambda'$.
   In the following, for each $l\in T_t$, we inductively define $\Gamma^\circ_l$, $\phi^\circ(l)$, and $\sigma(l)$
   that satisty (b1), (b2), and (b3).
   The case of $l=\nil$, define $\Gamma^\circ_\nil = \Delta\sharp\Gamma$ and $\theta_\nil=\{u/\xx\}$,
-  and define $\sigma^\circ(\nil)$ as $\mergeCtx{\Delta}{\Gamma}\vdash t[u/\xx]:A$
-  using the consistency of $\Delta$ and $\Gamma$ by the assumption. 
+  and define $\sigma^\circ(\nil)$ as $\mergeCtx{\Delta}{\Gamma}\vdash t[u/\xx]:A$. 
   Hence we have (b1) since
   $\Gamma^\circ_\nil = \mergeCtx{\Delta}{\Gamma} \sim \mergeCtx{\Delta}{\Restrict{(\Gamma,\xx:A)}{\overline{\xx}}[\theta_\nil]}$. 
 
@@ -373,7 +368,7 @@ even if the rule $\lambda$ is restricted to $\lambda'$.
     The first subcase is when $z\not\in\FV(\vec{u})$.
     We have $(\lambda z.b)[\theta_l] = \lambda z.(b[\Restrict{(\theta_l)}{\overline{z}}])$.
     Then define $\phi^\circ(l) = (\Gamma^\circ_l, z:C\vdash b[\Restrict{(\theta_l)}{\overline{z}}]:B,\Gamma^\circ_l\vdash \lambda z.(b[\Restrict{(\theta_l)}{\overline{z}}]):C\to B)$ as $\lambda$. 
-    Note that $\Gamma^\circ_l$ and $z:C$ are consistent
+    Note that $\Gamma^\circ_l,z:C$ is a context 
     because $z:C \not\in \mergeCtx{\Delta_l}{\Restrict{(\Gamma_l)}{\overline{\xx}}[\theta_l]} \sim \Gamma^\circ_l$
     holds by (b1), $z\not\in \FV(\Gamma_l)$ and $z \not\in\FV(\vec{u}) \supseteq \FV(\Delta_l)$
     (recall that $\Delta_l$ is $\Delta$ when $\xx:A\in\Gamma_l$, and is $\emptyset$ otherwise).
@@ -394,7 +389,7 @@ even if the rule $\lambda$ is restricted to $\lambda'$.
     We have $(\lambda z.b)[\theta_l] = \lambda z'.(b[\Restrict{(\theta_l)}{\overline{z}},z'/z])$, 
     where $z' \not\in\FV(b,\vec{u})$. 
     Then define $\phi^\circ(l) = (\Gamma^\circ_l, z':C\vdash b[\Restrict{(\theta_l)}{\overline{z}},z'/z]:B,\Gamma^\circ_l\vdash \lambda z'.(b[\Restrict{(\theta_l)}{\overline{z}},z'/z]):C\to B)$ as $\lambda$. 
-    We need to check that $\Gamma^\circ_l$ and $z':C$ are consistent. 
+    We need to check that $\Gamma^\circ_l,z':C$ is a context.
     It is shown by
     $z':C \not\in \mergeCtx{\Delta_l}{\Restrict{(\Gamma_l)}{\overline{\xx}}[\theta_l]} \sim \Gamma^\circ_l$
     using (b1), 
