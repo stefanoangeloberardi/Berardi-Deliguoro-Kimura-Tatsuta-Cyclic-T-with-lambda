@@ -1,21 +1,33 @@
 \section{Terms with the Global Trace Condition are Finite for Safe Reductions}
 
 \label{section-finite-safe-reductions}
-In this section we prove that every infinite reduction sequence of $\GTC$ includes
-only finitely many \quotationMarks{safe} reduction steps. 
-This implies that in $\GTC$ the sequences made of only \quotationMarks{safe} reductions 
-are finite. That is, this implies strong normalization for \quotationMarks{safe} reduction steps.
+In this section we prove that for all $n \in \N$, every infinite reduction sequence $\pi$ 
+from some term of $\GTC$ includes
+only finitely many \quotationMarks{$n$-safe} reduction steps.    
+In particular,
+this implies that in $\GTC$ the reduction sequences made of only \quotationMarks{$n$-safe} reductions 
+are finite. That is, this implies strong normalization for \quotationMarks{$n$-safe} reduction steps:
+no matter how we reduce within the $n$-safe level of a term, eventually we obtain some $n$-safe normal form.
 \\
 
+We introduce the property of being \quotationMarks{finite for $n$-safe reductions}.
+
+\begin{definition}
+\label{definition-finite-n-safe-reduction}
+Assume $t \in \CTlambda$. We say that $t$ is \emph{finite for $n$-safe reductions} if all infinite
+reduction paths include only finitely many $n$-safe reductions.
+\end{definition}
+
 In the following, we explicitly write $t[x_1,\ldots,x_n]$,
-when each free variable in  a term $t$ is some $x_i$, 
+when each free variable in a term $t$ is some $x_i$, 
 and, under this notation, we also write $t[a_1,\ldots,a_n]$ instead of $t[a_1/x_1,\ldots,a_n/x_n]$. 
 
-We define total well-typed terms by induction on the type, as in Tait's normalization proof.
+We have to prove that all terms in $\GTC$ are finite for $n$-safe reductions, for all $n \in \N$.
+For, we define total well-typed terms by induction on the type, as in Tait's normalization proof.
 
-We recall that $u \in \LAMBDA$ is \emph{finite for safe reduction} 
-if and only if all infinite reduction sequences from $t$ include only finitely many "safe" reduction steps
-(Def. \ref{definition-safe-trunk}).
+%We recall that $u \in \LAMBDA$ is \emph{finite for safe reduction} 
+%if and only if all infinite reduction sequences from $t$ include only finitely many "safe" reduction steps
+%(Def. \ref{definition-safe-trunk}).
 
 \begin{definition}[Total well-typed terms of $\LAMBDA$]
 \label{definition-total-term}
@@ -25,7 +37,7 @@ We define \quotationMarks{$t$ is total of type $T$} by induction on $T$
 \begin{enumerate}
 \item
 Let $T$ be any atomic type: $T = \N$ or $=\alpha$ for some type variable $\alpha$.
-Then $t$ is total of type $T$ if and only if $t$ is finite for safe reductions.
+Then $t$ is total of type $T$ if and only if $t$ is finite for $n$-safe reductions, for all $n \in \N$.
 
 \item
 Let $T$ be any arrow type $A \rightarrow B$.
@@ -60,12 +72,13 @@ If $t = \Succ(t)$ then $t \prec t$ and $\prec$ is \emph{not} well-founded on $t$
 We did not prove Church-Rosser yet, 
 therefore we ignore whether all decreasing sequences of $\prec$ have the same length. 
 
-However, we can prove that a decreasing sequence of $\prec$ terminates on a term  finite for safe reductions.
+However, we can prove that if $t$ is a term finite for $n$-safe reductions, 
+then any $\prec$-decreasing sequence from $t$ terminates.
 
 
 \begin{lemma}[The $\prec$-order]
 \label{lemma-prec-order}
-Assume $t \in \WTyped$ is finite for safe reductions and of type $\N$.
+Assume $n \in \N$, $t \in \WTyped$ has type $\N$, and $t$ is finite for $n$-safe reductions .
 
 \begin{enumerate}
 \item
@@ -75,7 +88,7 @@ $\sigma: t = t_0 \reduces \Succ(t_1) \reduces \Succ^2(t_2) \reduces \ldots$
 
 \item
 \label{lemma-prec-order-02}
-$\prec$ is well-founded on terms finite for safe reductions and of type $\N$.
+$\prec$ is well-founded on total terms of type $\N$.
 \end{enumerate}
 \end{lemma}
 
@@ -84,34 +97,41 @@ $\prec$ is well-founded on terms finite for safe reductions and of type $\N$.
 \begin{enumerate}
 \item
 %\label{lemma-prec-order-01}
-$t$ is finite for safe-reductions, therefore
-$\sigma$ only has finitely many reductions. From some $n\in\N$ tehre are no more safe reductions from
-$\Succ^n(t_n)$. This implies that for some $u$ and $f_1, g_1, \ldots, f_n, g_n$ we have
-$t_n = u[\cond(f_1,g_1), \ldots, \cond(f_n,g_n)]$ and all reductions from $t_n$ are inside
-some $g_1, \ldots, g_n$. Then for all $m \in \N$, $m \ge n$ we  have
-$\Succ^{m}(t_{m}) =  u[\cond(f_1,g'_1), \ldots, \cond(f_n,g'_n)]$ for some 
-$g'_1, \ldots, g'_n$. This is a contradiction when $m$ is larger than the number of symbols in $u$.
+$t$ is finite for $n$-safe-reductions, therefore
+$\sigma$ only has finitely many $n$-safe-reductions. 
+Thus, from some $k\in\N$ there are no more $n$-safe reductions from
+$\Succ^k(t_k)$. This implies that for some $\cond$-free term 
+$u$ and some terms $f_1, g_1, \ldots, f_m, g_m$ we have
+$t_n = u[\cond(f_1,g_1), \ldots, \cond(f_m,g_m)]$ and all reductions from $t_k$ on are inside
+some $g_1, \ldots, g_m$. This means for all $h \in \N$, $h \ge k$ we  have
+$\Succ^{h}(t_{h}) =  u[\cond(f_1,g'_1), \ldots, \cond(f_n,g'_m)]$ for some 
+$g'_1, \ldots, g'_m$. This implies that first $h$ symbols of $u$ are $\Succ$.
+This is a contradiction when $h$ is larger than the number of symbols in $u$.
 
 \item
 %\label{lemma-prec-order-02}
-If $t_0 \reduces \Succ(t_1)$, $t_1 \reduces \Succ(t_2)$, \ldots from some $t_0$ finite for safe reductions,
-then there is some infinite sequence 
+Assume for contradiction that there is some infinite sequence
+$\ldots t_n \prec \ldots \prec t_2 \prec t_1 \prec t_0$
+from some $t_0:\N$ total, hence by definition finite for $n$-safe reductions.
+Then there is some infinite sequence 
 $\sigma: t = t_0 \reduces \Succ(t_1) \reduces \Succ^2(t_2) \reduces \ldots$,
 contradicting point \ref{lemma-prec-order-01} above.
 \end{enumerate}
 \end{proof}
 
 
-We will assign total terms to  the sub-terms of $t$
-in an infinite path of a proof $\Pi : \Gamma \vdash t: A$ in a way compatible with traces. 
+We will prove that if $t$ is not total, then we can assign total terms to  the sub-terms of $t$
+in an infinite path of a proof $\Pi : \Gamma \vdash t: A$ in a way compatible with traces,
+and that in particular there is some  infinite $\prec$-decreasing chain from some term
+finite for $n$-safe reductions.
 
 
 \begin{definition}[Trace-compatible Assignment]
 \label{definition-trace-compatible}
 Assume $\pi  = (\Gamma_1 \vdash t_1:A_1, \ldots, \Gamma_n \vdash t_n:A_n, \ldots)$ 
-is any finite or infinite branch of $\Pi$
+is any finite or infinite branch of a typing proof $\Pi$
 and $\vec{v} = (\vec{v_1}, \ldots, \vec{v_n}, \ldots)$ 
-is any sequence of total assignments, one for each $t_i$. 
+is any sequence of total assignments, one on each $t_i$. 
 $\vec{v}$ is \emph{trace-compatible} in an index $i$ of $\pi$  
 if and only if it satisfies the following condition:
 
@@ -120,22 +140,23 @@ if and only if it satisfies the following condition:
   if $j$ is connected to $k$ then:
  \begin{enumerate}
  \item
- if $j$ progresses to $k$ then $v_j = v_k$
+ if $j$ progresses to $k$ then $v_j \prec v_k$ 
  \item
- if $j$ does not progress to $k$ then $v_j \prec v_k$.
+ if $j$ does not progress to $k$ then $v_j = v_k$.
  \end{enumerate}
 $\vec{v}$ is \emph{trace-compatible} if it is trace-compatible in all $i$.
 \end{definition}
 
-If an infinite path has a trace-compatible assignment, 
-then all traces of the path progress only finitely many times.
+Now we will prove that if an infinite path has a trace-compatible assignment, 
+then all traces of the path progress only finitely many times and the term is not in $\GTC$
+(does not satisfy the global trace condition).
 
 
 
 \begin{proposition}[Trace assignment]
 \label{prop:trace_assign-finiteness}
-Assume $\Pi:\Gamma \vdash t:A$ and there is some infinite path $\pi$ of $\Pi$ and
-some a trace-compatible assignment  $\rho$ to $\pi$. 
+Assume $\Pi:\Gamma \vdash t:A$ and there is some infinite path $\pi$ of $\Pi$ for which we have
+some \emph{total} trace-compatible assignment  $\rho$ to $\pi$. 
 \begin{enumerate}
 \item
 \label{prop:trace_assign-finiteness1}
@@ -155,17 +176,20 @@ $t \not \in \GTC$.
 By definition of trace-compatible assignment, whenever the trace progresses, 
 the term associated to the progressing argument decreases by $\prec$.
 Whenever the trace does not progress, the argument remains the same.
-By $\prec$ well-founded (lemma \ref{lemma-prec-order}.\ref{lemma-prec-order-02}), 
-a trace in $\pi$ progresses only finitely many times, as we wished to show.
+The assignment is made of total terms, therefore
+ $\prec$ well-founded by lemma \ref{lemma-prec-order}.\ref{lemma-prec-order-02}.
+Thus, any  trace in $\pi$ progresses only finitely many times, as we wished to show.
+
 \item
 %\label{prop:trace_assign-finiteness2}
 By point \ref{prop:trace_assign-finiteness1} above, 
 no trace from any argument in any term of the branch $\pi$ of $\Tree(t)$ progresses infinitely many times.
-We assumed that there is an infinite path $\pi$ in $\Pi$.
+We assumed that $\pi$ is an infinite path in $\Pi$.
 By definition of $\GTC$, we conclude that $t \not \in \GTC$. 
 \end{enumerate}
 \end{proof}
 
+%16:46 04/09/2024
 
 We now continue with our Tait's style proof of Strong Normalization.
 We check that total terms are closed by reductions, by application and by variables.

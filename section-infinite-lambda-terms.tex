@@ -834,7 +834,7 @@ if we reduce $t$ to $u$ by contracting a single redex in the $n$-safe level of $
 \item
 A term is $n$-safe-normal if all its redexes (if any) have $\cond$-depth $>n$.
 
-We abbreviate \quotationMarks{$1$-safe normal} with just \quotationMarks{safe normal}.
+We abbreviate \quotationMarks{$0$-safe normal} with just \quotationMarks{safe normal}.
 \end{enumerate}
 \end{definition}
 
@@ -843,7 +843,7 @@ We abbreviate \quotationMarks{$1$-safe normal} with just \quotationMarks{safe no
 
 \begin{Eg}
 Let $u = \cond. (0, (\lambda z.u)(z) )$, where we omitted the type superscript
-of $z$ because it is irrelevant. Then $u$ is $1$-safe-normal (safe normal for short), because
+of $z$ because it is irrelevant. Then $u$ is $0$-safe-normal (safe normal for short), because
 all redexes in $u$ are of the form  $(\lambda z.u)(z)$ and are in the right-hand-side of a $\cond$. 
 However $u$ has infinitely many nodes which are $\beta$-redexes. 
 Indeed, the tree form of $u$ has the following branch:
@@ -866,13 +866,13 @@ of some $\cond$ we will-express fixed-point equations.
 Reductions on fixed-point equations can easily loop.
 However, in order to produre the output of a computation we only need 
 to reduce closed terms of type $\N$ to a numeral. We will prove that for this taks we only
-need $1$-safe reductions, those in the the right-hand-side
-of \emph{no} $\cond$, and that $1$-safe reductions strongly normalize. 
+need $0$-safe reductions, those in the the right-hand-side
+of \emph{no} $\cond$, and that $0$-safe reductions strongly normalize. 
 
 \begin{Eg}
 This is an example of safe $\cond$-reductions from a term $v(n)$ to a normal form. 
 Assume $n \in \Num$ is any numeral and $v = \cond(1, v)$. There are only finitely many reductions
-from $v(n)$, and they are all $1$-safe. $v(n)$ $\cond$-reduces to $v(n-1)$, 
+from $v(n)$, and they are all $0$-safe. $v(n)$ $\cond$-reduces to $v(n-1)$, 
 then we loop: $v(n-1)$ $\cond$-reduces to $v(n-2)$ and so forth.
 After $n$ $\cond$-reductions we get $v(0)$. With one last $\cond$-reduction we get $1$ and we stop. 
 Thus, the term $v(n)$ strongly normalizes to $1$ in $(n+1)$-steps, in fact $v(n)$ has a unique reduction path,
