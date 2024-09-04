@@ -804,24 +804,37 @@ $\reduces_\cond$: $\cond(f,g)(0) \reduces_\cond f$ and
 $\cond(f,g)(\Succ (t)) \reduces_\cond g(t)$.
 
 \item
-$\reduces$ is the context and transitive closure of $\reduces_\beta$ and $\reduces_\cond$
+$\reduces$ is the contraction of one $\beta$ or $\cond$ redex: 
+the context closure of $\reduces_\beta$ and $\reduces_\cond$.
 
 \item
-$t \sim u$ if and only if there is some $v \in \LAMBDA$ such that $t \reduces v$ and $u \reduces v$.
+$\reduces^*$ is the transitive closure of $\reduces$ (finite sequence of reductions).
+
 
 \item
 The $\cond$-depth of a node $l=(i_1, \ldots, i_n) \in t$ 
 is the number of $1 \le h < n$ such that $(i_1, \ldots, i_h)$ has label $\cond$
- and $i_{h+1} = 2$
+and $i_{h+1} = 2$
 (the number of $\cond$ such that $l$ occurs in the right-hand-side of such $\cond$).
 
 \item
-We say that $t \reduces_\safe u$, or that $t$ reduces safely to $u$,  
-if we only reduce on nodes of $\cond$-depth $=0$.
+The $n$-safe level of $t$ is the set of nodes of $t$ of depth $\le n$.
+
+\item
+$t =_{n,\cond} u$, or \quotationMarks{$t$,$u$ are $n$-safe equal} is equality of $t$, $u$ after removing 
+all subterms whose $\cond$-depth is $>n$.
+%$t \sim u$ if and only if there is some $v \in \LAMBDA$ such that $t \reduces v$ and $u \reduces v$.
+
+\item
+We say that $t \reduces_{n,\safe} u$, or that $t$ $n$-safely reduces to $u$,  
+if we reduce $t$ to $u$ by contracting a single redex in the $n$-safe level of $t$ 
+(i.e. of $\cond$-depth $\le n$).
 %We call \emph{unsafe} a reduction inside any $\cond(f,g)$.
 
 \item
-A term is safe-normal if all its redexes (if any) have $\cond$-depth $>0$.
+A term is $n$-safe-normal if all its redexes (if any) have $\cond$-depth $>n$.
+
+We abbreviate \quotationMarks{$1$-safe normal} with just \quotationMarks{safe normal}.
 \end{enumerate}
 \end{definition}
 
@@ -830,39 +843,46 @@ A term is safe-normal if all its redexes (if any) have $\cond$-depth $>0$.
 
 \begin{Eg}
 Let $u = \cond. (0, (\lambda z.u)(z) )$, where we omitted the type superscript
-of $z$ because it is irrelevant. Then $u$ is safe-normal, because
+of $z$ because it is irrelevant. Then $u$ is $1$-safe-normal (safe normal for short), because
 all redexes in $u$ are of the form  $(\lambda z.u)(z)$ and are in the right-hand-side of a $\cond$. 
-However, the tree form of $u$ has the following branch:
+However $u$ has infinitely many nodes which are $\beta$-redexes. 
+Indeed, the tree form of $u$ has the following branch:
 \begin{center}
-  $u$, \quad
-  $(\lambda z.u)(z)$, \quad
-  $\lambda z.u$, \quad
-  $u$, \quad $\ldots$
+  $u$, 
+  \quad
+  $(\lambda z.u)(z)$, 
+  \quad
+  $\lambda z.u$, 
+ \quad
+  $u$, 
+ \quad $\ldots$
 \end{center}
 This branch is cyclic, infinite,
-and it includes infinitely many $\beta$-redexes.
+and it includes infinitely many $\beta$-redexes, all equal to the same term $(\lambda z.u)(z)$.
 \end{Eg}
 
-The reason for forbiding
-reductions in the right-hand-side $\cond(f,g)$ is that through branches crossing the right-hand-side
+Through branches crossing the right-hand-side
 of some $\cond$ we will-express fixed-point equations.
-Reductions on fixed-point equations can easily loop, and we consider them ``unsafe". 
-For this reason, we first considered the minimum possible of reductions of the form:
-$\cond(f,g)(0) \reduces_\cond f$ and
-$\cond(f,g)(\Succ (t)) \reduces_\cond g[t/x]$: only  those required to normalize closed
-terms of type $\N$. They are the reductions \emph{applied on maximal $\cond$-expression}.
-For the moment, we skip all reductions inside the second argument of $\cond$.
-
-In a second moment, 
-by adding a restriction of \emph{fairness} on reduction strategies,
-we will be able to recover strong normalization for most (not all) ``unsafe" reductions.
+Reductions on fixed-point equations can easily loop.
+However, in order to produre the output of a computation we only need 
+to reduce closed terms of type $\N$ to a numeral. We will prove that for this taks we only
+need $1$-safe reductions, those in the the right-hand-side
+of \emph{no} $\cond$, and that $1$-safe reductions strongly normalize. 
 
 \begin{Eg}
 This is an example of safe $\cond$-reductions from a term $v(n)$ to a normal form. 
 Assume $n \in \Num$ is any numeral and $v = \cond(1, v)$. There are only finitely many reductions
-from $v(n)$, and they are all safe. $v(n)$ $\cond$-reduces to $v(n-1)$, 
+from $v(n)$, and they are all $1$-safe. $v(n)$ $\cond$-reduces to $v(n-1)$, 
 then we loop: $v(n-1)$ $\cond$-reduces to $v(n-2)$ and so forth.
 After $n$ $\cond$-reductions we get $v(0)$. With one last $\cond$-reduction we get $1$ and we stop. 
-Thus, the term $v(n)$ strongly normalizes to $1$ in $(n+1)$-steps, in fact we have a unique reduction path of
-length $(n+1)$ from $v(n)$ to $1$.
+Thus, the term $v(n)$ strongly normalizes to $1$ in $(n+1)$-steps, in fact $v(n)$ has a unique reduction path,
+having length $(n+1)$ and terminating in $1$.
 \end{Eg}
+
+There are terms without a normal form, but we can get as close as we want to a normal form
+In fact, we will prove that for all $n$, all terms have some $n$-safe normal form, that is, 
+with no redexes of $\cond$-depth $\le n$. 
+The $n$-safe normal form of a term is unique up $n$-safe equality: any two $n$-safe normal forms have the same $n$-safe level, though they may be different in some level of $\cond$-depth $>n$.
+
+We will also prove that terms have a limit normal form, 
+obtained by taking the limit of the $n$-safe normal forms of the term, and that this limit normal form is unique.
