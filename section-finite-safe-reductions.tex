@@ -80,7 +80,7 @@ then any $\prec$-decreasing sequence from $t$ terminates.
 
 \begin{lemma}[The $\prec$-order]
 \label{lemma-prec-order}
-Assume $n \in \N$, $t \in \WTyped$ has type $\N$, and $t$ is finite for safe reductions .
+Assume $t \in \WTyped$ has type $\N$, and $t$ is finite for safe reductions .
 
 \begin{enumerate}
 \item
@@ -283,7 +283,7 @@ for an atomic type we have to prove that in all infinite reduction sequences fro
 there are only finitely many safe reduction. All reductions on $x(\vec{a})$ take place on $\vec{a}$,
 and since each $a_i$ in $\vec{a}$ is total only finitely many safe reductions are possible, as we wished.
 \item
-Assume $U = (A_1 \ldots A_2)$. By definition of total
+Assume $U = A_1 \to A_2$. By definition of total
 for an arrow type we have to prove that for all total $a$ we have  $x(\vec{a},a):A_2$ total.
 This follows by induction hypothesis on $A_2$.
 \end{enumerate}
@@ -662,7 +662,7 @@ namely $\Label(\Pi,l_i) = \Gamma\vdash t_i: \N = \Gamma\vdash \Succ(u): \N$
  $u[\vec{d_i},x] \reduces^* v[x]$ and $a\reduces^* a'$ and $\vec{b} \reduces^* \vec{b'}$.
  Then the reduction sequence $\sigma$ continues 
   with some infinite reduction $\sigma'$ from $v[a']\vec{b'}$, including infinitely many safe reductions. 
- From $u[\vec{d_i},x] \reduces v[x]$ and $\vec{b} \reduces^* \vec{b'}$ we deduce that 
+ From $u[\vec{d_i},x] \reduces^* v[x]$ and $\vec{b} \reduces^* \vec{b'}$ we deduce that 
 $$
         		t_{i+1}[\vec{d_i},a]\vec{b}  
 \ \ \ 		=
@@ -780,7 +780,7 @@ From this theorem we derive the strong normalization result for safe reductions 
 \begin{corollary}\label{cor:SN_GTC}
   \begin {enumerate}
   \item
-   Assume  $\Gamma\vdash t:A$. Then $t \in \GTC$ implies that $t$ is totaland all reduction sequences
+   Assume  $\Gamma\vdash t:A$. Then $t \in \GTC$ implies that $t$ is total and all reduction sequences
    from $t$ include only finitely many $0$-safe reductions.
   
 \item
