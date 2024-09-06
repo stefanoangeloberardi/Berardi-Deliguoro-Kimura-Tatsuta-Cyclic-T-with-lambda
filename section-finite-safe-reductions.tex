@@ -388,8 +388,8 @@ $v'[a']=v_0[a'][a']=v[a']$ by definition, and $v[a] = v_0[a][a] \reduces^* v_0[a
 because $a \reduces^* a'$ and there is a single occurrence of $a$ in $v_0[a][.]$. 
 
 The reduction on $v'[a']$ has both the left
-and right hand-side of $r$ not included in any $a'$ obtained by substitution. We conclude from the previous
-case applied to $v'[a]$, $v'[a']$.
+and right hand-side of $r$ not included in any $a'$ obtained by substitution, because this unique
+$a'$ is not part of $v'[.]$. We conclude from the previous case applied to $v'[a]$, $v'[a']$.
 
 \end{enumerate}
 Then by induction on $n' \in \N$ we prove that if $v[a'] \reduces^{n'} w$ ($n$ steps) 
