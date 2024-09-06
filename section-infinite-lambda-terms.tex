@@ -821,8 +821,10 @@ and $i_{h+1} = 2$
 The $n$-safe level of $t$ is the set of nodes of $t$ of depth $\le n$.
 
 \item
-$t =_{n,\cond} u$, or \quotationMarks{$t$,$u$ are $n$-safe equal} is equality of $t$, $u$ after removing 
-all subterms whose $\cond$-depth is $>n$.
+$t =_{n,\cond} u$, or \quotationMarks{$t$,$u$ are $n$-safe equal} means that, after possibly renaming
+the bound variables of $t$, $u$, the set of nodes of $t$ of depth $\le n$ has the same positions
+as the set of of $u$ of depth $\le n$, and for each position the same first symbol, and in the case of a binder,
+also the same bound variable.
 %$t \sim u$ if and only if there is some $v \in \LAMBDA$ such that $t \reduces v$ and $u \reduces v$.
 
 \item
