@@ -349,17 +349,49 @@ an infinite number of steps to reduce each of these $a$ to $a'$.
 
 However, we can prove a weaker property, expressed by the following Lemma.
 
+
 \begin{lemma}[Safe-infinite reductions and Substitution]
  \label{lemma-safe-infinite-substitution}
  Assume $a \reduces^* a'$ and there is some safe-infinite reduction $\sigma$ from $v[a']$.
- Then there is some safe-infinite reduction from $v[a']$.
+ Then there is some safe-infinite reduction from $v[a]$.
 \end{lemma}
 
 \begin{proof}
 We prove that if $v[a'] \reduces w$ then for some $z$ we have $w=z[a']$ and $v[a] \reduces^+ z[a]$,
 and if $v[a'] \reduces z[a']$ is a safe then the last reduction in $v[a] \reduces^+ z[a]$ is safe.
-The proof is by cases on the reduction $v[a'] \reduces w$.
+The proof is by cases on the reduction $v[a'] \reduces w$.  We argue by cases.
 
+\begin{enumerate}
+
+\item
+Assume the reduction $v[a'] \reduces w$ is on a redex of the form $r[a']$, with both the left
+and right hand-side of $r$ not included in any $a'$ obtained by substitution. 
+In this case we have $v[a'] = e[r[a'],a']
+\reduces e[s'[a],a']$, and
+$r[a'] = \cond(f[a'],g[a'])(0) \reduces f[a'] = s[a']$ or 
+$r[a'] = \cond(f[a'],g[a'])(S(t[a])) \reduces g[a'](t[a']) = s[a']$
+or $r[a'] = (\lambda x.t[a',x])(u[a']) \reduces t[a',u[a']] = s[a']$. 
+We define $z[a'] = e[s'[a],a']$. 
+In all three sub-cases we have $r[a] \reduces s[a]$ and therefore $v[a] \reduces e[r[a],a] = z[a]$
+if $v[a'] \reduces z[a']$ is safe then $v[a] \reduces z[a]$ is safe.
+
+\item
+Assume the reduction $v[a'] \reduces w$ is on a redex of the form $r$, with either the left
+or right hand-side of $r$ not included in some $a'$. In this case either $r$ is included in some $a'$ 
+obtained by substitution, or the left or right hand side of $r$ is equal to some $a'$ obtained by substitution.
+We cannot have both the left and right hand side equal to $a$, because the two sides of any redex 
+have a different type.
+
+In this case there is a single $a'$ whose value matters, that is, $v[a] = v_0[a][a]$, with the first $a$ denoting
+the single occurrence of $a$ we are speaking about. We choose $v'[.] = v_0[a'][.]$, then we have
+$v'[a']=v_0[a'][a']=v[a']$ by definition, and $v[a] = v_0[a][a] \reduces^* v_0[a'][a] = v'[a]$ 
+because $a \reduces^* a'$ and there is a single occurrence of $a$ in $v_0[a][.]$. 
+
+The reduction on $v'[a']$ has both the left
+and right hand-side of $r$ not included in any $a'$ obtained by substitution. We conclude from the previous
+case applied to $v'[a]$, $v'[a']$.
+
+\end{enumerate}
 Then by induction on $n' \in \N$ we prove that if $v[a'] \reduces^{n'} w$ ($n$ steps) 
 then for some $z$, some $n \ge n'$ we have $w=z[a']$ and $v[a] \reduces^{n} z[a]$,
 with the number of safe reductions in  $v[a'] \reduces^{n'} z[a']$ less or equal than the number
