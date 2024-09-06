@@ -798,22 +798,33 @@ However, $t$ is not in $\GTC$. Indeed, $t$ has an infinite path $t,t,t,t,\ldots$
 and therefore never progressing.
 
 We check that instead safe-normalization on closed terms of $\GTC$ of type $\N$ produce a numeral. 
-As an intermediate step in this proof we need the notion of \qutationMarks{sound} term.
+As an intermediate step in this proof we need the notion of \quotationMarks{sound} term.
 
 \begin{definition}[Sound terms]
 A term $t \in \CTlambda$ is sound if at least one of the following conditions holds.
 \begin{enumerate}
 \item
+$t$ is open
 \item
+$t$ has some $0$-safe redex
 \item
+$t=\lambda x.u$ or $t = \cond(f,g)$ for some $u$, $f$, $g$ and $t$ has an arrow type
 \item
+$t$ is a numeral
 \end{enumerate}
 \end{definition}
 
 \begin{proposition}[Closed Safe-Normal terms of Type $\N$]
+\begin{enumerate}
+\item
+All $t \in \GTC$ are sound
+\item
 If $t \in \GTC$, $t$ is closed and $0$-safe-normal then $t \in \Num$ ($t$ is a numeral)
+\end{enumerate}
 \end{proposition}
 
-\begin
+\begin{proof}
+\ldots
+\end{proof}
 
 \newpage
