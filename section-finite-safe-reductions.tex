@@ -819,14 +819,51 @@ $t$ is a numeral
 \item
 All $t \in \GTC$ are sound
 \item
-If $t \in \GTC$, $t$ is closed and $0$-safe-normal then $t \in \Num$ ($t$ is a numeral)
+If $t \in \GTC$, $t$ is closed and $0$-safe-normal and $t:\N$ then $t \in \Num$ ($t$ is a numeral)
 \end{enumerate}
 \end{proposition}
 
 \begin{proof}
 \begin{enumerate}
 \item
+We assume that $t \in \GTC$ in order to prove that $t$ is sound.
+We argue by  induction on the size of the $0$-safe level of $t$: this size is finite because $t \in \GTC$. 
+We consider one case for each possible first symbol of $t$.
+
+\begin{enumerate}
 \item
+$t =x$. Then $t$ is open.
+\item
+$t=0$. Then $t$ is a numeral.
+\item
+$t = \Succ(u)$. Then $u:\N$ and $u$ has a smaller $0$-safe level, therefore $u$ is sound. If $u$ is open then
+$t$ is open, if $u$ has a $0$-safe redex then so does $t$, $u$ cannot have an arrow type, and if $u$
+is a numeral then $t$ is a numeral.
+\item
+$t=u(v)$. Then $u:A \rightarrow B$, $u:A$ and $u$, $v$ have a smaller $0$-safe level, therefore $u$,
+$v$ are sound. 
+
+If $u$ or $v$ are open then $t$ is open. 
+
+If $u$ or $v$ have a $0$-safe redex then so does $t$.
+
+Suppose $u = \lambda x.v, \cond(f,g)$. If $u = \lambda x.v$ then $t=u(v)$ is a $0$-safe $\beta$-redex.
+If $u = \cond(f,g)$ then $A = \N$ and $v:\N$. $v$ is not open nor has a a $0$-safe redex, and $v$ has no
+arrow type. The only possibility left is that $v$ is a numeral: we conclude that $t=\cond(f,g)(v)$ is a $\cond$-rexed, therefore $t$ is sound.
+
+The only possibility left for $u$ is that is $u$ numeral. But this cannot be, because $u$ has an arrow type.
+
+\item
+$t = \lambda x.u$. Then $t$ is sound.
+
+\item
+$t = \cond(f,g)$. Then $t$ is sound.
+\end{enumerate}
+
+\item
+Assume that $t \in \GTC$, $t$ is closed and $0$-safe-normal and $t:\N$.
+Then $t$ is sound by the previous point and the only possibility left is that $t$ is 
+a numeral.
 \end{enumerate}
 \end{proof}
 
