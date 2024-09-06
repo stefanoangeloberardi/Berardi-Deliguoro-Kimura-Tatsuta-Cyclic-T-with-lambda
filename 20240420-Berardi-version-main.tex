@@ -52,7 +52,73 @@
 \vbadness=10000
 
 \input{macro}
-\input{title}
+
+\ifdraft
+
+\title{CT-$\lambda$, a cyclic simply typed $\lambda$-calculus with fixed points}
+
+\author{Stefano Berardi,  Ugo de' Liguoro, Daisuke Kimura, Koji Nakazawa, Makoto Tatsuta}
+\date{}
+
+\else
+
+\title[Equivalence]{}
+
+\author[S. Berardi]{Stefano Berardi}
+\address{Universit\`{a} di Torino,
+Torino, Italy}
+\email{stefano@unito.it}
+
+
+%% mandatory lists of keywords 
+\keywords{
+proof theory
+inductive definitions
+Brotherston-Simpson conjecture
+cyclic proofs
+}
+\fi
+
+\maketitle
+
+\begin{abstract}
+A motivation for having a circular syntax for G\"{o}del System $\systemT$ is that terms 
+in a circular syntax are much shorter than the equivalent terms written in $\systemT$, 
+yet they can be checked mechanically.
+
+Several circular syntax for $\systemT$ have been proposed.
+In this paper explore the possibility of defining a circular syntax
+directly for $\lambda$-abstraction and simple types, instead of interpreting
+ $\lambda$-abstraction through combinators first, then inserting a  circular syntax afterwards.
+A circular syntax using binders instead of combinators
+could be more familiar for researchers working in the field of Type Theory.
+
+We introduce our circular syntax as a fixed point operator defined by cases through a test on $0$.
+We prove the expected results for this circular simply typed $\lambda$-calculus, which we call $\CTlambda$: 
+\emph{(i)} every closed term of type $\N$ reduces to some numeral;
+\emph{(ii)}  strong normalization for all reductions sequences outside all fixed points; 
+\emph{(iii)}  strong normalization for ``fair'' reductions; \emph{(iv)} Church-Rosser property;
+and \emph{(v)} the inclusion between terms of G\"{o}del system $\systemT$
+inside the terms of $\CTlambda$. 
+We conjecture the equivalence between $\systemT$ and $\CTlambda$,
+a similar result but without a binder operator $\lambda$ was already obtained by Anupam.
+
+
+
+\end{abstract}
+
+\iffalse
+key words: 
+proof theory,
+inductive definitions,
+Brotherston-Simpson conjecture,
+cyclic proofs,
+Martin-Lof's system of inductive definitions,
+infinite Ramsey theorem
+Podelski-Rybalchenko termination theorem
+size-change termination theorem
+\fi
+
 
 
 
@@ -1304,11 +1370,15 @@ Assume  $t: \Gamma\vdash A$,
 %\input{section-normalization-fairness}
 
 
-\section{Equivalence between cyclic and non-cyclic system $T$} 
+\section{Relation between cyclic and non-cyclic system $T$} 
 \label{section-equivalence-cyclic-non-cyclic-T}
 \bfColor{red}
 {Incomplete section: uncomment the input command (below in the source code) to make this section visible}
 %\input{section-equivalence-cyclic-non-cyclic-T}
+
+\section{An example: the Ackermann function} 
+\label{section-ackermann}
+\input{section-ackermann}
 
 %
 %\section{appendix}
