@@ -789,11 +789,12 @@ From this theorem we derive the strong normalization result for safe reductions 
 \end{corollary}
 
 There are closed normal term of $\N$, even regular terms, which are not numeral.
-An example is $t = \cond(0, \lambda x^N.x^N)(t)$. $t$ has a unique type $\N$. $t$ is normal,
+An example is $t = \cond(0, \lambda x^N.1)(t)$ (\cite{2021-Anupam-Das}, Remark 44, page 33). 
+$t$ has a unique type $\N$. $t$ is normal,
 because $t$ is not $0$ nor a successor, therefore $t$ cannot be reduced, however $t$ is not a number.
 
 Remark that $t$ is regular: the subterms of $t$
-subterms are $t$ itself and$\cond(0, \lambda x^N.x^N)$, $0$, $\lambda x^N.x^N$.
+subterms are $t$ itself and$\cond(0, \lambda x^N.1)$, $0$, $\lambda x^N.1$, $1$.
 However, $t$ is not in $\GTC$. Indeed, $t$ has an infinite path $t,t,t,t,\ldots$, never crossing a $\cond$,
 and therefore never progressing.
 
