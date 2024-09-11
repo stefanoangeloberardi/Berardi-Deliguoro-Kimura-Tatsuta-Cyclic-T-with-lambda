@@ -1,0 +1,247 @@
+
+
+\newpage
+
+\section{Weak Church-Rosser for leveled safe reductions}
+\label{section-n-safe-church-rosser}
+
+In this section we prove a result for the $n$-safe part of a term, which we call 
+\quotationMarks{\emph{unicity of the $n$-safe part of the safe normal form up to $\nequal{n}$}}. By this we mean:
+for all $t, u, v \in \GTC$, if $t \nsafeReduces{n} u$ and $t \nsafeReduces{n} v$ and $u$, $v$ are $n$-safe-normal 
+then $u \nequal{n} v$ holds. 
+
+Our first idea (wrong) is to prove a full Church-Rosser property for $\LAMBDA$: 
+for all $t,u,v \in \LAMBDA$, if $t \reduces u$ and $t \reduces v$ then for some $w \in \LAMBDA$
+we have $u \reduces w$ and $v \reduces w$. This property is false: for some $t \in \LAMBDA$, finding a 
+common reduction of $u$, $v$ takes infinitely many steps. This even in the case $t \in \CTlambda$,
+as the next example shows.
+
+\begin{Eg}[Failure of Church-Rosser for $\CTlambda$]
+Let $b = \cond(x^{\N},b):\N \rightarrow \N$ a normal form
+and $t = (\lambda x^{\N}.b)(r):\N \rightarrow \N$, 
+where $r = (\lambda x^{\N}.x^{\N})(3)$ is some redex. 
+
+We have $b[r/x](n) \reduces r \reduces 3$ for all numerals $n$, 
+therefore $t$ and $\lambda \_.3$ are extensionally equal, however $t \not \reduces \lambda \_.3$. 
+We have $t \in \CTlambda$. Indeed, 
+\begin{enumerate}
+\item
+$t$ is regular by construction.
+\item
+We have $t \in \GTC$, because the unique infinite path of $t$ is 
+$t, \lambda x^{\N}.b, b, b, b, \ldots$, and the
+unique unnamed argument of $b:\N \rightarrow \N$ in the path progresses infinitely many times.
+\end{enumerate}
+
+Now consider the reductions: $t \reduces b[r/x^\N]$ and $t \reduces  (\lambda x^{\N}.b)(3)$.
+We expect $b[3/x^\N]$ as common normal form. But we have $b[r/x^\N] = \cond(r,b[r/x^\N]$,
+that is, we have replicated the redex $r$ infinitely many times in $b[r/x^\N]$. Therefore to reduce 
+$b[r/x^\N]$ to $b[3/x^\N]$ takes infinitely many steps, and for \emph{no finite reduction we have}
+$b[r/x^\N] \reduces b[3/x^\N]$. 
+
+We proved that Church-Rosser is false for $\CTlambda$.
+\end{Eg}
+
+In the following we will work in the $n$-safe level of $t\in \GTC$. 
+The global trace condition guarentees the finiteness of the $n$-safe level for each $n$. 
+\begin{lemma}
+  For any $n\ge 0$, the set of the $n$-safe level of $t\in \GTC$ is finite.
+\end{lemma}
+\begin{proof}
+  Let $t\in \GTC$. We show the finiteness of any $n$-level of $t$ by proof of contradiction.
+  Assume that the finiteness fails. 
+  Then take the least number $n$ such that the $n$-safe level of $t$ is infinite.
+  
+  The case of $n=0$.
+  Since the binary tree obtained from $t$ restricting to the $0$-safe level of $t$ contains infinite nodes,
+  we can take an infinite path $t,t_1,t_2,\ldots$ of the tree by using K\"{o}nig's lemma.
+  Then this infinite path does not contain a progressing trace since any $t_i$
+  cannot be the right subterm of $\cond$. This contradicts $t\in \GTC$.
+  
+  The case of $n>0$. By the leastness of $n$, for any $n'<n$, all $n'$-level of $t$ are finite.
+  We can also take an infinite path from 
+  the binary tree that is a restriction of $t$ with nodes until the $n$-safe level of $t$. 
+  The path has the form $\vec{t_0},\vec{t_1},\ldots,\vec{t_n}$,
+  where each $\vec{t_i}$ is a sequence of nodes of the $i$-safe level,
+  and only $\vec{t_n}$ is infinite.
+  Then this infinite path does not contain a progressing trace as in the case of $n=0$. 
+  This also contradicts $t\in \GTC$.
+  
+  Hence we have the finiteness of the $n$-safe level of $t\in\GTC$, as we wished. 
+\end{proof}
+
+We write $\Lv{n}{t}$ for the number of the $n$-safe level of $t\in\GTC$. 
+
+We define a $n$-safe level context $\Lctx{n}$
+with holes (written $\cdot$) that will be filled with terms in $\LAMBDA$,
+and whose positions are at the $n$-safe level. 
+\begin{definition}[Safe level context]
+  We define $\Lctx{-1} = \cdot$. 
+  For $n \ge 0$, the $n$-safe level context, written $\Lctx{n}$, is inductively defined as
+  follows:
+  \[
+  \Lctx{n} ::= x^T \mid 0 \mid \Lctx{n}\Lctx{n} \mid \lambda x^T.\Lctx{n}
+  \mid \Suc{\Lctx{n}} \mid \Cond{\Lctx{n}}{\Lctx{n-1}}. 
+  \]
+\end{definition}
+Multiple holes may appear in a context and each holes are distinguished.
+The resulting term obtained by filling $k$-holes in $\Lctx{n}$
+with terms $t_1,\ldots,t_k$ is written $\Lctx{n}[t_1,\ldots,t_k]$. 
+Note that filling holes with terms is not substitution,
+but just putting terms at the positions of holes, namely, for example,
+the result of filling the unique hole in $\lambda x.\Cond{0}{\cdot}$ with $x$
+is $\lambda x.\Cond{0}{x}$. 
+
+The finiteness of the $n$-safe level of $t\in\GTC$ enables 
+to split $t$ by a $n$-safe level context and terms that apper at level $>n$
+as stated in the next lemma. 
+
+\begin{lemma}\label{lem:split_context}
+  \begin{enumerate}
+  \item\label{lem:split_context1}
+    For any $\Lctx{n}$, there uniquely exists
+    $(\Lctx{0},\Lctx{n-1}^{1},\ldots,\Lctx{n-1}^{k})$ such that
+    $\Lctx{0}$ has $k$-holes and
+    $\Lctx{n} = \Lctx{0}[\Lctx{n-1}^1,\ldots,\Lctx{n-1}^k]$, namely $\Lctx{n}[\vec{t_1},\ldots,\vec{t_k}] = \Lctx{0}[\Lctx{n-1}^1[\vec{t_1}],\ldots,\Lctx{n-1}^k[\vec{t_k}]]$ holds for any $\vec{t_1},\ldots,\vec{t_k}$. 
+  \item\label{lem:split_context2}
+    Let $t\in\GTC$ and $n\ge 0$.
+    There uniquely exists $(\Lctx{n},t_1,\ldots,t_k)$
+    such that $\Lctx{n}$ has $k$-holes, $t = \Lctx{n}[t_1,\ldots,t_k]$,
+    and all $t_1,\ldots,t_k$ appear at the $(n+1)$-safe level of $t$.
+  \end{enumerate}
+\end{lemma}
+\begin{proof}
+  The point~\ref{lem:split_context1} is shown by induction on the construction of $\Lctx{n}$.
+  If $\Lctx{n}$ is $x^T$ or $0$, then define $\Lctx{0}$ by the same one as $\Lctx{n}$. 
+  For the case of $\Lctx{n} = \lambda x^T.\Lctx{n}'$, 
+  we have a unique $(\Lctx{0}',\overrightarrow{\Lctx{n-1}'})$ such that 
+  $\Lctx{n}' = \Lctx{0}'[\overrightarrow{\Lctx{n-1}'}]$.
+  Then $(\lambda x^T.\Lctx{0}',\overrightarrow{\Lctx{n-1}'})$
+  satisfies the expected condition for $\Lctx{n}$ of this case. 
+  The cases of $\Lctx{n} = \Lctx{n}'\Lctx{n}''$ and $\Lctx{n} = \Suc{\Lctx{n}'}$
+  are shown similarly by using the induction hypothesis.
+  We show the case $\Lctx{n} = \Cond{\Lctx{n}'}{\Lctx{n-1}''}$. 
+  By the induction hypothesis, there exists a unique
+  $(\Lctx{0}',\overrightarrow{\Lctx{n-1}'})$ such that 
+  $\Lctx{n}' = \Lctx{0}'[\overrightarrow{\Lctx{n-1}'}]$.
+  Then $(\Cond{\Lctx{0}'}{\cdot}, \overrightarrow{\Lctx{n-1}'}, \Lctx{n-1}'')$
+  satisfies the expected condition for $\Lctx{n}$ of this case. 
+  
+  The point~\ref{lem:split_context2} is shown
+  by induction on $n$ using \ref{lem:split_context1}.
+
+  We first show the case of $n=0$ by induction on the number of the $0$-safe level of $t$.
+  If $t = x^T$ or $t = 0$, it is shown by taking $\Lctx{0}$ as $t$.
+  If $t = \lambda x^T.t'$, by the induction hypothesis,
+  there uniquely exists $(\Lctx{0}',\vec{t'})$ that satisfies the condition for $t'$. 
+  Then $(\lambda x^T.\Lctx{0}',\vec{t'})$ satisfies
+  the expected condition for $\lambda x^T.t'$. 
+  If $t =t't''$ or $t = \Suc{t'}$, it is also shown by the induction hypothesis. 
+  If $t = \Cond{t'}{f}$, by the induction hypothesis, 
+  there uniquely exists $(\Lctx{0}',\vec{t'})$ that satisfies the condition for $t'$. 
+  Then $(\Cond{\Lctx{0}'}{\cdot},\vec{t'},f)$ satisfies
+  the expected condition for $\Cond{t'}{f}$. 
+
+  Then we show the case of $n>0$.
+  By the result of the case of $n=0$, there uniquely exists $(\Lctx{0},t_1,\ldots,t_k)$
+  that satisfies $t = \Lctx{0}[t_1,\ldots,t_k]$ and
+  each $t_i$ appears at the $1$-safe level of $t$.
+  For each $i$, by applying the induction hypothesis to $t_i$,
+  we have unique $(\Lctx{0}^i,\vec{t'_i})$
+  satisfies $t_i = \Lctx{0}^i[\vec{t'_i}]$ and $\vec{t'_i}$ appear
+  at the $(n-1)$-safe level of $t_i$. 
+  Then $(\Lctx{0}[\Lctx{n-1}^1,\ldots,\Lctx{n-1}^k],\vec{t'_1},\ldots,\vec{t'_k})$
+  satisfies the expected condition for $t$.
+  Its uniqueness is obtained by using the uniqueness of $\Lctx{0}$ and $\Lctx{n-1}^i$,
+  and the point \ref{lem:split_context1}. 
+\end{proof}
+
+We define the notion \quotationMarks{$n$-safe equality} that intuitively means
+two terms are approximately equal excepting for deeper safe levels more than $n$. 
+
+\begin{definition}[$n$-safe equal]
+  $t_1 \nequal{n} t_2$, or \quotationMarks{$t_1$ and $t_2$ are $n$-safe equal}
+  is defined by after possibly renaming the bound variables of $t_1$ and $t_2$, 
+  they have the forms $\Lctx{n}[\vec{u}_1]$ and $\Lctx{n}[\vec{u}_2]$
+  with some terms $\vec{u}_1$ and $\vec{u}_2$. 
+\end{definition}
+
+The $n$-safe equality is necessary to fill \quotationMarks{gaps}
+after $n$-safe reductions from the same term.
+For example, let $t$ be $(\lambda x^{\N\to\N}.\Cond{0}{x})(IS)$,
+where $I = \lambda z^{\N\to\N}.z$ and $S = \lambda n^\N.\Suc{n}$.
+For the two $0$-safe reducuctions 
+$t \nsafeReducesAst{0} \Cond{0}{S}$ and $t \nsafeReducesAst{0} \Cond{0}{IS}$, 
+we have $\Cond{0}{IS} \nequal{0} \Cond{0}{S}$
+since $\Cond{0}{IS} \nsafeReduces{0} \Cond{0}{S}$ does not hold. 
+
+The main theorem of this section is a weak form of Church-Rosser
+of the $n$-safe reductions that holds up to the $n$-equalities. 
+
+\begin{theorem}[Weak Church-Rosser of $n$-safe reduction modulo $n$-safe equality]
+  Let $t\in \GTC$.
+  If $t_1 \nsafeReducesAstL{n} t \nsafeReducesAst{n} t_2$, 
+  then there exist $t'_1$ and $t'_2$ such that
+  $t_1 \nsafeReducesAst{n} t'_1 \nequal{n} t'_2 \nsafeReducesAstL{n} t_2$. 
+\end{theorem}
+
+This theorem will be proved by a variant of the parallel reduction technique. 
+
+\begin{definition}[Safe parallel reduction]
+  Let $n\ge -1$.
+  We define the $n$-safe parallel reduction relation $\nsafePReduces{n}$ on the $\GTC$ terms.
+  The $\nsafePReduces{-1}$ is defined by $t\nsafePReduces{-1} t$ for all $t\in\GTC$. 
+  For $n\ge 0$, the relation $\nsafePReduces{n}$ is inductively defined as follows: 
+  \begin{itemize}
+  \item[(id)]
+    $t \nsafePReduces{n} t$.
+  \item[$(\Succ)$]
+    If $t \nsafePReduces{n} t'$, then $\Suc{t} \nsafePReduces{n} \Suc{t'}$.
+  \item[$(\lambda)$]
+    If $t \nsafePReduces{n} t'$, then $\lambda x^T.t \nsafePReduces{n} \lambda x^T.t'$.
+  \item[(ap)]
+    If $f \nsafePReduces{n} f'$ and $a \nsafePReduces{n} a'$,
+    then $f(a) \nsafePReduces{n} f'(a')$.
+  \item[$(\cond)$]
+    If $a \nsafePReduces{n} a'$ and $f \nsafePReduces{n-1} f'$,
+    then $\Cond{a}{f} \nsafePReduces{n} \Cond{a'}{f'}$.
+  \item[$(\beta)$]
+    If $t \nsafePReduces{n} t'$ and $u \nsafePReduces{n} u'$,
+    then $(\lambda x^T.t)u \nsafePReduces{n} t'[u'/x]$.
+  \item[$(\cond\,0)$]
+    If $a \nsafePReduces{n} a'$, 
+    then $\Cond{a}{f}(0) \nsafePReduces{n} a'$.
+  \item[$(\cond\,\Succ)$]
+    If $f \nsafePReduces{n-1} f'$ and $u \nsafePReduces{n} u'$, 
+    then $\Cond{a}{f}(\Suc{u}) \nsafePReduces{n} f'(u')$.
+  \end{itemize}
+\end{definition}
+
+The relation $\nsafePReduces{-1}$ is a special case to simplify
+the rules $(\cond)$ and $(\cond\,\Succ)$.
+For $n\ge 0$, if $t$ is reduced to $u$ by the $n$-safe parallel reduction,
+redexes that appear in the $n$-safe level of $t$ can be reduced. 
+For example, $\Cond{I0}{\Cond{I0}{IS}} \nsafePReduces{n} \Cond{0}{\Cond{0}{S}}$
+holds if $n=2$, but does not hold if $n=1$. 
+The case (id) cannot be replaced by $x^T \nsafePReduces{n} x^T$ and $0 \nsafePReduces{n} 0$ expecting (id) can derived from them, but it is not the case in our setting
+because we are working on the infinite terms. 
+
+The relation $\nsafePReduces{n}$ satisfies the following basic properties. 
+\begin{lemma}\label{lem:parallel_basic}
+  Let $t, u\in \GTC$. The following properties hold. 
+  \begin{enumerate}
+  \item\label{lem:parallel_basic1}
+    $n < n'$ and $t \nsafePReduces{n} u$ implies $t \nsafePReduces{n'} u$ (monotonicity). 
+  \item\label{lem:parallel_basic2}
+    If $t \nsafeReduces{n} u$, then $t \nsafePReduces{n} u$. 
+  \item\label{lem:parallel_basic3}
+    If $t \nsafePReduces{n} u$, then $t \nsafeReducesAst{n} u$. 
+  \end{enumerate}
+\end{lemma}
+\begin{proof}
+  The point~\ref{lem:parallel_basic1} is shown by induction on $\nsafePReduces{n}$.
+  We show the point~\ref{lem:parallel_basic2}.
+  
+  
+
+\end{proof}
