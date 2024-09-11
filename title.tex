@@ -1,6 +1,6 @@
 \ifdraft
 
-\title{CT-$\lambda$, a cyclic simply typed $\lambda$-calculus with fixed points}
+\title{$\CTlambda$, a cyclic simply typed $\lambda$-calculus with fixed points}
 
 \author{Stefano Berardi,  Ugo de' Liguoro, Daisuke Kimura, Koji Nakazawa, Makoto Tatsuta}
 \date{}
@@ -34,22 +34,34 @@ A motivation for having a circular syntax for G\"{o}del System $\systemT$ is tha
 in a circular syntax are much shorter than the equivalent terms written in $\systemT$, 
 yet they can be checked mechanically.
 
-Several circular syntax for $\systemT$ have been proposed.
-In this paper explore the possibility of defining a circular syntax
-directly for $\lambda$-abstraction and simple types, instead of interpreting
- $\lambda$-abstraction through combinators first, then inserting a  circular syntax afterwards.
+Several circular syntax for $\systemT$ (that is, infinite regular terms with the global trace condition)
+have been proposed, like $\CT$ by Anupam (\cite{2021-Anupam-Das}, \S 4.5, page 20).
+In this paper we explore the possibility of defining a circular syntax 
+directly for $\lambda$-abstraction and simple types, which we call $\CTlambda$, instead of interpreting
+ $\lambda$-abstraction through combinators first, then inserting a  global trace condition afterwards.
 A circular syntax using binders instead of combinators
 could be more familiar for researchers working in the field of Type Theory.
+Again for reason of simplicity of use, we drop the restriction of having finitely many variables in infinite terms, 
+and finitely many redexes, a restriction considered in previous works on the same topic, 
+and we explore the consequences of ths choice.
+\\
 
 We introduce our circular syntax as a fixed point operator defined by cases through a test on $0$.
-We prove the expected results for this circular simply typed $\lambda$-calculus, which we call $\CTlambda$: 
-\emph{(i)} every closed term of type $\N$ reduces to some numeral;
-\emph{(ii)}  strong normalization for all reductions sequences outside all fixed points; 
-\emph{(iii)}  strong normalization for ``fair'' reductions; \emph{(iv)} Church-Rosser property;
-\emph{(v)} the inclusion between terms of G\"{o}del system $\systemT$
-inside the terms of $\CTlambda$. 
-We conjecture the equivalence between $\systemT$ and $\CTlambda$,
-a similar result but without a binder operator $\lambda$ was already obtained by Anupam.
+We prove for $\CTlambda$ some of the results proved by Anupam for his combinatorial circular syntax:
+\emph{(i)}  every closed term of type $\N$ reduces to some numeral;
+\emph{(ii)}  strong normalization for all reductions sequences never reducing inside a fixed point operator;
+\emph{(iii)} the equivalence between the set of terms of G\"{o}del system $\systemT$
+and the set of terms of $\CTlambda$. 
+\\
+
+A consequence of the
+ fact that we allow infinitely many variables for our infinite terms is that some other results proved by Anupam,
+namely Strong Normalization for all reductions and Church Rosser 
+(\cite{2021-Anupam-Das}, Theorem 51, page 35), fail. 
+However, we recover for $\CTlambda$ the same properties in the limit:
+\emph{(iv)}  existence of a limit for all infinite reductions;
+\emph{(v)}  strong normalization in the limit for all fair reductions;
+\emph{(vi)} Church-Rosser in the limit.
 
 \end{abstract}
 
