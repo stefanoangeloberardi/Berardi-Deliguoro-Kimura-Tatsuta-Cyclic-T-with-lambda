@@ -6,37 +6,51 @@
 \label{section-safe-church-rosser}
 
 %15:12 16/04/2024
-In this section prove a result for the safe part of a term, which we call 
-\quotationMarks{\emph{unicity of the safe part of the safe normal form}}. By this we mean:
-for all $t,u,v \in \LAMBDA$, if $t \reduces u$ and $t \reduces v$ and $u$, $v$ are safe-normal 
-then $u$, $v$ are equal outside the right-hand side of all $\cond$-sub-terms.
-We prove more results of a similar form.
+We already proved that all terms of $\CTlambda$ have a safe normal form, an $n$-safe normal form
+for all $n \in \N$, and a full normal form in the limit. 
+In this section prove the corresponding uniqueness results,  which are:
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
-%\\
-%\bfColor{red}{(Here we should fill this part by adapting the proof of Church Rosser for the type $\N$- Stefano)}
-%\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
-%%15:46 24/04/2024
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{enumerate}
+\item
+\emph{\bf\quotationMarks{Uniqueness of the safe normal form}}.
+For all $t,u,v \in \CTlambda$, if $t \reduces u$ and $t \reduces v$ and $u$, $v$ are safe-normal 
+then $u =_{0,\cond} v$. That is: $u$, $v$ are equal outside the right-hand side of all $\cond$-sub-terms.
+\item
+\emph{\bf\quotationMarks{Uniqueness of the $n$-safe normal form}}.
+For all $t,u,v \in \CTlambda$, if $t \reduces u$ and $t \reduces v$ and $u$, $v$ are $n$-safe-normal 
+then $u =_{n,\cond} v$. That is: $u$, $v$ are equal outside the right-hand side of all $\cond$-sub-terms
+of $\cond$-depth.
+\item
+\emph{\bf\quotationMarks{Uniqueness of the limit normal form}}.
+For all $t,u,v \in \CTlambda$, if $u$, $v$ are limit normal form of $t$ then $u = v$.
+\end{enumerate}
 
-Our first idea (wrong) is to prove a full Church-Rosser property for $\LAMBDA$: 
+The last point implies that if $t,u,v \in \CTlambda$, if $t \reduces u$ and $t \reduces v$,
+then the limit normal forms of $u,v$, being limit normal form of $t$, are the same. This means that we
+are looking for a Church-Rosser property, at least in the limit.
+
+Our first idea (which turns out to be wrong) 
+is to prove a full Church-Rosser property for $\CTlambda$, or even for $\LAMBDA$: 
 for all $t,u,v \in \LAMBDA$, if $t \reduces u$ and $t \reduces v$ then for some $w \in \LAMBDA$
 we have $u \reduces w$ and $v \reduces w$. This property is false: for some $t \in \LAMBDA$, finding a 
-common reduction of $u$, $v$ takes infinitely many steps. This even in the case $t \in \CTlambda$,
+common reduction of $u$, $v$ takes infinitely many steps. This even in the case we have $t \in \CTlambda$,
 as the next example shows.
 
-\begin{Eg}[Failure of Church-Rosser for $\CTlambda$]
+\begin{Eg}[A term $t \in \CTlambda$ for which Church-Rosser fails]
 Let $b = \cond(x^{\N},b):\N \rightarrow \N$ a normal form
 and $t = (\lambda x^{\N}.b)(r):\N \rightarrow \N$, 
-where $r = \id(3)$ is some redex. 
-
-We have 
-$$b[r/x](n) \reduces b[r/x](n-1) \reduces \ldots \reduces b[r/x](0)\reduces r \reduces 3$$ 
-for all numerals $n \in \Num$, 
-therefore $b$ and $\lambda \_.3$ define the same map, constantly equal to $3$, 
-however $b \not \reduces \lambda \_.3$.
-
+where $r = (\lambda x^{\N}.x)(3)$ is some $\beta$-redex. 
+%%%%%%%%%%%%%%%%
+% USELESS 12:23 15/09/2024
+%%%%%%%%%%%%%%%%
+%We have $b[r/x] = \cond(r,b[r/x])$. Then if we define $c = \cond(r,c)$ we have $b[r/x]=c$. We have
+%$$
+%t(n) \reduces_\beta b[r/x](n) = c(n)
+%\reduces_\cond c(n-1) \reduces_\cond \ldots \reduces_\cond c(0)
+%\reduces_\cond r \reduces_\beta 3
+%$$ 
+%for all numerals $n \in \Num$,  therefore $t$ is the map constantly equal to $3$.
+%%%%%%%%%%%%%%%%
 We have $t \in \CTlambda$. Indeed, 
 \begin{enumerate}
 \item
@@ -47,45 +61,104 @@ $t, \lambda x^{\N}.b, b, b, b, \ldots$, and the
 unique unnamed argument of $b:\N \rightarrow \N$ in the path progresses infinitely many times.
 \end{enumerate}
 
-With a $\beta$-redudction on $t$ itself we obtain $t \reduces b[r/x^\N]$.
+Now we check Church-Rosser fails for $t$.
+With a $\beta$-reduction on $t$ itself we obtain $t \reduces b[r/x^\N]$.
 With a $\beta$ reduction $r \reduces 3$ we obtain $t \reduces  (\lambda x^{\N}.b)(3)$.
 We expect $b[3/x^\N]$ as common normal form. But we have $b[r/x^\N] = \cond(r,b[r/x^\N])$,
 that is, we have replicated the redex $r$ infinitely many times in $b[r/x^\N]$. Therefore to reduce 
 $b[r/x^\N]$ to $b[3/x^\N]$ takes infinitely many $\beta$ reductions of the form $r \reduces 3$, 
 and for \emph{no finite reduction we have} $b[r/x^\N] \reduces b[3/x^\N]$. 
-$b[r/x^\N]$ is a term without normal form.
+
+$b[r/x^\N]$ is a term without normal form: all its normal form are in the limit.
 
 We proved that Church-Rosser is false for $\CTlambda$.
 \end{Eg}
 
-In order to recover Church-Rosser we use Barendregt's trick 
+As we anticipated, we will recover a weak form of Church-Rosser in the limit for $\CTlambda$.
+
+We say that $t \in \CTlambda$ reduces in the limit to $u \in \CTlambda$, and we write 
+$t \reduces_\lim u$, if $t \reduces^* u$ 
+or $t = \lim_{n \rightarrow \infty} t_n$ for some infinite sequence $t = t_0 \reduces t_1 \reduces t_2
+\reduces \ldots$. $u$ is a limit normal form of $t$ if and only if $t \reduces_\lim u$ and $u$ is normal.
+Remark that we include finite reductions as trivial cases of limit reductions.
+
+We say that a reduction $\parallelReduces$ on $\CTlambda$ 
+is a sub-limit extension of $\reduces$ if
+
+$$
+\reduces \subset \parallelReduces \subset \reduces_\lim
+$$ 
+
+\begin{lemma}[Sufficient condition fo Unicity of normal form]
+Assume there is some \emph{confluent} sub-limit extension of $\reduces$ on terms of $\CTlambda$.
+Then safe-normal forms, $n$-safe normal forms for any $n \in \N$ and limit normal form are unique.
+\end{lemma}
+
+\begin{proof}
+%08:55 16/09/2024
+\end{proof}
+
+$\parallelReduces$ selects any set of redexes of any $t \in \CTlambda$and contract all of them at the
+same time. 
+The global trace condition will be required in order to prove that $\parallelReduces$ is well-defined.
+
+
+To prove it, we use Barendregt's trick 
 (page 282, Theorem 10.1.11) 
-of labeling constructor in $\lambda$-calculus.
+of labeling constructors in $\lambda$-calculus.
 Apparently, the other Church-Rosser proof in the same book (page 61, Lemma 3.2.6)
-is not suitable for 
+is based on induction on the term and therefore it not obviously adaptable to infinite terms,
+even for infinite terms with the global trace condition.
+\\
 
 We define $\CTlambdaLabelled$ as a version of $\CTlambda$ with $3$ applications: 
 $\ap_0, \ap_1, \ap_2$. We assume the same reduction rules for all $\ap_i$, $i =0,1,2$.
 $\ap_i(\lambda x.t,u) \reduces t[u/x]$, $\ap_i(\cond(f,g)(0)) \reduces f$ and
-$\ap_i(\cond(f,g)(S(t))) \reduces \ap_0(f,t)$. We use the subscript $i\not = 0$ as a label to trace what
-happens to a subterm $\ap_i(t,u)$ during a reduction. When we reduce a redex $\ap_i(\ldots)$,
-the label $i$ on the first $\ap$-symbol of a redex disappears. 
+$\ap_i(\cond(f,g)(S(t))) \reduces \ap_0(f,t)$. 
 If $r = \ap_i(\ldots)$ we say that $r$ is an $i$-application, an $i$-redex if $r$ is a redex.
 
-Assume $X \subseteq \{0,1,2\}$ is a decidable set. 
+When $i \not = 0$, we use the subscript $i$ as a label to trace what
+happens to a subterm $\ap_i(t,u)$ during a reduction. When we reduce a redex $\ap_i(\ldots)$,
+the label $i$ on the first $\ap$-symbol of a redex disappears. If a new application is born after
+reduction,
+we assign to it the label $0$, to stress that this application is new. 
+
 We define a map  $\phi_X(t)$ reducing all $i$-redexes in $t$ for all $i \in X$. 
 $\phi_X(t)$ is the limit of a family $\phi_{n,X}(t)$ for $n \rightarrow \infty$, defined by induction on $n$.
-We set $\phi_{0,X}(t)=t$. If $n >0$ then $\phi_{n,X}(x^T)=x^T$, $\phi_{n,X}(0)=0$,
-$\phi_{n,X}(\Succ(t)) = \Succ(\phi_{n,X}(t))$. If $r = \ap_i(t,u)$ then $\phi_{n,X}(r) =
-\ap_i(\phi_{n-1,X}(t),\phi_{n-1,X}(u))$ if $i \not \in X$ or $r$ not $i$-redex.
+
+
+\begin{definition}[The maps $\phi_X$ and $\phi_{n,X}$]
+Assume $X \subseteq \{0,1,2\}$ is a decidable set. 
+We set $\phi_{0,X}(t)=t$. If $n >0$ then we define $\phi_n$ out of $\phi_{n-1}$:
+\begin{enumerate} 
+
+\item
+$\phi_{n,X}(x^T)=x^T$ and $\phi_{n,X}(0)=0$.
+
+\item
+$\phi_{n,X}(\Succ(t)) = \Succ(\phi_{n-1,X}(t))$. 
+
+\item
+Let $r = \ap_i(t,u)$. If  $i \not \in X$ or $r$ not $i$-redex then 
+$\phi_{n,X}(r) = \ap_i(\phi_{n-1,X}(t),\phi_{n-1,X}(u))$
 If $i \in X$ and $r$ is a redex whose contraction is $s$ then $\phi_{n,X}(r) = \phi_{n-1,X}(s)$.
-If $r = \cond(f,g)$ then $\phi_{n,X}(r) = \cond(\phi_{n-1,X}(f), \phi_{n-1,X}(g))$.
+
+\item
+$\phi_{n,X}(\cond(f,g)) = \cond(\phi_{n-1,X}(f), \phi_{n-1,X}(g))$.
+
+\end{enumerate}
 
 We define $\phi_X = \lim_{n \rightarrow \infty}(\phi_{n,X})$.
+\end{definition}
+
+$\phi_{n,X}$ is a well defined map $\CTlambdaLabelled \rightarrow \CTlambdaLabelled$.
+Instead, it is not self-evident that $ $\phi_X(t)$ is a total tree.
+%12:53 15/09/2024
+
 Both $\phi_{n,X}$ and $\phi_X$ are continuous.
 
 We prove that if all $i$-applications of $t$ are redexes for all $i \in X \cup Y$, and $n \ge m$
-then $\phi_{n,X}($\phi_{m,Y}(t)) = \phi_{n,X \cup Y}(t)$. Then proof is by induction on $m$.
+then $\phi_{n,X}(\phi_{m,Y}(t)) = \phi_{n,X \cup Y}(t)$. Then proof is by induction on $m$.
 
 By taking the limit we conclude that $\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$.
 This implies Church-Rosser: if all $i$-applications of $t$ are redexes for all $i \in X \cup Y$,
