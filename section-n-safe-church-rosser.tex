@@ -314,7 +314,7 @@ The relation $\nsafePReduces{n}$ satisfies the following basic properties.
   We show the case $(\beta)$ with $t=(\lambda y^B.t_1)t_2$, where $y^B\not\in\FV(u,u')$ by renaming,
   $t'=t'_1[t'_2/y^B]$, $t_1\nsafePReduces{n} t'_1$, and $t_2\nsafePReduces{n} t'_2$. 
   By the induction hytpothesis, $t_1[u/x^A] \nsafePReduces{n} t'_1[u'/x^A]$ and $t_2[u/x^A]\nsafePReduces{n} t'_2[u'/x^A]$ hold.
-  Then, by Lemma~\ref{lem:subst_ex},
+  Then, by the substitution lemma (Lemma~\ref{lem:subst}),
   $((\lambda y^B.t_1)t_2)[u/x^A] = (\lambda y^B.(t_1[u/x^A]))t_2[u/x^A] \nsafePReduces{n} t_1[u/x^A][t_2[u/x^A]/y^B] = t_1[t_2/y^B][u/x^A]$ as we wished. 
 \end{proof}
 

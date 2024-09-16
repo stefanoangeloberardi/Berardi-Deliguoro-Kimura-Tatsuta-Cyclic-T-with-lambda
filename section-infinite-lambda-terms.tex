@@ -364,6 +364,14 @@ Formally we define the substitution as follows.
   we write $\Gamma[\theta]$ for $(\theta(x_1):A_1,\ldots,\theta(x_n):A_n)$ if it is a context. 
 \end{definition}
 
+We have the following substitution lemma. 
+\begin{lemma}[Substitution lemma]\label{lem:subst}
+  $t[u/x][v/y] = t[t/y][u[v/y]/x]$ if $x\not\in\FV(v)$. 
+\end{lemma}
+\begin{proof}
+  (FILL THIS)
+\end{proof}
+
 
 \subsection{Typing Rules}
 We define typing rules for terms of $\LAMBDA$ and the subset $\WTyped$ of well-typed terms.
