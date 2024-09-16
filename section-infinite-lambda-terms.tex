@@ -283,8 +283,6 @@ which are one a permutation of the other, therefore we will need a rule to move 
 %The scope of the binder $\lambda x^T.t$ is $t$.
 %The scope of the binder $\cond(f,g)$ is $g$ ($f$ is \emph{not} in the scope of $\cond(f,g)$).
 
-\Daisuke{begin definition of substitution}\\
-
 We define the term $t[u/x]$ obtained by substituting the infinite term $u$ for the free variable $x$ in $t$ 
 avoiding variable captures.
 In order to define the capture avoiding substitution
@@ -366,7 +364,13 @@ Formally we define the substitution as follows.
   we write $\Gamma[\theta]$ for $(\theta(x_1):A_1,\ldots,\theta(x_n):A_n)$ if it is a context. 
 \end{definition}
 
-\Daisuke{end definition of substitution}
+We have the following substitution lemma. 
+\begin{lemma}[Substitution lemma]\label{lem:subst}
+  $t[u/x][v/y] = t[t/y][u[v/y]/x]$ if $x\not\in\FV(v)$. 
+\end{lemma}
+\begin{proof}
+  (FILL THIS)
+\end{proof}
 
 
 \subsection{Typing Rules}
@@ -398,7 +402,6 @@ Therefore we do not assume having a primitive rule for renaming.
 The lack of a renaming rule is a 
 \emph{difference with the circular syntax for inductive \underline{proofs}}.
 
-\Daisuke{start}
 The reason of not having implicit $\alpha$-conversion mentioned in the previous section 
 comes from this assumption. 
 For example, if we identify the $\alpha$-equivalent terms $\lambda x^A.x$ and $\lambda z^A.z$,
@@ -423,7 +426,6 @@ That is, the proof structure does not closed under identity of the $\alpha$-equi
 \end{center}
 The provability of sequents is closed under the variable renaming and the $\alpha$-equivalence.
 We will discuss this point later. 
-\Daisuke{end}
 
 %11:56 29/04/2024
 
@@ -821,14 +823,7 @@ and $i_{h+1} = 2$
 The $n$-safe level of $t$ is the set of nodes of $t$ of depth $\le n$.
 
 \item
-$t =_{n,\cond} u$, or \quotationMarks{$t$,$u$ are $n$-safe equal} means that, after possibly renaming
-the bound variables of $t$, $u$, the set of nodes of $t$ of depth $\le n$ has the same positions
-as the set of of $u$ of depth $\le n$, and for each position the same first symbol, and in the case of a binder,
-also the same bound variable.
-%$t \sim u$ if and only if there is some $v \in \LAMBDA$ such that $t \reduces v$ and $u \reduces v$.
-
-\item
-We say that $t \reduces_{n,\safe} u$, or that $t$ $n$-safely reduces to $u$,  
+We say that $t \nsafeReduces{n} u$, or that $t$ $n$-safely reduces to $u$,  
 if we reduce $t$ to $u$ by contracting a single redex in the $n$-safe level of $t$ 
 (i.e. of $\cond$-depth $\le n$).
 %We call \emph{unsafe} a reduction inside any $\cond(f,g)$.
@@ -889,4 +884,3 @@ The $n$-safe normal form of a term is unique up $n$-safe equality: any two $n$-s
 We will also prove that terms have a limit normal form, 
 obtained by taking the limit of the $n$-safe normal forms of the term, and that this limit normal form is unique.
 
-\newpage

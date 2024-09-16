@@ -288,6 +288,7 @@
 %22/03/2024
 \newcommand{\ap}                { {\tt ap} }
 \newcommand{\cond}            { {\tt cond} }
+\newcommand{\mapsfrom} {\mathbin{\leftarrow\!\!\rule[0.3pt]{0.5pt}{4pt}\,}}
 \newcommand{\reduces}       { \mathbin{\mapsto} }
 \newcommand{\CTlambda}    { { {\tt CT} \mbox{-} \lambda} }
 \newcommand{\CT}                { {\tt CT} }
@@ -314,7 +315,16 @@
 \newcommand{\GlobalTraceCondition}  { {\tt GlTrCon} }
 \newcommand{\Sum}              { {\tt Sum} }
 \newcommand{\safeReduces} {\mathbin{\reduces_\safe}}
+\newcommand{\nsafeReduces}[1] {\mathbin{\reduces_{#1,\safe}}}
+\newcommand{\nsafeReducesL}[1] {\mathbin{\mapsfrom_{#1,\safe}}}
+\newcommand{\nsafeReducesAstL}[1] {\mathbin{\mapsfrom_{#1,\safe}^*}}
 \newcommand{\safeReducesAst} {\mathbin{\reduces_\safe^*}}
+\newcommand{\nsafeReducesAst}[1] {\mathbin{\reduces_{#1,\safe}^*}}
+\newcommand{\nsafePReduces}[1] {\mathbin{\Rightarrow_{#1}}}
+\newcommand{\nsafePReducesL}[1] {\mathbin{\Leftarrow_{#1}}}
+\newcommand{\nsafePReducesMany}[2] {\mathbin{\Rightarrow_{#1}^{#2}}}
+\newcommand{\nsafePReducesManyL}[2] {\mathbin{\Leftarrow_{#1}^{#2}}}
+\newcommand{\nequal}[1] {\mathbin{\approx_{#1}}}
 \newcommand{\var}                { {\tt var} }
 \newcommand{\Graph}            { {\tt Graph} }
 \newcommand{\bfColor} [2]     {{\bf \color{#1}{#2}}}
@@ -325,6 +335,9 @@
 \definecolor{oldgold}{rgb}{0.81, 0.71, 0.23}
 
 \newcommand{\SubTerm}               {{\tt SubT}}
+\newcommand{\LSubTerm}[2]           {{\tt Sub_{#1}(#2)}}
+\newcommand{\Lctx}[1]           {{\tt C}_{#1}}
+\newcommand{\Lv}[2]           {||#2||_{#1}}
 \newcommand{\Tree}                      {{\tt Tree}}
 \newcommand{\N}                           {{N}}
 \newcommand{\Num}                      {{\tt Num}}
@@ -377,7 +390,7 @@
 \newcommand{\AckA}{{\tt ack1}}
 \newcommand{\AckB}{{\tt ack2}}
 \newcommand{\ACK}{{\redM Ack}}
-\newcommand{\Cond}[2]{\text{cond}(#1,#2)}
+\newcommand{\Cond}[2]{{\tt cond}(#1,#2)}
 \newcommand{\Suc}[1]{{\tt S}(#1)}
 %\newcommand{\N}{N}
 \newcommand{\goldN}{{\bfColor{oldgold}{N}}}
