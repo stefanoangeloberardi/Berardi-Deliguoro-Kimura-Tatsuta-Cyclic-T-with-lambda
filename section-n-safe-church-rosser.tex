@@ -190,7 +190,7 @@ Note that $\nequal{n}$ is an equivalence relation. Moreover it is closed under s
   The case of $\Lctx{n}=x^A$ is shown by $x^A[u_1/x^A] = u_1 \nequal{n} u_2 = x^A[u_2/x^A]$.
   The cases of $\Lctx{n}=0$ and $\Lctx{n}=z^C \neq x^A$
   are shown by $t_1[u_1/x^A] = t_1 \nequal{n} t_2 = t_2[u_2/x^A]$.
-  The case of $\Lctx{n}=\lambda z^C.\Lctx{n}'$ with $z^C\not\in\FV(\vecu_1,u_2)$ by renaming
+  The case of $\Lctx{n}=\lambda z^C.\Lctx{n}'$ with $z^C\not\in\FV(\vec{u_1,u_2})$ by renaming
   is shown by
   $(\lambda z^C.\Lctx{n}'[\vec{v_1}])[u_1/x^A] = \lambda z^C.(\Lctx{n}'[\vec{v_1}][u_1/x^A]) \nequal{n} \lambda z^C.(\Lctx{n}'[\vec{v_2}][u_2/x^A]) = (\lambda z^C.\Lctx{n}'[\vec{v_2}])[u_2/x^A]$ by the induction hypothesis.
   The cases of $\Lctx{n}=\Lctx{n}'\Lctx{n}''$ and $\Lctx{n}=\Suc{\Lctx{n}'}$
@@ -299,7 +299,7 @@ The relation $\nsafePReduces{n}$ satisfies the following basic properties.
   The cases $t=y^B\neq x^A$ and $t=0$ are shown by $(id)$. 
   The case $t=y^B\neq x^A$ is shown by $(id)$.   
   The case $t=\lambda y^B.t'$ with $y^B\not\in\FV(u,u')$ by renaming is shown by
-  $(\lambda y^B.t')[u/x^A] = \lambda y^B.(t'[u/x^A]) \nsafePRuduces{n} \lambda y^B.(t'[u'/x^A]) = (\lambda y^B.t')[u'/x^A]$ by the induction hypothesis and $(\lambda)$.
+  $(\lambda y^B.t')[u/x^A] = \lambda y^B.(t'[u/x^A]) \nsafePReduces{n} \lambda y^B.(t'[u'/x^A]) = (\lambda y^B.t')[u'/x^A]$ by the induction hypothesis and $(\lambda)$.
   The cases $t=t_1t_2$ and $t=\Suc{t'}$ are also shown by the induction hypothesis.
   We show the case $t=\Cond{a}{f}$ and $n>0$. 
   Since $\Lv{n-1}{a}, \Lv{n}{f} < \Lv{n}{\Cond{a}{f}}$, 

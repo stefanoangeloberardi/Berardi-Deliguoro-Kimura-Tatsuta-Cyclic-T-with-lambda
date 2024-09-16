@@ -77,29 +77,86 @@ We proved that Church-Rosser is false for $\CTlambda$.
 As we anticipated, we will recover a weak form of Church-Rosser in the limit for $\CTlambda$.
 
 We say that $t \in \CTlambda$ reduces in the limit to $u \in \CTlambda$, and we write 
-$t \reduces_\lim u$, if $t \reduces^* u$ 
+$t \reduces_{\lim} u$, if $t \reduces^* u$ 
 or $t = \lim_{n \rightarrow \infty} t_n$ for some infinite sequence $t = t_0 \reduces t_1 \reduces t_2
-\reduces \ldots$. $u$ is a limit normal form of $t$ if and only if $t \reduces_\lim u$ and $u$ is normal.
+\reduces \ldots$. $u$ is a limit normal form of $t$ if and only if $t \reduces_{\lim} u$ and $u$ is normal.
 Remark that we include finite reductions as trivial cases of limit reductions.
 
 We say that a reduction $\parallelReduces$ on $\CTlambda$ 
 is a sub-limit extension of $\reduces$ if
 
 $$
-\reduces \subset \parallelReduces \subset \reduces_\lim
+\reduces \subseteq \parallelReduces \subseteq \reduces_{\lim}
 $$ 
 
 \begin{lemma}[Sufficient condition fo Unicity of normal form]
 Assume there is some \emph{confluent} sub-limit extension of $\reduces$ on terms of $\CTlambda$.
-Then safe-normal forms, $n$-safe normal forms for any $n \in \N$ and limit normal form are unique.
+Then 
+\begin{enumerate}
+\item
+safe-normal forms and $n$-safe normal forms for any $n \in \N$ are unique up to $=_{n,\cond}$.
+\item
+Limit normal form are unique.
+\end{enumerate}
 \end{lemma}
 
 \begin{proof}
 %08:55 16/09/2024
+Let $\parallelReduces^*$ be the reflexive and transitive closure of $\parallelReduces$:
+from $\parallelReduces \subseteq \reduces_{\lim}$ we deduce that
+$\parallelReduces^* \subseteq \reduces_{\lim}^*$.
+From the assumption that $\parallelReduces$ is confluent we deduce that
+$\parallelReduces^*$ is confluent. 
+
+Now we prove:
+
+\begin{enumerate}
+
+\item
+\emph{Unicity of $n$-safe normal forms up to $=_{n,\cond}$.}
+Suppose  $t \reduces^* u,v$ and $u$, $v$ are $n$-safe normal, 
+in order to prove that $u=_{n,\cond}  v$.
+Then $t \parallelReduces^* u,v$, and from confluence of $\parallelReduces^*$
+we deduce that for some $w \in \CTlambda$ we have $u,v \parallelReduces^* w$. 
+From $\parallelReduces^* \subseteq \reduces_{\lim}^*$
+we deduce that $u,v \reduces_lim^* w$. From $u,v$ $n$-safe normal we deduce that
+all reductions on $u$, $v$ take place in the rigth-hand-side of some depth-$n$ $\cond$.
+Thus, for all $z \in \CTlambda$ we have
+ $u \reduces z$ implies $u=_{n,\cond} z$. 
+\begin{enumerate} 
+\item
+By induction on the reduction
+length we deduce $u \reduces^* z$ implies $u=_{n,\cond} z$. 
+\item
+By taking the limit
+we obtain that $u \reduces_{\lim} z$ implies $u=_{n,\cond} z$. 
+\item
+By induction
+on the reduction length again we get  that $u \reduces_{\lim}^* z$ implies $u=_{n,\cond} z$.
+\end{enumerate}
+By switching the role of $u$ and $v$ we deduce that $v \reduces_{\lim}^* z$ implies $v =_{n,\cond} z$.
+Eventually, from $u,v \reduces_lim^* w$ we conclude that $u=_{n,\cond} w =_{n,\cond} v$,
+as we wished to show.
+
+\item
+\emph{Unicity of limit normal forms.}
+Suppose  $t \reduces_lim u,v$ and $u$, $v$ are normal, in order to prove that $u=v$.
+Let $n \in \N$.
+From the finiteness of $n$-safe reduction we deduce that $t \reduces^* u' \reduces_lim u$
+for some $u' \in \CTlambda$ such that $u' =_{n,\cond} u$. 
+From $n$ normal we deduce that $u'$ is \emph{$n$-safe normal}.
+By switching the role of $u$ and $v$ we deduce that 
+$t \reduces^* v' \reduces_lim v$ for some \emph{$n$-safe normal} $v' \in \CTlambda$ 
+such that $v'=_{n,\cond} v$.
+
+From unicity of $n$-safe normal form we deduce that $u'=_{n,\cond} v'$.
+From $u' =_{n,\cond} u$ and $v' =_{n,\cond} v$ we obtain that $u'=_{n,\cond} v'$, for all $n \in \N$.
+We conclude that $u=v$, as we wished to show.
+\end{enumerate}
 \end{proof}
 
-$\parallelReduces$ selects any set of redexes of any $t \in \CTlambda$and contract all of them at the
-same time. 
+$\parallelReduces$ selects any set of redexes of any $t \in \CTlambda$ 
+and contracts all of them at the same time. 
 The global trace condition will be required in order to prove that $\parallelReduces$ is well-defined.
 
 
@@ -152,7 +209,7 @@ We define $\phi_X = \lim_{n \rightarrow \infty}(\phi_{n,X})$.
 \end{definition}
 
 $\phi_{n,X}$ is a well defined map $\CTlambdaLabelled \rightarrow \CTlambdaLabelled$.
-Instead, it is not self-evident that $ $\phi_X(t)$ is a total tree.
+Instead, it is not self-evident that $\phi_X(t)$ is a total tree.
 %12:53 15/09/2024
 
 Both $\phi_{n,X}$ and $\phi_X$ are continuous.
