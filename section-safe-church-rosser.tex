@@ -37,6 +37,7 @@ common reduction of $u$, $v$ takes infinitely many steps. This even in the case 
 as the next example shows.
 
 \begin{Eg}[A term $t \in \CTlambda$ for which Church-Rosser fails]
+\label{example-church-rosser-fails}
 Let $b = \cond(x^{\N},b):\N \rightarrow \N$ a normal form
 and $t = (\lambda x^{\N}.b)(r):\N \rightarrow \N$, 
 where $r = (\lambda x^{\N}.x)(3)$ is some $\beta$-redex. 
@@ -60,8 +61,18 @@ We have $t \in \GTC$, because the unique infinite path of $t$ is
 $t, \lambda x^{\N}.b, b, b, b, \ldots$, and the
 unique unnamed argument of $b:\N \rightarrow \N$ in the path progresses infinitely many times.
 \end{enumerate}
+\end{Eg}
 
-Now we check Church-Rosser fails for $t$.
+Now we check that:
+
+
+\begin{lemma}
+Church-Rosser fails for $\CTlambda$
+\end{lemma}
+
+
+\begin{proof}
+Let $t$ be the term defined above in \ref{example-church-rosser-fails}.
 With a $\beta$-reduction on $t$ itself we obtain $t \reduces b[r/x^\N]$.
 With a $\beta$ reduction $r \reduces 3$ we obtain $t \reduces  (\lambda x^{\N}.b)(3)$.
 We expect $b[3/x^\N]$ as common normal form. But we have $b[r/x^\N] = \cond(r,b[r/x^\N])$,
@@ -72,7 +83,7 @@ and for \emph{no finite reduction we have} $b[r/x^\N] \reduces b[3/x^\N]$.
 $b[r/x^\N]$ is a term without normal form: all its normal form are in the limit.
 
 We proved that Church-Rosser is false for $\CTlambda$.
-\end{Eg}
+\end{proof}
 
 As we anticipated, we will recover a weak form of Church-Rosser in the limit for $\CTlambda$.
 
@@ -82,14 +93,16 @@ or $t = \lim_{n \rightarrow \infty} t_n$ for some infinite sequence $t = t_0 \re
 \reduces \ldots$. $u$ is a limit normal form of $t$ if and only if $t \reduces_{\lim} u$ and $u$ is normal.
 Remark that we include finite reductions as trivial cases of limit reductions.
 
-We say that a reduction $\parallelReduces$ on $\CTlambda$ 
-is a sub-limit extension of $\reduces$ if
+We say that a a binary relation $\parallelReduces$ on $\CTlambda$ 
+is a sub-limit extension of $\reduces$ if it is between $\reduces$ and $\reduces_{\lim}$:
 
 $$
 \reduces \subseteq \parallelReduces \subseteq \reduces_{\lim}
 $$ 
 
-\begin{lemma}[Sufficient condition fo Unicity of normal form]
+We have the following
+ 
+\begin{lemma}[Sufficient condition for Unicity of normal form]
 Assume there is some \emph{confluent} sub-limit extension $\parallelReduces$
 of $\reduces$ on terms of $\CTlambda$.
 Then: 
@@ -160,15 +173,13 @@ We conclude that $u=v$, as we wished to show.
 Now we define some sub-limit extension $\parallelReduces$ of $\reduces$.
 $\parallelReduces$ selects any set of redexes of any $t \in \CTlambda$ 
 and contracts all of them at the same time. 
-The global trace condition will be required in order to prove that $\parallelReduces$ is well-defined.
-
-
+We will need the global trace condition in order to prove that $\parallelReduces$ is well-defined.
 
 How to define  $\parallelReduces$ ?
 There is a Church-Rosser proof in Barendregt's book (page 61, Lemma 3.2.6),
-in which a reduction similar to $\parallelReduces$ is defined on induction on the term. 
+in which a parallel reduction is defined on induction on the term. 
 However, it not obvious how to adapt this proof to infinite terms,
-even for infinite terms with the global trace condition.
+even for infinite terms with the global trace condition, because we lack induction.
 
 Instead, we will define $\parallelReduces$ following the second
 Church-Rosser proof in the same book (page 282, Theorem 10.1.11).
@@ -181,9 +192,12 @@ redexes we do not contract.
 
 We first define a $\lambda$-calculus $\CTlambdaLabelled$ as a version of $\CTlambda$ 
 with applications labeled by some $i \in \N$:
-$\ap_0, \ap_1, \ap_2, \ldots$. We assume the same reduction rules for all $\ap_i$, $i \in \N$.
-$\ap_i(\lambda x.t,u) \reduces t[u/x]$, $\ap_i(\cond(f,g)(0)) \reduces f$ and
-$\ap_i(\cond(f,g)(S(t))) \reduces \ap_0(f,t)$. 
+$\ap_0, \ap_1, \ap_2, \ldots$. We assume the same reduction rules for all $\ap_i$, $i \in \N$:
+$$
+\ap_i(\lambda x.t,u) \reduces t[u/x], \ \ \ 
+\ap_i(\cond(f,g)(0)) \reduces f, \ \ \ 
+\ap_i(\cond(f,g)(S(t))) \reduces \ap_0(f,t)
+$$
 If $r = \ap_i(\ldots)$ we say that $r$ is an $i$-application, an $i$-redex if $r$ is a redex.
 When $i=0$ we identify $\ap_0$ with $\ap$: in this way $\CTlambda$  is a proper
 subset of $\CTlambdaLabelled$.
@@ -195,8 +209,8 @@ if and only if $t \in \CTlambda$.
 When $i \not = 0$, we use the subscript $i$ as a label to trace what
 happens to a subterm $\ap_i(t,u)$ during a reduction. When we reduce a redex $\ap_i(\ldots)$,
 the label $i$ on the first $\ap$-symbol of a redex disappears. 
-If a new application is born after reduction, we assigned to it the label $0$: new applications have no
-meaningful labeling. 
+In the reduction $\ap_i(\cond(f,g)(S(t))) \reduces \ap_0(f,t)$ there is new application born after reduction. 
+We assign to it the label $0$: this new application has a trivial labelling.
 
 %12:41 16/09/2024
 
@@ -250,8 +264,11 @@ In order to prove it, we need first the notion of $X$-chain and $X$-length for a
 An $X$-chain from $t$ is any finite sequence $\{t_a : a \le k\}$ such that: 
 $t=t_0$, for all $a<k$ we have $t_a$ some $i$-redex for some $ i \in X$, and $t_{a+1}$ is the contractum
 of $t_a$. The longest $X$-path from $t$ is unique, because each redex has a unique contractum. 
-The longest $X$-path from $t$ is a path of safe reduction and therefore it is finite. We call its length $k$ the
-$X$-length of $t$.
+The longest $X$-path $\{t_a : a \le k\}$ 
+from $t$ is a path of safe reduction and therefore it is finite. We call its length $k$ the
+$X$-length of $t$, and we write $\length_X(t) = k$. We call $t_k$ the $X$-form of $t$ and we
+write $\form_X(t) = t_k$: $t_k$ is no $i$-redex, for any $i \in X$.
+
 
 \begin{lemma}[$\phi_X(t)$ is a total tree]
 For all $t \in \CTlambdaLabelled$, $\phi_X(t)$ is a total tree.
@@ -264,7 +281,8 @@ with $t_k$ no $i$-redex, for any $i \in X$.
 By definition of $\phi_{n,X}$ we deduce that for all $n \ge k$ we have $\phi_{n,X}(t)
 = phi_{n-1,X}(t_1) = phi_{n-2,X}(t_2) = \ldots = phi_{n-k,X}(t_k)$. 
 We assumed that $t_k$ is no $i$-redex, for any $i \in X$.
-We deduce that for all $n \ge k+1$, if we abbreviate $\psi \equiv \phi_{n-(k+1),X}$, then
+By definition of $phi_{n-k,X}(t_k)$, 
+we deduce that for all $n \ge k+1$, if we abbreviate $\psi \equiv \phi_{n-(k+1),X}$, then
 we have that $\phi_{n-k,X}(t_k)$ is one among
 $$ 
 x, \ \ \  
@@ -288,43 +306,191 @@ and therefore that $\phi_X(t) = \lim_{n \rightarrow \infty}(\phi_{n,X})$ exists.
 \end{proof}
 
 
+We define an equality $t =_n u$, which means: the subterms of $t,u$ of distance $<n$ from the root are the
+same. From $t =_n u$ we will define a topology on terms of $\CTlambda$.
+
+\begin{definition}[$n$-equality on Terms of $\CTlambda$]
+Let $a,a',u,u',v,v',z,z',f,f',g,g' \in \CTlambda$. We set
+$a=_0 a'$ for all $a,a' \in \CTlambda$. If $n>0$ and
+$$
+u=_{n-1} u' \ \ \ v=_{n-1} v' \ \ \ w=_{n-1} w' \ \ \ z=_{n-1} z' \ \ \ f=_{n-1} f' \ \ \ g=_{n-1} g'
+$$
+then we set:
+$$
+x=_{n} x, \ \ \  
+0=_{n} 0, \ \ \   
+\Succ(u)=_{n} \Succ(u'), \ \ \ 
+\ap_i(u,v) =_{n} \ap_i(u',v') \ \ \  
+\lambda x.z =_{n} \lambda x.z', \ \ \ 
+\cond(f,g) =_{n} \cond(f',g')
+$$
+\end{definition}
+
+
 Both $\phi_{n,X}$ and $\phi_X$ are continuous maps, w.r.t. the topology on $\CTlambdaLabelled$
 whose basic opens for $t \in \CTlambdaLabelled$ are all sets 
-$O_{n,t} = \{u \in \CTlambdaLabelled | u =_{n,\cond} t\}$.
+$O_{n,t} = \{u \in \CTlambdaLabelled | u =_{n} t\}$ (equality for all levels $<n$).
+Usually,  the basic open $O_{n,t}$ is much smaller than the $n$-safe-level of $t$. 
 
 %14:26 15/09/2024
+
 
 We prove that if all $i$-applications of $t$ are redexes for all $i \in X \cup Y$
 then to apply $\phi_X$ and $\phi_Y$ consecutively, that is, to remove first all redexes with label in $X$
 then all redexes in $Y$, amounts to apply $\phi_{X \cup Y}$,  that is, to remove 
 all redexes with label in $X \cup Y$.
 
-The proof is by induction on $m$.
-
-\begin{lemma}
-Assume that $t \in \CTlambdaLabelled$ and $n, m \in \N$. 
+The proof requires the notion of branches. If $t \in \in \CTlambdaLabelled$ then $\universe{t}$
+is the set of lists over $\{1,2\}$ which are addresses of subterms of $t$. The head of a term
+$\lambda x^A.t$ are the first two symbols of the term, namely $\lambda, x^A$ (with apices). 
+The head of any other term:
+$x^T,0,\Succ(u),\ap_i(v,w),\cond(f,g)$ is its first symbol (with indexes and apices), respectively: 
+$x^T,0,\Succ,\ap_i,\cond$. For any list $l \in \{1,2\}^*$ of elements $1,2$, 
+if $l \in \universe{t}$ is the address of some subterm $u$ of $t$ then we set $t_l = u$ 
+and $\head(l,t) = $ the head of $u$,
+otherwise we set $t_l = \bot$ and  $\head(l,t) = \bot$.
+For any $t,u \in \CTlambdaLabelled$ we have a way of proving $t = u$ by induction on $n \in \N$.
+We define the following property $\Eq(t,u,n)$: for all $l \in \{1,2\}^*$
 \begin{enumerate}
 \item
-If $n \ge m$ then $\phi_{n,X}(\phi_{m,Y}(t)) = \phi_{n,X \cup Y}(t)$. 
+ if  $\length(l)<n$ then $\head(l,t) = \head(l,u)$ 
 \item
-$\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$. 
+ if $\length(l) \le n$ then $(l \in \universe{t}) \leftrightarrow (l \in \universe{u})$.
+\end{enumerate}
+$t = u$ is equivalent to $\forall n \in \N.\Eq(t,u,n)$.
+We trivially have $\Eq(t,u,0)$, in order to prove $t=u$ we have to prove that for all $n \in \N$ we have
+$\Eq(t,u,n) \rightarrow \Eq(t,u,n+1)$.
+
+
+\begin{lemma}
+Assume that $t \in \CTlambdaLabelled$. 
+\begin{enumerate}
+
+\item
+If $t$ is no $i$-redex for any $i \in X$ and $t$ is
+$$ 
+x, \ \ \  
+0, \ \ \  
+\Succ(u),  \ \ \  
+\ap_i(v,w), \ \ \  
+\lambda x.z, \ \ \  
+\cond(f,g)
+$$
+then $\phi_X(t)$ is, respectively:
+$$ 
+x, \ \ \  
+0, \ \ \  
+\Succ(\phi_X(u)),  \ \ \  
+\ap_i(\phi_X(v),\phi_X(w)), \ \ \  
+\lambda x.\phi_X(z), \ \ \  
+\cond(\phi_X(f),\phi_X(g))
+$$
+
+\item
+If $t'$ is the $X$-form of $t$ then $\phi_X(t) = \phi_X(t')$.
+
+\item
+If all $X$-applications in $t,u$ are redexes, then all $X$-applications in $t[u/x]$ are redexes.
+
+\item
+$\phi_{X}(\phi_{X}(t)) = \phi_{X}(t)$.
+
+\item
+$\phi_{X}(t)[\phi_{X}(u)/x]= \phi_{X}(t[u/x])$.
+
+\item
+$\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$.
+
 \end{enumerate}
 \end{lemma}
 
+
 \begin{proof}
 \begin{enumerate}
+
+Assume that $n \in \N$ that $t$ is no $i$-redex for any $i \in X$ and $t$ is
+$$ 
+x, \ \ \  
+0, \ \ \  
+\Succ(u),  \ \ \  
+\ap_i(v,w), \ \ \  
+\lambda x.z, \ \ \  
+\cond(f,g)
+$$
+Then $\phi_{n+1,X}(t)$ is, respectively:
+$$ 
+x, \ \ \  
+0, \ \ \  
+\Succ(\phi_{n,X}(u)),  \ \ \  
+\ap_i(\phi_{n,X}(v),\phi_{n,X}(w)), \ \ \  
+\lambda x.\phi_{n,X}(z), \ \ \  
+\cond(\phi_{n,X}(f),\phi_{n,X}(g))
+$$
+We deduce that $\phi_X(t)$, being the limit of $\phi_{n+1,X}(t)$, is equal to
+$$ 
+x, \ \ \  
+0, \ \ \  
+\Succ(\phi_X(u)),  \ \ \  
+\ap_i(\phi_X(v),\phi_X(w)), \ \ \  
+\lambda x.\phi_X(z), \ \ \  
+\cond(\phi_X(f),\phi_X(g))
+$$
+ 
+%11:25 17/09/2024
+
 \item
-We assume $n \ge m$ in order to prove that $\phi_{n,X}(\phi_{m,Y}(t)) = \phi_{n,X \cup Y}(t)$. 
-We argue by induction on $m$.
+Assume that $t=t_0 \rightarrow t_1 \rightarrow \ldots \rightarrow t_k = t'$ 
+is  $X$-reduction path from $t$, with $t'$ the $X$-form of $t$. 
+We have to prove that $\phi_X(t) = \phi_X(t')$.
+For all $n \in \N$ we have $\phi_{n+k,X}(t) = \phi_{n}X(t')$.
+By taking the limit for $n \rightarrow \infty$ we conclude that $\phi_X(t) = \phi_X(t')$,
+as wished.
+
+\item
+Assume that all $X$-applications in $t,u$ are redexes in order to prove that 
+all $X$-applications in $t[u/x]$ are redexes.
+If $l \in \{1,2\}^*$ is the address of a subterm of $t[u/x]$ we have two possibilities:
+
+\begin{enumerate}
+\item
+either $l = l_1 \conc l_2$ with $ l_1 \in \universe{t}$, $ l_2 \in \universe{u}$ and $t[u/x]_l = u_{l_2}$,
+\item
+or $l = l_1 \in \universe{t}$ and $t[u/x]_l = t_{l_1}[u/x]$.
+\end{enumerate}
+Assume $t[u/x]_l$ is an $i$-application in order to prove that $t[u/x]_l$ is a redex.
+
+\begin{enumerate}
+\item
+In the first case, $u_{l_2}$ is a redex and therefore $t[u/x]_l = u_{l_2}$ is a redex.
+\item
+In the second case, either $t_{l_1}=x$ or not. 
+If   $t_{l_1}=x$ then $t[u/x]_l = u_{\nil}$ and we are reduced to the previous case.
+Suppose  $t_{l_1}\not =x$. Then the head of $t_{l_1}$ and $t[u/x]_l$ are the same.
+Since $t_{l_1}$ is an $X$-application, then by assumption $t_{l_1}$ is redex, and we
+conclude that $t_{l_1}[u/x] = t[u/x]_l $ is a redex.
+We conclude that $t[u/x]_l = t_{l_1}[u/x]$ is a redex.
+\end{enumerate}
+
+%12:59 17/09/2024
+
+\item
+$\phi_{X}(\phi_{X}(t)) = \phi_{X}(t)$.
+\ldots
+
+\item
+$\phi_{X}(t)[\phi_{X}(u)/x]= \phi_{X}(t[u/x])$.
 \ldots
 
 \item
 $\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$.
+\ldots
+
 \end{enumerate}
 \end{proof}
 
+%09:34 17/09/2024
 
-By taking the limit we conclude that $\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$.
+%By taking the limit we conclude that $\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$.
 This implies Church-Rosser: if all $i$-applications of $t$ are redexes for all $i \in X \cup Y$,
 $\phi_{X}(\phi_{Y}(t)) = \phi_{Y}(\phi_{X}(t))$, for all $t \in \CTlambdaLabelled$.
 
