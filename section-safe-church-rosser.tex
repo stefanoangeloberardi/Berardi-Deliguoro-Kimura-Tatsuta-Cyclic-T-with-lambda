@@ -340,26 +340,44 @@ then to apply $\phi_X$ and $\phi_Y$ consecutively, that is, to remove first all 
 then all redexes in $Y$, amounts to apply $\phi_{X \cup Y}$,  that is, to remove 
 all redexes with label in $X \cup Y$.
 
-The proof requires the notion of branches. If $t \in \in \CTlambdaLabelled$ then $\universe{t}$
-is the set of lists over $\{1,2\}$ which are addresses of subterms of $t$. The head of a term
-$\lambda x^A.t$ are the first two symbols of the term, namely $\lambda, x^A$ (with apices). 
+The proof requires the notion of head of a term. 
+% If $t \in \in \CTlambdaLabelled$ then $\universe{t}$
+% is the set of lists over $\{1,2\}$ which are addresses of subterms of $t$. 
+The head $\head(t)$  of a term
+$\lambda x^A.t$ are the first two symbols of the term, namely $\head(t) = \lambda, x^A$ (with apices). 
 The head of any other term:
-$x^T,0,\Succ(u),\ap_i(v,w),\cond(f,g)$ is its first symbol (with indexes and apices), respectively: 
-$x^T,0,\Succ,\ap_i,\cond$. For any list $l \in \{1,2\}^*$ of elements $1,2$, 
-if $l \in \universe{t}$ is the address of some subterm $u$ of $t$ then we set $t_l = u$ 
-and $\head(l,t) = $ the head of $u$,
-otherwise we set $t_l = \bot$ and  $\head(l,t) = \bot$.
-For any $t,u \in \CTlambdaLabelled$ we have a way of proving $t = u$ by induction on $n \in \N$.
-We define the following property $\Eq(t,u,n)$: for all $l \in \{1,2\}^*$
+$t = x^T,0,\Succ(u),\ap_i(v,w),\cond(f,g)$ is its first symbol (with its indexes and apices).
+We have, respectively: 
+$\head(t) = x^T, 0, \Succ, \ap_i, \cond$. 
+
+%%%%%%%%%%%
+ For any list $l \in \{1,2\}^*$ of elements $1,2$, 
+ if $l \in \universe{t}$ is the address of some subterm $u$ of $t$ then we set $t_l = u$ 
+% and $\head(l,t) = $ the head of $u$,
+ otherwise we set $t_l = \bot$. 
+% and  $\head(l,t) = \bot$.
+%%%%%%%%%%%
+
+We will use a a sufficient condition for having: $\alpha(t) = \beta(t)$ for all $t \in \CTlambdaLabelled$.
+
+\begin{lemma}[Equalities on $\CTlambdaLabelled$]
+\label{lemma-sufficient-condition}
+Assume $\alpha, \beta: \CTlambdaLabelled \rightarrow \CTlambdaLabelled$. 
+Suppose that:
+
 \begin{enumerate}
 \item
- if  $\length(l)<n$ then $\head(l,t) = \head(l,u)$ 
+$\head(\alpha(t)) = \head(\beta(t))$ 
 \item
- if $\length(l) \le n$ then $(l \in \universe{t}) \leftrightarrow (l \in \universe{u})$.
+Assume that $\alpha(t)$ is a tree of arity $a \in \{0,1,2\}$.
+Then either $\alpha(t) = \beta(t)$, or 
+for all $i \in [1,a]$ there is some $u \in \CTlambdaLabelled$ such that the $i$-th sub-terms of 
+ $\alpha(t)$ and of $\beta(t)$ are, respectively, $\alpha(u)$ and $\beta(u)$.
 \end{enumerate}
-$t = u$ is equivalent to $\forall n \in \N.\Eq(t,u,n)$.
-We trivially have $\Eq(t,u,0)$, in order to prove $t=u$ we have to prove that for all $n \in \N$ we have
-$\Eq(t,u,n) \rightarrow \Eq(t,u,n+1)$.
+
+Then $\alpha(t) = \beta(t)$ for all $t \in \CTlambdaLabelled$.
+\end{lemma}
+
 
 
 \begin{lemma}
@@ -393,13 +411,14 @@ If $t'$ is the $X$-form of $t$ then $\phi_X(t) = \phi_X(t')$.
 If all $X$-applications in $t,u$ are redexes, then all $X$-applications in $t[u/x]$ are redexes.
 
 \item
-$\phi_{X}(\phi_{X}(t)) = \phi_{X}(t)$.
+If all $X$-applications in $t$ are redexes, then $\phi_{X}(\phi_{X}(t)) = \phi_{X}(t)$.
 
 \item
-$\phi_{X}(t)[\phi_{X}(u)/x]= \phi_{X}(t[u/x])$.
+If all $X$-applications in $t$ are redexes, then $\phi_{X}(t)[\phi_{X}(u)/x]= \phi_{X}(t[u/x])$.
 
 \item
-$\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$.
+If $0 \not \in X \cup Y$ and all $X \cup Y$-applications in $t$ are redexes, 
+then $\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$.
 
 \end{enumerate}
 \end{lemma}
@@ -442,9 +461,9 @@ $$
 Assume that $t=t_0 \rightarrow t_1 \rightarrow \ldots \rightarrow t_k = t'$ 
 is  $X$-reduction path from $t$, with $t'$ the $X$-form of $t$. 
 We have to prove that $\phi_X(t) = \phi_X(t')$.
-For all $n \in \N$ we have $\phi_{n+k,X}(t) = \phi_{n}X(t')$.
-By taking the limit for $n \rightarrow \infty$ we conclude that $\phi_X(t) = \phi_X(t')$,
-as wished.
+For all $n \in \N$ we have $\phi_{n+k,X} (t) = \phi_{n,X} (t')$.
+By taking the limit for $n \rightarrow \infty$ 
+we conclude that $\phi_X(t) = \phi_X(t')$, as wished.
 
 \item
 Assume that all $X$-applications in $t,u$ are redexes in order to prove that 
@@ -474,23 +493,250 @@ We conclude that $t[u/x]_l = t_{l_1}[u/x]$ is a redex.
 %12:59 17/09/2024
 
 \item
-$\phi_{X}(\phi_{X}(t)) = \phi_{X}(t)$.
-\ldots
+Assume that  all $X$-applications in $t$ are redexes, 
+in order to prove that $\phi_{X}(\phi_{X}(t)) = \phi_{X}(t)$ for all $t \in \CTlambdaLabelled$.
+
+By Lemma \ref{lemma-sufficient-condition}, we have to prove that
+$\head(\phi_{X}(\phi_{X}(t))) = \head(\phi_{X}(t))$ and that any two immediate subterms
+in the same position are of the form $\phi_{X}(\phi_{X}(t'))$ and $\phi_{X}(t')$ for some $t'$.
+
+\begin{enumerate}
+\item
+We first assume that $t$ is no $X$-redex. Then $t$ is
+
+$$ 
+x, \ \ \  
+0, \ \ \  
+\Succ(u),  \ \ \  
+\ap_i(v,w), \ \ \  
+\lambda x.z, \ \ \  
+\cond(f,g)
+$$
+
+for some $u,v,w,z,f,g \in \CTlambdaLabelled$ whose $X$-applications are all redexes.
+In the case $t = \ap_i(v,w)$, from $t$ not $X$-redex we deduce that $t$ is no
+$X$-application, that is, that $i \not \in X$.
+Then $\phi_X(t)$ is, respectively: 
+
+$$ 
+x, \ \ \  
+0, \ \ \  
+\Succ(\phi_X(u)),  \ \ \  
+\ap_i(\phi_X(v),\phi_X(w)), \ \ \  
+\lambda x.\phi_X(z), \ \ \  
+\cond(\phi_X(f),\phi_X(g))
+$$
+
+From $i \not \in X$ we deduce that $\phi_X(\phi_X(t))$ is, respectively: 
+
+$$ 
+x, \ \ \  
+0, \ \ \  
+\Succ( \phi_X(\phi_X(u)) ),  \ \ \  
+\ap_i( \phi_X(\phi_X(v)),\phi_X(\phi_X(w))  ), \ \ \  
+\lambda x.\phi_X(\phi_X(z)), \ \ \  
+\cond( \phi_X(\phi_X(f)), \phi_X(\phi_X(g)) )
+$$
+
+for some $u,v,w,z,f,g \in \CTlambdaLabelled$ whose $X$-applications are all redexes.
+This is our thesis in this sub-case.
 
 \item
-$\phi_{X}(t)[\phi_{X}(u)/x]= \phi_{X}(t[u/x])$.
-\ldots
+Assume that $t$ is some $X$-redex and $t'$ is the $X$-form of $t$ (hence $t'$ is no $X$-redex).
+By definition of $\phi_X$ we have $\phi_X(t) =\phi_X(t')$ and $\phi_X(\phi_X(t)) = \phi_X(\phi_X(t'))$.
+From the previous point we conclude our thesis also in this sub-case.
+\end{enumerate}
+
+%15:30 17/09/2024
 
 \item
-$\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$.
-\ldots
+Assume that  all $X$-applications in $t$ are redexes, 
+in order to prove that $\phi_{X}(t)\sigma= \phi_{X}(t[a/x])$, where $\sigma=\sigma$.
+
+
+By Lemma \ref{lemma-sufficient-condition}, applied to $t$, we have to prove that
+$\head( \phi_{X}(t)\sigma ) = \head( \phi_{X}(t[a/x]) )$ 
+and that either $\phi_{X}(t)\sigma= \phi_{X}(t[a/x])$, or any two immediate subterms
+in the same position are of the form $\phi_{X}(t')[\phi_{X}(u)/x]$ and $\phi_{X}(t'[a/x])$ for some $t'$.
+
+\begin{enumerate}
+\item
+We first assume that $t$ is no $X$-redex. Then $t$ is
+
+$$ 
+x, \ \ \ 
+y \   (\mbox{with $y\not 0 x$}), \ \ \  
+0, \ \ \  
+\Succ(u),  \ \ \  
+\ap_i(v,w), \ \ \  
+\lambda x.z, \ \ \  
+\cond(f,g)
+$$
+
+for some $u,v,w,z,f,g \in \CTlambdaLabelled$ whose $X$-applications are all redexes.
+In the case $t = \ap_i(v,w)$, from $t$ not $X$-redex we deduce that $t$ is no
+$X$-application, that is, that $i \not \in X$. By definition, $\sigma(x)=\phi_{X}(a)$
+and $\sigma(y)=y$ for all  $y\not 0 x$.
+Then $\phi_{X}(t)\sigma$ is
+
+$$ 
+\phi_{X}(a), \ \ \ 
+y, \ \ \  
+0, \ \ \  
+\Succ(\phi_X(u)\sigma),  \ \ \  
+\ap_i(\phi_X(v)\sigma, \phi_X(w)\sigma), \ \ \  
+\lambda x.\phi_X(z)\sigma, \ \ \  
+\cond(\phi_X(f)\sigma, \phi_X(g)\sigma)
+$$
+
+while $\phi_{X}(t[a/x])$ is, according to the shape of $t$:
+
+$$ 
+\phi_{X}(a),   \ \ \ 
+y,   \ \ \  
+0,   \ \ \  
+\Succ(\phi_{X}(u[a/x])),    \ \ \  
+\ap_i(   \phi_{X}(v[a/x]),    \phi_{X}(w[a/x])   ), \ \ \  
+\lambda x.\phi_{X}(z[a/x]),    \ \ \  
+\cond(    \phi_{X}(f[a/x]),     \phi_{X}(g[a/x])    )
+$$
+as we wished to show.
+
+\item
+We assume that $t$ is some $X$-redex with $X$-form $t'$, with some maximal $X$-reduction
+$t \rightarrow^* t'$: all terms in the path but $t'$ are $X$-redexes, $t'$ is no $X$-redex. 
+There is a (possibly not maximal) $X$-reduction $t\sigma \rightarrow^* t'\sigma$, 
+all terms in the path but $t'\sigma$ are $X$-redexes, $t'\sigma$ is \emph{could} be an $X$-redex. 
+Then $\phi_X(t)\sigma = \phi_X(t')\sigma$ 
+and $\phi_X(t\sigma) = \phi_X(t'\sigma)$.
+From $t'$ no $X$-redex and the previous point, any two immediate subterms
+in the same position of $\phi_X(t\sigma) = \phi_X(t'\sigma)$
+are of the form $\phi_{X}(t'')[\phi_{X}(u)/x]$ and $\phi_{X}(t''[a/x])$ for some $t''$,
+as we wished to show.
+
+\end{enumerate}
+
+\item
+Assume that $0 \not \in X \cup Y$ and all $X \cup Y$-applications in $t$ are redexes, 
+in order to prove that $\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$.
+
+By Lemma \ref{lemma-sufficient-condition}, applied to $t$, we have to prove that
+either $\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$, or
+$\head( \phi_{X}(\phi_{Y}(t)) ) = \head( \phi_{X \cup Y}(t) )$ 
+and that any two immediate subterms in the same position of the two terms 
+are of the form $\phi_{X}(\phi_{Y}(t')) $ and $\phi_{X \cup Y}(t')$, for some $t'$.
+
+\begin{enumerate}
+\item
+We first assume that $t$ is no $X$-redex. Then $t$ is
+
+$$ 
+x, 
+0, \ \ \  
+\Succ(u),  \ \ \  
+\ap_i(v,w), \ \ \  
+\lambda x.z, \ \ \  
+\cond(f,g)
+$$
+
+for some $u,v,w,z,f,g \in \CTlambdaLabelled$ whose $X \cup Y$-applications are all redexes.
+In the case $t = \ap_i(v,w)$, from $t$ not $X \cup Y$-redex we deduce that $t$ is no
+$X \cup Y$-application, that is, \emph{\bf that $i \not \in X \cup Y$}. 
+Then $\phi_{Y}(t)$ is
+
+$$ 
+x, \ \ \ 
+0, \ \ \  
+\Succ(\phi_X(u)),  \ \ \  
+\ap_i(\phi_X(v), \phi_X(w)), \ \ \  
+\lambda x.\phi_X(z), \ \ \  
+\cond(\phi_X(f), \phi_X(g))
+$$
+
+Again because $i \not \in X \cup Y$, 
+we have that $\phi_{X}(\phi_{Y}(t))$ is, according to the shape of $t$:
+
+$$ 
+x, \ \ \ 
+0, \ \ \  
+\Succ(   \phi_X(\phi_Y(u))   ),  \ \ \  
+\ap_i(  \phi_X(\phi_Y(v)),   \phi_X(\phi_Y(w))   ) , \ \ \  
+\lambda x.   \phi_X(\phi_Y(z)), \ \ \  
+\cond(   \phi_X(\phi_Y(f)), \phi_X(\phi_Y(g))  )
+$$
+
+Again because $i \not \in X \cup Y$, 
+we have that $\phi_{X \cup Y}(t)$ is, according to the shape of $t$:
+
+$$ 
+x, \ \ \ 
+0, \ \ \  
+\Succ( \phi_{X \cup Y}(u)  ),  \ \ \  
+\ap_i(  \phi_{X \cup Y}(v),   \phi_{X \cup Y}(w)   ) , \ \ \  
+\lambda x.   \phi_{X \cup Y}(z), \ \ \  
+\cond(   \phi_{X \cup Y}(f), \phi_{X \cup Y}(g)  )
+$$
+
+as we wished to show.
+
+\item
+as we wished to show.
+
+\item
+We assume that $t$ is some $X \cup Y$-redex with $X \cup Y$-form $t'$, 
+with some maximal $X$-reduction
+$t=t_0 \rightarrow t_1 \ldots \rightarrow t_k = t'$, of length $k>0$. All terms  
+in the $X$-path but $t'$ are $X \cup Y$-redexes, in particular $X \cup Y$-applications
+while $t'$ is no $X \cup Y$-redex. We argue by induction on $k$, 
+and by cases on the first reduction $t_0 \rightarrow t_1$. 
+By definition of $\phi$ we have $\phi_{X \cup Y}(t) = \phi_{X \cup Y}(t_1)$. 
+
+Suppose $t = t_0 = \ap_i(\lambda x.u,v) \reduces u[v/x] = t_1$, 
+with $i \in X \cup Y$. Suppose $i \in Y$. Then 
+$\phi_X(\phi_Y(t)) = \phi_X(\phi_Y(t_1))$. 
+By induction on $k$ we deduce that
+$\phi_{X \cup Y}(t) = \phi_X(\phi_Y(t_1)) = \phi_{X \cup Y}(t_1) = \phi_{X \cup Y}(t)$.
+Suppose $i \not \in Y$, hence $i \in X$. Then 
+$\phi_X(\phi_Y(t)) = \phi_X(\ap_i(  \lambda x.\phi_Y(u),  \phi_Y(v)  )) = $
+(by $i \in X$) 
+$\phi_X( \phi_Y(u)[\phi_Y(v)/x]  )) =$
+%(by the previous point)
+$\phi_X( \phi_Y(u[v/x])  ) = \phi_{X \cup Y}(t_1)$, 
+as we wished to show.
+
+Suppose $t = t_0 = \ap_i(\cond(f,g),0) \reduces f = t_1$, 
+with $i \in X \cup Y$. Suppose $i \in Y$. Then $\phi_X(\phi_Y(t)) = \phi_X(\phi_Y(t_1))$
+By induction on $k$ we deduce that
+$\phi_{X \cup Y}(t) = \phi_X(\phi_Y(t_1)) = \phi_{X \cup Y}(t_1) = \phi_{X \cup Y}(t)$.
+Suppose $i \not \in Y$, hence $i \in X$. Then 
+$ \phi_X(\phi_Y(t)) = \phi_X(\ap_i( \cond(\phi_Y(f), \phi_Y(g) , 0) $ 
+(by $i \in X$) 
+$\phi_X(\phi_Y(f)) = \phi_X(\phi_Y(t_1)) = \phi_{X \cup Y}(t_1)$, 
+as we wished to show.
+
+Suppose $t = t_0 = \ap_i(\cond(f,g),\Succ(h)) \reduces g(h) = t_1$, 
+with $i \in X \cup Y$. Suppose $i \in Y$. Then $\phi_X(\phi_Y(t)) = \phi_X(\phi_Y(t_1))$
+By induction on $k$ we deduce that
+$\phi_{X \cup Y}(t) = \phi_X(\phi_Y(t_1)) = \phi_{X \cup Y}(t_1) = \phi_{X \cup Y}(t)$.
+Suppose $i \not \in Y$, hence $i \in X$. Then 
+$ \phi_X(\phi_Y(t)) = \phi_X(\ap_i( \cond(\phi_Y(f), \phi_Y(g) , \Succ(\phi_Y(h)) $ (by $i \in X$) 
+$\phi_X(\ap_0(\phi_Y(g), \phi_Y(h) ) ) = $ (by $0 \not \in X \cup Y$)
+$\ap_0(\phi_X(\phi_Y(g)), \phi_X(\phi_Y(h)) )$,
+and  
+$\phi_{X \cup Y}(t_1) = \ap_0( \phi_{X \cup Y}(g), \phi_{X \cup Y}(h) )$
+as we wished to show.
+
+%13:13 18/09/2024
+
+
+\end{enumerate}
 
 \end{enumerate}
 \end{proof}
 
 %09:34 17/09/2024
 
-%By taking the limit we conclude that $\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$.
+
 This implies Church-Rosser: if all $i$-applications of $t$ are redexes for all $i \in X \cup Y$,
 $\phi_{X}(\phi_{Y}(t)) = \phi_{Y}(\phi_{X}(t))$, for all $t \in \CTlambdaLabelled$.
 
