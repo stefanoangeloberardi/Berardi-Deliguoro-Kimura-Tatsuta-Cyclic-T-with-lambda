@@ -736,15 +736,73 @@ as we wished to show.
 
 %09:34 17/09/2024
 
+We conclude Church-Rosser for set of reductions on $\CTlambdaLabelled$.
 
-This implies Church-Rosser: if all $i$-applications of $t$ are redexes for all $i \in X \cup Y$,
-$\phi_{X}(\phi_{Y}(t)) = \phi_{Y}(\phi_{X}(t))$, for all $t \in \CTlambdaLabelled$.
+\begin{lemma}[Church-Rosser for the reduction set $\phi_X(t)$]
+Assume that all $i$-applications of $t$ are redexes for all $i \in X \cup Y$,
+and $0 \not \in X \cup Y$.
+Then $\phi_{X}(\phi_{Y}(t)) =\phi_{Y}(\phi_{X}(t))$, for all $t \in \CTlambdaLabelled$.
+\end{lemma}
 
-In particular, if $t \reduces^* u$ and $t \reduces^* v$, then $u$, $v$ have some limit form in common.
+\begin{proof}
+Assume $t \in \CTlambdaLabelled$.
+From $Y \cup X = X \cup Y$ we deduce that all $i$-applications of $t$ are redexes for all $i \in X \cup Y$,
+and $0 \not \in X \cup Y$.
+We conclude that
+$\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t) = \phi_{Y \cup X}(t) = \phi_{Y}(\phi_{X}(t))$, 
+as we wished to show.
+\end{proof}
+
+
+We can move the Church-Rosser result to $\CTlambda$. Assume $t, u \in \CTlambda$.
+We define $t \parallelReduces u$ as: for some $t' \in \CTlambdaLabelled$
+such that $\overline{t'} = t$, some $X \subseteq \N$, if $u' = \phi_X(t')$
+then $u = \overline{u'}$.
+
+
+We prove that $\parallelReduces$ is confluent. 
+Assume that $t, u, v \in \CTlambda$,  $t \parallelReduces u$ and
+$t \parallelReduces v$, in order to prove that  $u,v \parallelReduces w$ for some $w \in \CTlambda$.
+By definition we have:
+
+\begin{enumerate}
+\item
+for some $t'_1 \in \CTlambdaLabelled$
+such that $\overline{t'_1} = t$, some $X \subseteq \N$, if $u' = \phi_X(t'_1)$
+then $u = \overline{u'}$.
+
+\item
+for some $t'_2 \in \CTlambdaLabelled$
+such that $\overline{t'_2} = t$, some $Y \subseteq \N$, if $u' = \phi_Y(t'_2)$
+then $u = \overline{u'}$.
+
+\end{enumerate}
+We relabel $t'_1$ and $t'_2$ by replacing 
+all $i  \not \in \in X \cup Y$ with $0$, 
+all $i \in X \setminus Y$ with $1$, 
+all $i \in X \cap Y$ with $2$, 
+all $i \in Y \setminus X$ with $3$. 
+The result is some term $t'_3 \in \CTlambdaLabelled$, such that 
+$t = \overline{t'_3}$, and if $u''=\phi_{\{1,2\}^*}(t'_3)$
+then $\overline{u''} =  \overline{\phi_{X}(t'_1)} = \overline{u'} = u$
+and and if $v''=\phi_{\{2,3\}^*}(t'_3)$
+then $\overline{v'')} = 
+\overline{\phi_{Y}(t'_2)} =\overline{v'} = v$.
+
+Let $w' = \phi_{\{1,2,3\}^*}(t'_3)$ be the common value of
+$\phi_{\{2,3\}^*}(\phi_{\{1,2\}^*}(t'_3)) = \phi_{\{2,3\}^*}(\phi_{\{1,2\}^*}(t'_3))$ and of $\phi_{\{1,2\}^*}(\phi_{\{2,3\}^*}(t'_3))$. 
+Let $w = \overline{w'}$. Then $u,v \parallelReduces w$ by definition , as we wished to show.
+
+%18:48 18/09/2024
+
+
+
 
 
 
 \newpage
+
+
 
 
 \section{An older proof of Church-Rosser in the limit}
