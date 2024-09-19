@@ -778,14 +778,23 @@ From this theorem we derive the strong normalization result for safe reductions 
 (on all terms which satisfy the global trace condition).
 
 \begin{corollary}\label{cor:SN_GTC}
+Assume  $t \in \CTlambda$ and $n \in \N$.
   \begin {enumerate}
   \item
-   Assume  $\Gamma\vdash t:A$. Then $t \in \GTC$ implies that $t$ is total and all reduction sequences
+   $t$ is total and all reduction sequences
    from $t$ include only finitely many $0$-safe reductions.
+
+  \item
+   $t$ is total and all reduction sequences
+   from $t$ include only finitely many $n$-safe reductions.
   
 \item
-   Assume  $\Gamma\vdash t:A$. Then $t \in \GTC$ implies that $t$ strongly $0$-safe-normalizes
+   $t$ strongly $n$-safe-normalizes.
+
+\item
+   All infinite reduction sequences from $t$ have some limit. 
    \end{enumerate}
+
 \end{corollary}
 
 There are closed normal term of $\N$, even regular terms, which are not numeral.
