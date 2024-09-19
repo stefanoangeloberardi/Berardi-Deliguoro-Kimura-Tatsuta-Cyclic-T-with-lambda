@@ -164,14 +164,14 @@ as we wished to show.
 
 \item
 \emph{Unicity of limit normal forms.}
-Suppose  $t \reduces_lim u,v$ and $u$, $v$ are normal, in order to prove that $u=v$.
+Suppose  $t \reduces_{\lim} u,v$ and $u$, $v$ are normal, in order to prove that $u=v$.
 Let $n \in \N$.
-From the finiteness of $n$-safe reduction we deduce that $t \reduces^* u' \reduces_lim u$
+From the finiteness of $n$-safe reduction we deduce that $t \reduces^* u' \reduces_{\lim} u$
 for some $u' \in \CTlambda$ such that there are no $n$-safe reductions from
 $u'$ to $u$, that is: $u' =_{n,\cond} u$. 
 From $u$ $n$-safe normal we deduce that $u'$ is \emph{$n$-safe normal}.
 By switching the role of $u$ and $v$ we deduce that 
-$t \reduces^* v' \reduces_lim v$ for some \emph{$n$-safe normal} $v' \in \CTlambda$ 
+$t \reduces^* v' \reduces_{\lim} v$ for some \emph{$n$-safe normal} $v' \in \CTlambda$ 
 such that $v'=_{n,\cond} v$.
 
 From unicity of $n$-safe normal form we deduce that $u'=_{n,\cond} v'$.
@@ -201,7 +201,8 @@ redexes we do not contract.
 
 
 
-We first define a $\lambda$-calculus $\CTlambdaLabelled$ as a version of $\CTlambda$ 
+We first define a \emph{\quotationMarks{labelled circular $\lambda$-calculus}}
+ $\CTlambdaLabelled$ as a version of $\CTlambda$ 
 with applications labeled by some $i \in \N$:
 $\ap_0, \ap_1, \ap_2, \ldots$. We assume the same reduction rules for all $\ap_i$, $i \in \N$:
 $$
@@ -209,26 +210,45 @@ $$
 \ap_i(\cond(f,g)(0)) \reduces f, \ \ \ 
 \ap_i(\cond(f,g)(S(t))) \reduces \ap_0(f,t)
 $$
-If $r = \ap_i(\ldots)$ we say that $r$ is an $i$-application, an $i$-redex if $r$ is a redex.
-When $i=0$ we identify $\ap_0$ with $\ap$: in this way $\CTlambda$  is a proper
-subset of $\CTlambdaLabelled$.
-We define a projection $\overline{\cdots} : \CTlambdaLabelled \rightarrow \CTlambda$
-by hereditarily replacing all subterms $\ap_i(u,v)$ of $\CTlambdaLabelled$ with 
- $\ap_0(u,v)$. For all $t \in \CTlambdaLabelled$ we have  $\overline{t} = t$
-if and only if $t \in \CTlambda$.
-
 When $i \not = 0$, we use the subscript $i$ as a label to trace what
 happens to a subterm $\ap_i(t,u)$ during a reduction. When we reduce a redex $\ap_i(\ldots)$,
 the label $i$ on the first $\ap$-symbol of a redex disappears. 
 In the reduction $\ap_i(\cond(f,g)(S(t))) \reduces \ap_0(f,t)$ there is new application born after reduction. 
 We assign to it the label $0$: this new application has a trivial labelling.
 
+When $i=0$ we identify $\ap_0$ with $\ap$: in this way $\CTlambda$  is a proper
+subset of $\CTlambdaLabelled$.
+We define a projection $\overline{(\cdot)} : \CTlambdaLabelled \rightarrow \CTlambda$
+by hereditarily replacing all subterms $\ap_i(u,v)$ of $\CTlambdaLabelled$ with 
+ $\ap_0(u,v)$. For all $t \in \CTlambdaLabelled$ we have  $\overline{t} = t$
+if and only if $t \in \CTlambda$. 
+
+We define a relation between a term and a set of labels.
+
+\begin{definition}[$X$-applications, $X$-redexes and $X$-terms]
+\label{definition-X-term}
+Assume that $t \in \in \CTlambda$, $r = \ap_i(\ldots) \in \CTlambda$ 
+and $X \subseteq \N$, $i \in \N$.
+\begin{enumerate}
+\item
+$r$ is an $i$-application, and an $i$-redex if $r$ is a redex.
+\item
+$r$ is an $X$-application (an $X$-redex) 
+if and only if $r$ is an $i$-application (an $i$-redex) for some $i \in X$. 
+\item
+$t$ is an $X$-term if and only if all redexes in $t$ are $X$-redexes.
+\end{enumerate}
+\end{definition}
+
 %12:41 16/09/2024
 
-For all $t \in \CTlambdaLabelled$, all sets $X$ of labels $\not = 0$ for redexes.
+For all $t \in \CTlambdaLabelled$, all sets $X \subseteq \N$ of labels
 we define a map  $\phi_X(t)$ reducing all $i$-redexes in $t$ for all $i \in X$. 
-Then we define $\phi_X(t)$ is the limit of a family $\phi_{n,X}(t)$ for $n \rightarrow \infty$, 
-a family defined by induction on $n$.
+$\phi_X(t)$ is the limit of a family $\phi_{n,X}(t)$ for $n \rightarrow \infty$, 
+a family which is defined by induction on $n$.
+
+
+
 
 
 \begin{definition}[The maps $\phi_{n,X}$ and $\phi_X$]
@@ -267,28 +287,60 @@ We set $\phi_X(t) = \lim_{n \rightarrow \infty}(\phi_{n,X})(t)$.
 \end{definition}
 
 
-By induction on $n$ we can prove that 
+
+By induction on $n$ we immediately prove that 
 $\phi_{n,X}$ is a well defined map $\CTlambdaLabelled \rightarrow \CTlambdaLabelled$.
-Instead, it is not self-evident that $\phi_X(t)$ is a total tree.
+Instead, it is not self-evident that $\phi_X(t)$ is a total tree: this requires co-induction,
+and in the case $0 \in X$ even Finiteness of safe reductions (\ref{cor:SN_GTC}).
 
-In order to prove it, we need first the notion of $X$-chain and $X$-length for any $t \in \CTlambdaLabelled$.
-An $X$-chain from $t$ is any finite sequence $\{t_a : a \le k\}$ such that: 
+
+
+Again to prove that $\phi_X(t)$ is a total tree, 
+we also the notion of $X$-chain and $X$-length for labelled terms.
+
+
+\begin{definition}[$X$-chain and $X$-length]
+Let  $t \in \CTlambdaLabelled$.
+\begin{enumerate}
+\item
+An $X$-chain from $t$ is any finite sequence $t_0, \ldots, t_k$ such that: 
 $t=t_0$, for all $a<k$ we have $t_a$ some $i$-redex for some $ i \in X$, and $t_{a+1}$ is the contractum
-of $t_a$. The longest $X$-path from $t$ is unique, because each redex has a unique contractum. 
-The longest $X$-path $\{t_a : a \le k\}$ 
-from $t$ is a path of safe reduction and therefore it is finite. We call its length $k$ the
-$X$-length of $t$, and we write $\length_X(t) = k$. We call $t_k$ the $X$-form of $t$ and we
-write $\form_X(t) = t_k$: $t_k$ is no $i$-redex, for any $i \in X$.
+of $t_a$. 
+\item
+The $X$-length is the lenght of the longest $X$-chain, if finite. 
+If the $X$-length exists we write $\length_X(t) = k$. 
+In this case call $t_k$ the $X$-form of $t$ and we
+write $\form_X(t) = t_k$.
+\end{enumerate}
+\end{definition}
 
+The longest $X$-path  $t_0, \ldots, t_k, \ldots$ is unique because the contractum of any redex is unique.
+Any $X$-path is a path of safe reductions. 
+By Finiteness of safe reductions (\ref{cor:SN_GTC}) the longest $X$-path is \emph{always finite}.
+By definition, the $X$-form $t_k$ of $t$ is no $X$-redex.
+
+The last ingredient is the notion of head of a term of $\CTlambdaLabelled$. 
+% If $t \in \in \CTlambdaLabelled$ then $\universe{t}$
+% is the set of lists over $\{1,2\}$ which are addresses of subterms of $t$. 
+\begin{definition}[Head]
+The head $\head(t)$  of a term
+$\lambda x^A.t$ are the first two symbols of the term, namely $\head(t) = \lambda, x^A$ (with apices). 
+The head of any other term:
+$t = x^T,0,\Succ(u),\ap_i(v,w),\cond(f,g)$ is its first symbol (with its indexes and apices) respectively: 
+$\head(t) = x^T, 0, \Succ, \ap_i, \cond$. 
+\end{definition}
+
+Eventually we can prove:
 
 \begin{lemma}[$\phi_X(t)$ is a total tree]
 For all $t \in \CTlambdaLabelled$, $\phi_X(t)$ is a total tree.
 \end{lemma}
 
 
+
 \begin{proof}
-Let $k\in \N$ be the $X$-length of $t$. Then the longest $X$-chain is some $\{t_a : a \le k\}$,
-with $t_k$ no $i$-redex, for any $i \in X$.
+Let $k\in \N$ be the $X$-length of $t$. Then the longest $X$-chain is some $t_0, \ldots, t_k$,
+with $t_k$ no $X$-redex.
 By definition of $\phi_{n,X}$ we deduce that for all $n \ge k$ we have $\phi_{n,X}(t)
 = phi_{n-1,X}(t_1) = phi_{n-2,X}(t_2) = \ldots = phi_{n-k,X}(t_k)$. 
 We assumed that $t_k$ is no $i$-redex, for any $i \in X$.
@@ -312,21 +364,30 @@ x, \ \ \
 \lambda x.z, \ \ \  
 \cond(f,g)
 $$
-In all cases we proved that the node $\phi_{n,X}(t)$ has the same head for all $n \ge k+1$,
-and therefore that $\phi_X(t) = \lim_{n \rightarrow \infty}(\phi_{n,X})$ exists.
+In all cases we proved that the node $\phi_{n,X}(t)$ has the same head $\xi$ for all $n \ge k+1$,
+and therefore that $\phi_X(t) = \lim_{n \rightarrow \infty}(\phi_{n,X}) = \xi$ exists.
 \end{proof}
 
 
 We define an equality $t =_n u$, which means: the subterms of $t,u$ of distance $<n$ from the root are the
-same. From $t =_n u$ we will define a topology on terms of $\CTlambda$.
+same.
 
 \begin{definition}[$n$-equality on Terms of $\CTlambda$]
-Let $a,a',u,u',v,v',z,z',f,f',g,g' \in \CTlambda$. We set
-$a=_0 a'$ for all $a,a' \in \CTlambda$. If $n>0$ and
+Let $a,a',u,u',v,v',z,z',f,f',g,g' \in \CTlambda$. 
+The predicate $=_n$ is the smallest predicate closed w.r.t. the following operations.
+
+\begin{enumerate}
+
+
+\item
+We set
+$a=_0 a'$ for all $a,a' \in \CTlambda$. 
+\item
+If $n>0$ and
 $$
 u=_{n-1} u' \ \ \ v=_{n-1} v' \ \ \ w=_{n-1} w' \ \ \ z=_{n-1} z' \ \ \ f=_{n-1} f' \ \ \ g=_{n-1} g'
 $$
-then we set:
+then:
 $$
 x=_{n} x, \ \ \  
 0=_{n} 0, \ \ \   
@@ -335,31 +396,20 @@ x=_{n} x, \ \ \
 \lambda x.z =_{n} \lambda x.z', \ \ \ 
 \cond(f,g) =_{n} \cond(f',g')
 $$
+
+\end{enumerate}
 \end{definition}
 
-
+Then $t=u$ if and only if $t=_n u$ for all $n \in N$.
 Both $\phi_{n,X}$ and $\phi_X$ are continuous maps, w.r.t. the topology on $\CTlambdaLabelled$
-whose basic opens for $t \in \CTlambdaLabelled$ are all sets 
-$O_{n,t} = \{u \in \CTlambdaLabelled | u =_{n} t\}$ (equality for all levels $<n$).
+whose basic opens are all sets 
+$O_{n,t} = \{u \in \CTlambdaLabelled | u =_{n} t\}$  for $t \in \CTlambdaLabelled$.
 Usually,  the basic open $O_{n,t}$ is much smaller than the $n$-safe-level of $t$. 
 
 %14:26 15/09/2024
 
 
-We prove that if all $i$-applications of $t$ are redexes for all $i \in X \cup Y$
-then to apply $\phi_X$ and $\phi_Y$ consecutively, that is, to remove first all redexes with label in $X$
-then all redexes in $Y$, amounts to apply $\phi_{X \cup Y}$,  that is, to remove 
-all redexes with label in $X \cup Y$.
 
-The proof requires the notion of head of a term. 
-% If $t \in \in \CTlambdaLabelled$ then $\universe{t}$
-% is the set of lists over $\{1,2\}$ which are addresses of subterms of $t$. 
-The head $\head(t)$  of a term
-$\lambda x^A.t$ are the first two symbols of the term, namely $\head(t) = \lambda, x^A$ (with apices). 
-The head of any other term:
-$t = x^T,0,\Succ(u),\ap_i(v,w),\cond(f,g)$ is its first symbol (with its indexes and apices).
-We have, respectively: 
-$\head(t) = x^T, 0, \Succ, \ap_i, \cond$. 
 
 %%%%%%%%%%%
  For any list $l \in \{1,2\}^*$ of elements $1,2$, 
@@ -369,9 +419,12 @@ $\head(t) = x^T, 0, \Succ, \ap_i, \cond$.
 % and  $\head(l,t) = \bot$.
 %%%%%%%%%%%
 
-We will use a a sufficient condition for having: $\alpha(t) = \beta(t)$ for all $t \in \CTlambdaLabelled$.
+We sum up in a Lemma how to prove an equation $\alpha(t) = \beta(t)$ for $t \in \CTlambdaLabelled$
+by proving the existence of an identical map 
+(in fact, an identical bisimulation) between $\alpha(t)$ and $\beta(t)$.
+%as we would do in a proof assistant (say, Coq).
 
-\begin{lemma}[Equalities on $\CTlambdaLabelled$]
+\begin{lemma}[Identity between terms of $\CTlambdaLabelled$]
 \label{lemma-sufficient-condition}
 Assume $\alpha, \beta: \CTlambdaLabelled \rightarrow \CTlambdaLabelled$. 
 Suppose that:
@@ -380,23 +433,32 @@ Suppose that:
 \item
 $\head(\alpha(t)) = \head(\beta(t))$ 
 \item
-Assume that $\alpha(t)$ is a tree of arity $a \in \{0,1,2\}$.
-Then either $\alpha(t) = \beta(t)$, or 
-for all $i \in [1,a]$ there is some $u \in \CTlambdaLabelled$ such that the $i$-th sub-terms of 
+Either $\alpha(t) = \beta(t)$, or 
+for all $i\le a =$ the arity of the tree $\alpha(t)$,
+there is some $u \in \CTlambdaLabelled$ such that the $i$-th sub-terms of 
  $\alpha(t)$ and of $\beta(t)$ are, respectively, $\alpha(u)$ and $\beta(u)$.
 \end{enumerate}
 
 Then $\alpha(t) = \beta(t)$ for all $t \in \CTlambdaLabelled$.
 \end{lemma}
 
+Assume that if $t$ is an $X \cup Y$-term,
+that is, that all $i$-applications of $t$ are redexes for some $i \in X \cup Y$ (Def. \ref{definition-X-term}).
+We claim that if we apply $\phi_X$ and $\phi_Y$ consecutively, 
+that is, if we remove first all redexes with label in $X$ then all redexes with label in in $Y$, 
+as a result we remove all redexes with label in $X \cup Y$.
 
 
-\begin{lemma}
-Assume that $t \in \CTlambdaLabelled$. 
+%16:23 19/09/2024
+
+The first step in this proof is to characterize the value of $\phi_X(t)$.
+
+\begin{lemma}[Characterizing $\phi_X(t)$]
+Assume that $t \in \CTlambdaLabelled$ and $X \subseteq \N$.
 \begin{enumerate}
 
 \item
-If $t$ is no $i$-redex for any $i \in X$ and $t$ is
+If $t$ is no $X$-redex and $t$ is
 $$ 
 x, \ \ \  
 0, \ \ \  
@@ -418,19 +480,6 @@ $$
 \item
 If $t'$ is the $X$-form of $t$ then $\phi_X(t) = \phi_X(t')$.
 
-\item
-If all $X$-applications in $t,u$ are redexes, then all $X$-applications in $t[u/x]$ are redexes.
-
-\item
-If all $X$-applications in $t$ are redexes, then $\phi_{X}(\phi_{X}(t)) = \phi_{X}(t)$.
-
-\item
-If all $X$-applications in $t$ are redexes, then $\phi_{X}(t)[\phi_{X}(u)/x]= \phi_{X}(t[u/x])$.
-
-\item
-If $0 \not \in X \cup Y$ and all $X \cup Y$-applications in $t$ are redexes, 
-then $\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$.
-
 \end{enumerate}
 \end{lemma}
 
@@ -438,7 +487,8 @@ then $\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$.
 \begin{proof}
 \begin{enumerate}
 
-Assume that $n \in \N$ that $t$ is no $i$-redex for any $i \in X$ and $t$ is
+\item
+Assume that $n \in \N$, that $t$ is no $i$-redex for any $i \in X$ and $t$ is
 $$ 
 x, \ \ \  
 0, \ \ \  
@@ -470,13 +520,33 @@ $$
 
 \item
 Assume that $t=t_0 \rightarrow t_1 \rightarrow \ldots \rightarrow t_k = t'$ 
-is  $X$-reduction path from $t$, with $t'$ the $X$-form of $t$. 
+is  the longest $X$-reduction path from $t$, hence that $t'$ is the $X$-form of $t$. 
 We have to prove that $\phi_X(t) = \phi_X(t')$.
-For all $n \in \N$ we have $\phi_{n+k,X} (t) = \phi_{n,X} (t')$.
+For all $n \in \N$ by definition of $\phi_X$ we have 
+$$
+\phi_{n+k,X} (t) = 
+\phi_{n+k,X} (t_0) = 
+\phi_{n+k-1,X} (t_1) = 
+\ldots = 
+\phi_{n+k-k,X} (t_k) 
+= \phi_{n,X} (t')
+$$
 By taking the limit for $n \rightarrow \infty$ 
 we conclude that $\phi_X(t) = \phi_X(t')$, as wished.
 
-\item
+\end{enumerate}
+\end{proof}
+
+The next step is to prove that $X$-terms are closed under substitution.
+
+
+
+\begin{lemma}
+Assume that $t \in \CTlambdaLabelled$ and $X \subseteq \N$.
+If $t,u$ are $X$-terms (all $X$-applications in $t,u$ are redexes), then $t[u/x]$ is an $X$-term.
+\end{lemma}
+
+\begin{proof}
 Assume that all $X$-applications in $t,u$ are redexes in order to prove that 
 all $X$-applications in $t[u/x]$ are redexes.
 If $l \in \{1,2\}^*$ is the address of a subterm of $t[u/x]$ we have two possibilities:
@@ -491,17 +561,54 @@ Assume $t[u/x]_l$ is an $i$-application in order to prove that $t[u/x]_l$ is a r
 
 \begin{enumerate}
 \item
-In the first case, $u_{l_2}$ is a redex and therefore $t[u/x]_l = u_{l_2}$ is a redex.
+In the first case, we have that $t[u/x]_l = u_{l_2}$ is an $i$-application. 
+By our assumption on $u$, we deduce than $u_{l_2}$  is a redex.
+
 \item
-In the second case, either $t_{l_1}=x$ or not. 
+In the second case we have $t[u/x]_l = t_{l_1}[u/x]$. Either $t_{l_1}=x$ or not. 
 If   $t_{l_1}=x$ then $t[u/x]_l = u_{\nil}$ and we are reduced to the previous case.
 Suppose  $t_{l_1}\not =x$. Then the head of $t_{l_1}$ and $t[u/x]_l$ are the same.
-Since $t_{l_1}$ is an $X$-application, then by assumption $t_{l_1}$ is redex, and we
-conclude that $t_{l_1}[u/x] = t[u/x]_l $ is a redex.
+From $t[u/x]_l$ we deduce that $t_{l_1}$ is an $i$-application, 
+then by assumption of $t$ that $t_{l_1}$ is redex.
+Redexes are closed under substitution, therefore $t_{l_1}[u/x] = t[u/x]_l $ is a redex.
 We conclude that $t[u/x]_l = t_{l_1}[u/x]$ is a redex.
 \end{enumerate}
 
 %12:59 17/09/2024
+\end{proof}
+
+
+We can now prove our thesis $\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$, 
+from an auxiliary equation $\phi_{X}(t)[\phi_{X}(u)/x]= \phi_{X}(t[u/x])$.
+
+
+%17:49 19/09/2024
+
+
+\begin{lemma}
+Assume that $t \in \CTlambdaLabelled$ and $X \subseteq \N$.
+
+\begin{enumerate}
+\item
+If $t$ is an $X$-term, then $\phi_{X}(\phi_{X}(t)) = \phi_{X}(t)$.
+
+\item
+If $t$ is an $X$-term, then $\phi_{X}(t)[\phi_{X}(u)/x]= \phi_{X}(t[u/x])$.
+
+\item
+If $0 \not \in X \cup Y$ and 
+all $X \cup Y$-applications in $t$ are redexes, 
+then $\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$.
+
+\end{enumerate}
+\end{lemma}
+
+
+
+\begin{proof}
+\begin{enumerate}
+
+
 
 \item
 Assume that  all $X$-applications in $t$ are redexes, 
@@ -514,7 +621,6 @@ in the same position are of the form $\phi_{X}(\phi_{X}(t'))$ and $\phi_{X}(t')$
 \begin{enumerate}
 \item
 We first assume that $t$ is no $X$-redex. Then $t$ is
-
 $$ 
 x, \ \ \  
 0, \ \ \  
@@ -523,12 +629,10 @@ x, \ \ \
 \lambda x.z, \ \ \  
 \cond(f,g)
 $$
-
 for some $u,v,w,z,f,g \in \CTlambdaLabelled$ whose $X$-applications are all redexes.
 In the case $t = \ap_i(v,w)$, from $t$ not $X$-redex we deduce that $t$ is no
 $X$-application, that is, that $i \not \in X$.
-Then $\phi_X(t)$ is, respectively: 
-
+From $i \not \in X$ we deduce that $\phi_X(t)$ is, respectively: 
 $$ 
 x, \ \ \  
 0, \ \ \  
@@ -537,23 +641,20 @@ x, \ \ \
 \lambda x.\phi_X(z), \ \ \  
 \cond(\phi_X(f),\phi_X(g))
 $$
-
-From $i \not \in X$ we deduce that $\phi_X(\phi_X(t))$ is, respectively: 
-
+Again from $i \not \in X$ we deduce that $\phi_X^2(t))$ is, respectively: 
 $$ 
 x, \ \ \  
 0, \ \ \  
-\Succ( \phi_X(\phi_X(u)) ),  \ \ \  
-\ap_i( \phi_X(\phi_X(v)),\phi_X(\phi_X(w))  ), \ \ \  
-\lambda x.\phi_X(\phi_X(z)), \ \ \  
-\cond( \phi_X(\phi_X(f)), \phi_X(\phi_X(g)) )
+\Succ( \phi_X^2(u) ),  \ \ \  
+\ap_i( \phi_X^2(v),  \phi_X^2(w)  ), \ \ \  
+\lambda x.\phi_X^2(z), \ \ \  
+\cond( \phi_X^2(f), \phi_X^2(g) )
 $$
-
 for some $u,v,w,z,f,g \in \CTlambdaLabelled$ whose $X$-applications are all redexes.
 This is our thesis in this sub-case.
 
 \item
-Assume that $t$ is some $X$-redex and $t'$ is the $X$-form of $t$ (hence $t'$ is no $X$-redex).
+Then we assume that $t$ is some $X$-redex and $t'$ is the $X$-form of $t$ (hence $t'$ is no $X$-redex).
 By definition of $\phi_X$ we have $\phi_X(t) =\phi_X(t')$ and $\phi_X(\phi_X(t)) = \phi_X(\phi_X(t'))$.
 From the previous point we conclude our thesis also in this sub-case.
 \end{enumerate}
@@ -561,14 +662,15 @@ From the previous point we conclude our thesis also in this sub-case.
 %15:30 17/09/2024
 
 \item
-Assume that  all $X$-applications in $t$ are redexes, 
-in order to prove that $\phi_{X}(t)\sigma= \phi_{X}(t[a/x])$, where $\sigma=\sigma$.
-
+Assume that all $X$-applications in $t$ are redexes, 
+in order to prove that $\phi_{X}(t)[\phi_{X}(u)/x]= \phi_{X}(t[u/x])$.
+We write $\sigma=[a/x]$ and we have to prove $\phi_{X}(t)\sigma= \phi_{X}(t\sigma)$.
 
 By Lemma \ref{lemma-sufficient-condition}, applied to $t$, we have to prove that
-$\head( \phi_{X}(t)\sigma ) = \head( \phi_{X}(t[a/x]) )$ 
-and that either $\phi_{X}(t)\sigma= \phi_{X}(t[a/x])$, or any two immediate subterms
-in the same position are of the form $\phi_{X}(t')[\phi_{X}(u)/x]$ and $\phi_{X}(t'[a/x])$ for some $t'$.
+$\head( \phi_{X}(t)\sigma ) = \head( \phi_{X}(t\sigma) )$ 
+and that either $\phi_{X}(t)\sigma= \phi_{X}(t\sigma)$, or any two immediate subterms
+in the same position in $\phi_{X}(t)\sigma$
+are of the form $\phi_{X}(t')[\phi_{X}(u)/x]$ and $\phi_{X}(t'\sigma)$ for some $t'$.
 
 \begin{enumerate}
 \item
@@ -576,7 +678,7 @@ We first assume that $t$ is no $X$-redex. Then $t$ is
 
 $$ 
 x, \ \ \ 
-y \   (\mbox{with $y\not 0 x$}), \ \ \  
+y \   (\mbox{with $y\not = x$}), \ \ \  
 0, \ \ \  
 \Succ(u),  \ \ \  
 \ap_i(v,w), \ \ \  
