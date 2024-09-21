@@ -585,19 +585,29 @@ from an auxiliary equation $\phi_{X}(t)[\phi_{X}(u)/x]= \phi_{X}(t[u/x])$.
 %17:49 19/09/2024
 
 
-\begin{lemma}
+\begin{lemma}[Composition and Union]
 Assume that $t \in \CTlambdaLabelled$ and $X \subseteq \N$.
-
+\label{lemma-phi-composition-union}
 \begin{enumerate}
+%
+%
+%% IDEMPOTENCY IS CORRECT BUT USELESS
+%\item
+%\label{lemma-phi-composition-union-01}
+%\emph{Idempotency}.
+%If $t$ is an $X$-term, then $\phi_{X}(\phi_{X}(t)) = \phi_{X}(t)$.
+%
+%
 \item
-If $t$ is an $X$-term, then $\phi_{X}(\phi_{X}(t)) = \phi_{X}(t)$.
-
-\item
+\label{lemma-phi-composition-union-02}
+\emph{Commutation with substitution}.
 If $t$ is an $X$-term, then $\phi_{X}(t)[\phi_{X}(u)/x]= \phi_{X}(t[u/x])$.
 
 \item
-If $0 \not \in X \cup Y$ and 
-all $X \cup Y$-applications in $t$ are redexes, 
+\label{lemma-phi-composition-union-03}
+\emph{Composition and Union}.
+If $0 \not \in X \cup Y$ and $t$ is an $X$-term
+(all $X \cup Y$-applications in $t$ are redexes), 
 then $\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$.
 
 \end{enumerate}
@@ -608,73 +618,88 @@ then $\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$.
 \begin{proof}
 \begin{enumerate}
 
-
+%% IDEMPOTENCY IS CORRECT BUT USELESS
+%\item
+%%\label{lemma-phi-composition-union-01}
+%\emph{Idempotency}.
+%Assume that  all $X$-applications in $t$ are redexes, 
+%in order to prove that $\phi_{X}(\phi_{X}(t)) = \phi_{X}(t)$ for all $t \in \CTlambdaLabelled$.
+%
+%By Lemma \ref{lemma-sufficient-condition}, we have to prove that
+%$\head(\phi_{X}(\phi_{X}(t))) = \head(\phi_{X}(t))$ and that any two immediate subterms
+%in the same position are of the form $\phi_{X}(\phi_{X}(t'))$ and $\phi_{X}(t')$ for some $t'$.
+%We argue by cases on the condition \emph{\quotationMarks{$t$ $X$-redex}}.
+%
+%\begin{enumerate}
+%%\label{lemma-phi-composition-union-01a}
+%\item
+%\emph{First sub-case}. We assume that $t$ is \emph{no} $X$-redex. Then $t$ is
+%$$ 
+%x, \ \ \  
+%0, \ \ \  
+%\Succ(u),  \ \ \  
+%\ap_i(v,w), \ \ \  
+%\lambda x.z, \ \ \  
+%\cond(f,g)
+%$$
+%for some $X$-terms $u,v,w,z,f,g \in \CTlambdaLabelled$ 
+%(i.e., terms whose $X$-applications are all redexes).
+%In the case $t = \ap_i(v,w)$, from $t$ not $X$-redex we deduce that $t$ is no
+%$X$-application, that is, that $i \not \in X$.
+%From $i \not \in X$ and definition of $\phi$ we deduce that $\phi_X(t)$ is, respectively: 
+%$$ 
+%x, \ \ \  
+%0, \ \ \  
+%\Succ(\phi_X(u)),  \ \ \  
+%\ap_i(\phi_X(v),\phi_X(w)), \ \ \  
+%\lambda x.\phi_X(z), \ \ \  
+%\cond(\phi_X(f),\phi_X(g))
+%$$
+%Again from $i \not \in X$ and definition of $\phi$we deduce that $\phi_X^2(t))$ is, respectively: 
+%$$ 
+%x, \ \ \  
+%0, \ \ \  
+%\Succ( \phi_X^2(u) ),  \ \ \  
+%\ap_i( \phi_X^2(v),  \phi_X^2(w)  ), \ \ \  
+%\lambda x.\phi_X^2(z), \ \ \  
+%\cond( \phi_X^2(f), \phi_X^2(g) )
+%$$
+%for some $X$-terms $u,v,w,z,f,g \in \CTlambdaLabelled$.
+%This is our thesis in this sub-case.
+%
+%\item
+%%\label{lemma-phi-composition-union-01b}
+%\emph{Second sub-case}. w
+%We assume that $t$ is \emph{some $X$-redex} and $t'$ is the $X$-form of $t$ (hence $t'$ is no $X$-redex).
+%By definition of $\phi_X$ we have $\phi_X(t) =\phi_X(t')$ and $\phi_X(\phi_X(t)) = \phi_X(\phi_X(t'))$.
+%From the sub-case \ref{lemma-phi-composition-union-01a} above we conclude 
+%that any two immediate subterms
+%in the same position are of the form $\phi_{X}(\phi_{X}(t''))$ and $\phi_{X}(t'')$ for some $t''$.
+%\end{enumerate}
+%
+%%15:30 17/09/2024
 
 \item
-Assume that  all $X$-applications in $t$ are redexes, 
-in order to prove that $\phi_{X}(\phi_{X}(t)) = \phi_{X}(t)$ for all $t \in \CTlambdaLabelled$.
-
-By Lemma \ref{lemma-sufficient-condition}, we have to prove that
-$\head(\phi_{X}(\phi_{X}(t))) = \head(\phi_{X}(t))$ and that any two immediate subterms
-in the same position are of the form $\phi_{X}(\phi_{X}(t'))$ and $\phi_{X}(t')$ for some $t'$.
-
-\begin{enumerate}
-\item
-We first assume that $t$ is no $X$-redex. Then $t$ is
-$$ 
-x, \ \ \  
-0, \ \ \  
-\Succ(u),  \ \ \  
-\ap_i(v,w), \ \ \  
-\lambda x.z, \ \ \  
-\cond(f,g)
-$$
-for some $u,v,w,z,f,g \in \CTlambdaLabelled$ whose $X$-applications are all redexes.
-In the case $t = \ap_i(v,w)$, from $t$ not $X$-redex we deduce that $t$ is no
-$X$-application, that is, that $i \not \in X$.
-From $i \not \in X$ we deduce that $\phi_X(t)$ is, respectively: 
-$$ 
-x, \ \ \  
-0, \ \ \  
-\Succ(\phi_X(u)),  \ \ \  
-\ap_i(\phi_X(v),\phi_X(w)), \ \ \  
-\lambda x.\phi_X(z), \ \ \  
-\cond(\phi_X(f),\phi_X(g))
-$$
-Again from $i \not \in X$ we deduce that $\phi_X^2(t))$ is, respectively: 
-$$ 
-x, \ \ \  
-0, \ \ \  
-\Succ( \phi_X^2(u) ),  \ \ \  
-\ap_i( \phi_X^2(v),  \phi_X^2(w)  ), \ \ \  
-\lambda x.\phi_X^2(z), \ \ \  
-\cond( \phi_X^2(f), \phi_X^2(g) )
-$$
-for some $u,v,w,z,f,g \in \CTlambdaLabelled$ whose $X$-applications are all redexes.
-This is our thesis in this sub-case.
-
-\item
-Then we assume that $t$ is some $X$-redex and $t'$ is the $X$-form of $t$ (hence $t'$ is no $X$-redex).
-By definition of $\phi_X$ we have $\phi_X(t) =\phi_X(t')$ and $\phi_X(\phi_X(t)) = \phi_X(\phi_X(t'))$.
-From the previous point we conclude our thesis also in this sub-case.
-\end{enumerate}
-
-%15:30 17/09/2024
-
-\item
+%\label{lemma-phi-composition-union-02}
+\emph{Commutation with substitution}.
 Assume that all $X$-applications in $t$ are redexes, 
-in order to prove that $\phi_{X}(t)[\phi_{X}(u)/x]= \phi_{X}(t[u/x])$.
-We write $\sigma=[a/x]$ and we have to prove $\phi_{X}(t)\sigma= \phi_{X}(t\sigma)$.
+in order to prove that $\phi_{X}(t)[\phi_{X}(a)/x]= \phi_{X}(t[a/x])$.
+We abbreviate $\sigma=[\phi_{X}(a)/x]$ and $\tau = [a/x]$: 
+then we have to prove $\phi_{X}(t)\sigma= \phi_{X}(t\tau)$.
 
 By Lemma \ref{lemma-sufficient-condition}, applied to $t$, we have to prove that
-$\head( \phi_{X}(t)\sigma ) = \head( \phi_{X}(t\sigma) )$ 
-and that either $\phi_{X}(t)\sigma= \phi_{X}(t\sigma)$, or any two immediate subterms
-in the same position in $\phi_{X}(t)\sigma$
-are of the form $\phi_{X}(t')[\phi_{X}(u)/x]$ and $\phi_{X}(t'\sigma)$ for some $t'$.
+$\head( \phi_{X}(t)\sigma ) = \head( \phi_{X}(t\tau) )$ 
+and that either $\phi_{X}(t)\sigma= \phi_{X}(t\tau)$, or any two immediate subterms
+in the same position in $\phi_{X}(t)\sigma$ and $\phi_{X}(t\tau)$ 
+are of the form $\phi_{X}(t')\sigma$ and $\phi_{X}(t'\tau)$ for some $t'$.
+We argue by cases on the condition: \emph{\quotationMarks{$t$ $X$-redex}}.
 
 \begin{enumerate}
+
 \item
-We first assume that $t$ is no $X$-redex. Then $t$ is
+%\label{lemma-phi-composition-union-02a}
+\emph{First sub-case}.
+We first assume that $t$ is \emph{no} $X$-redex. Then $t$ is
 
 $$ 
 x, \ \ \ 
@@ -686,15 +711,15 @@ y \   (\mbox{with $y\not = x$}), \ \ \
 \cond(f,g)
 $$
 
-for some $u,v,w,z,f,g \in \CTlambdaLabelled$ whose $X$-applications are all redexes.
+for some $X$-terms $u,v,w,z,f,g \in \CTlambdaLabelled$.
 In the case $t = \ap_i(v,w)$, from $t$ not $X$-redex we deduce that $t$ is no
-$X$-application, that is, that $i \not \in X$. By definition, $\sigma(x)=\phi_{X}(a)$
-and $\sigma(y)=y$ for all  $y\not 0 x$.
-Then $\phi_{X}(t)\sigma$ is
+$X$-application, that is, that $i \not \in X$. By definition, $x \sigma = \phi_{X}(a)$
+and $y \sigma =y$ for all  $y\not 0 x$.
+We deduce that $\phi_{X}(t)\sigma$ is
 
 $$ 
-\phi_{X}(a), \ \ \ 
-y, \ \ \  
+x \sigma = \phi_{X}(a), \ \ \ 
+y \sigma = y, \ \ \  
 0, \ \ \  
 \Succ(\phi_X(u)\sigma),  \ \ \  
 \ap_i(\phi_X(v)\sigma, \phi_X(w)\sigma), \ \ \  
@@ -702,34 +727,46 @@ y, \ \ \
 \cond(\phi_X(f)\sigma, \phi_X(g)\sigma)
 $$
 
-while $\phi_{X}(t[a/x])$ is, according to the shape of $t$:
+By definition, $x \tau = a$
+and $y \sigma =y$ for all  $y\not 0 x$.
+We deduce that  $\phi_{X}(t\tau)$ is, according to the shape of $t$:
 
 $$ 
-\phi_{X}(a),   \ \ \ 
-y,   \ \ \  
+\phi_{X}(x \tau) = \phi_{X}(a),   \ \ \ 
+\phi_{X}(y \tau) = \phi_{X}(y) = y,   \ \ \  
 0,   \ \ \  
-\Succ(\phi_{X}(u[a/x])),    \ \ \  
-\ap_i(   \phi_{X}(v[a/x]),    \phi_{X}(w[a/x])   ), \ \ \  
-\lambda x.\phi_{X}(z[a/x]),    \ \ \  
-\cond(    \phi_{X}(f[a/x]),     \phi_{X}(g[a/x])    )
+\Succ(\phi_{X}(u\tau)),    \ \ \  
+\ap_i(   \phi_{X}(v\tau),    \phi_{X}(w\tau)   ), \ \ \  
+\lambda x.\phi_{X}(z\tau),    \ \ \  
+\cond(    \phi_{X}(f\tau),     \phi_{X}(g\tau)    )
 $$
-as we wished to show.
+We conclude that any two immediate subterms
+in the same position in $\phi_{X}(t)\sigma$ and $\phi_{X}(t\tau)$ 
+are of the form $\phi_{X}(t')\sigma$ and $\phi_{X}(t'\tau)$ for some $t'$, as we wished to show.
 
 \item
-We assume that $t$ is some $X$-redex with $X$-form $t'$, with some maximal $X$-reduction
-$t \rightarrow^* t'$: all terms in the path but $t'$ are $X$-redexes, $t'$ is no $X$-redex. 
-There is a (possibly not maximal) $X$-reduction $t\sigma \rightarrow^* t'\sigma$, 
-all terms in the path but $t'\sigma$ are $X$-redexes, $t'\sigma$ is \emph{could} be an $X$-redex. 
-Then $\phi_X(t)\sigma = \phi_X(t')\sigma$ 
-and $\phi_X(t\sigma) = \phi_X(t'\sigma)$.
-From $t'$ no $X$-redex and the previous point, any two immediate subterms
-in the same position of $\phi_X(t\sigma) = \phi_X(t'\sigma)$
-are of the form $\phi_{X}(t'')[\phi_{X}(u)/x]$ and $\phi_{X}(t''[a/x])$ for some $t''$,
+%\label{lemma-phi-composition-union-02b}
+\emph{Second sub-case}.
+We assume that $t$ is \emph{some $X$-redex} with $X$-form $t'$, with some maximal $X$-reduction
+$t \rightarrow^* t'$: all terms in the path but $t'$ are $X$-redexes, while $t'$ is no $X$-redex. 
+Substitution preserves $X$-redexes, therefore if we apply $\tau$ we obtain some  
+(possibly not maximal) $X$-reduction $t\tau \rightarrow^* t'\tau$, 
+all terms in the path but $t'\sigma$ are $X$-redexes, while 
+$t'\sigma$ is \emph{could} be an $X$-redex or not.
+
+By definition of $\phi$ we have $\phi_X(t)\sigma = \phi_X(t')\sigma$ 
+and $\phi_X(t\tau) = \phi_X(t'\tau)$.
+From $t'$ no $X$-redex and the sub-case \ref{lemma-phi-composition-union-02a} above, 
+any two immediate subterms in the same position of $\phi_X(t'\tau)$ and $\phi_X(t'\sigma)$
+are of the form $\phi_X(t''\tau)$ and $\phi_X(t''\sigma)$ for some $t''$,
 as we wished to show.
 
 \end{enumerate}
 
+%08:24 21/09/2024
+
 \item
+%\label{lemma-phi-composition-union-03}
 Assume that $0 \not \in X \cup Y$ and all $X \cup Y$-applications in $t$ are redexes, 
 in order to prove that $\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$.
 
@@ -737,11 +774,15 @@ By Lemma \ref{lemma-sufficient-condition}, applied to $t$, we have to prove that
 either $\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t)$, or
 $\head( \phi_{X}(\phi_{Y}(t)) ) = \head( \phi_{X \cup Y}(t) )$ 
 and that any two immediate subterms in the same position of the two terms 
-are of the form $\phi_{X}(\phi_{Y}(t')) $ and $\phi_{X \cup Y}(t')$, for some $t'$.
+are of the form $\phi_{X}(\phi_{Y}(t')) $ and $\phi_{X \cup Y}(t')$, 
+for some $X$-term $t' \in \CTlambda$.
+We argue by cases on the condition \emph{\quotationMarks{$t$ $X$-redex}}.
 
 \begin{enumerate}
 \item
-We first assume that $t$ is no $X$-redex. Then $t$ is
+%\label{lemma-phi-composition-union-03a}
+\emph{First Sub-case}.
+We first assume that $t$ is \emph{no} $X$-redex. Then $t$ is
 
 $$ 
 x, 
@@ -752,7 +793,8 @@ x,
 \cond(f,g)
 $$
 
-for some $u,v,w,z,f,g \in \CTlambdaLabelled$ whose $X \cup Y$-applications are all redexes.
+for some $X$-terms $u,v,w,z,f,g \in \CTlambdaLabelled$. 
+%whose $X \cup Y$-applications are all redexes.
 In the case $t = \ap_i(v,w)$, from $t$ not $X \cup Y$-redex we deduce that $t$ is no
 $X \cup Y$-application, that is, \emph{\bf that $i \not \in X \cup Y$}. 
 Then $\phi_{Y}(t)$ is
@@ -760,10 +802,10 @@ Then $\phi_{Y}(t)$ is
 $$ 
 x, \ \ \ 
 0, \ \ \  
-\Succ(\phi_X(u)),  \ \ \  
-\ap_i(\phi_X(v), \phi_X(w)), \ \ \  
-\lambda x.\phi_X(z), \ \ \  
-\cond(\phi_X(f), \phi_X(g))
+\Succ(\phi_Y(u)),  \ \ \  
+\ap_i(\phi_Y(v), \phi_Y(w)), \ \ \  
+\lambda x.\phi_Y(z), \ \ \  
+\cond(\phi_Y(f), \phi_Y(g))
 $$
 
 Again because $i \not \in X \cup Y$, 
@@ -790,54 +832,88 @@ x, \ \ \
 \cond(   \phi_{X \cup Y}(f), \phi_{X \cup Y}(g)  )
 $$
 
-as we wished to show.
+We conclude that any two immediate subterms in the same position of 
+$\phi_{X}(\phi_{Y}(t)) $ and $\phi_{X \cup Y}(t)$ 
+are of the form $\phi_{X}(\phi_{Y}(t')) $ and $\phi_{X \cup Y}(t')$, 
+for some $X$-term $t' \in \CTlambda$, as we wished to show.
 
 \item
-as we wished to show.
+%\label{lemma-phi-composition-union-03b}
+\emph{Second Sub-case}.
 
-\item
-We assume that $t$ is some $X \cup Y$-redex with $X \cup Y$-form $t'$, 
+We assume that $t$ is \emph{some $X \cup Y$-redex} with $X \cup Y$-form $t'$, 
 with some maximal $X$-reduction
 $t=t_0 \rightarrow t_1 \ldots \rightarrow t_k = t'$, of length $k>0$. All terms  
-in the $X$-path but $t'$ are $X \cup Y$-redexes, in particular $X \cup Y$-applications
-while $t'$ is no $X \cup Y$-redex. We argue by induction on $k$, 
-and by cases on the first reduction $t_0 \rightarrow t_1$. 
-By definition of $\phi$ we have $\phi_{X \cup Y}(t) = \phi_{X \cup Y}(t_1)$. 
-
-Suppose $t = t_0 = \ap_i(\lambda x.u,v) \reduces u[v/x] = t_1$, 
-with $i \in X \cup Y$. Suppose $i \in Y$. Then 
+in the $X$-path but $t'$ are $X \cup Y$-redexes, in particular we have $t = \ap_i(\ldots)$
+for some $i \in X \cup Y$,
+while $t'$ is no $X \cup Y$-redex. We argue by induction on $k$. 
+By definition of $\phi$ we have $\phi_{X \cup Y}(t) = \phi_{X \cup Y}(t_1)$.
+Suppose that $i \in Y$. Then 
 $\phi_X(\phi_Y(t)) = \phi_X(\phi_Y(t_1))$. 
-By induction on $k$ we deduce that
-$\phi_{X \cup Y}(t) = \phi_X(\phi_Y(t_1)) = \phi_{X \cup Y}(t_1) = \phi_{X \cup Y}(t)$.
-Suppose $i \not \in Y$, hence $i \in X$. Then 
-$\phi_X(\phi_Y(t)) = \phi_X(\ap_i(  \lambda x.\phi_Y(u),  \phi_Y(v)  )) = $
-(by $i \in X$) 
-$\phi_X( \phi_Y(u)[\phi_Y(v)/x]  )) =$
-%(by the previous point)
-$\phi_X( \phi_Y(u[v/x])  ) = \phi_{X \cup Y}(t_1)$, 
-as we wished to show.
+By induction on $k$ we deduce our thesis:
+that any two immediate subterms in the same position of 
+$\phi_{X}(\phi_{Y}(t_1)) $ and $\phi_{X \cup Y}(t_1)$ 
+are of the form $\phi_{X}(\phi_{Y}(t')) $ and $\phi_{X \cup Y}(t')$, 
+for some $X$-term $t' \in \CTlambda$.
+Suppose that $i \not \in Y$. From $i \in X \cup Y$ we deduce that $i \in X$. 
+We argue by sub-sub-cases on the first reduction $t_0 \rightarrow t_1$.
+\\
 
-Suppose $t = t_0 = \ap_i(\cond(f,g),0) \reduces f = t_1$, 
-with $i \in X \cup Y$. Suppose $i \in Y$. Then $\phi_X(\phi_Y(t)) = \phi_X(\phi_Y(t_1))$
-By induction on $k$ we deduce that
-$\phi_{X \cup Y}(t) = \phi_X(\phi_Y(t_1)) = \phi_{X \cup Y}(t_1) = \phi_{X \cup Y}(t)$.
-Suppose $i \not \in Y$, hence $i \in X$. Then 
-$ \phi_X(\phi_Y(t)) = \phi_X(\ap_i( \cond(\phi_Y(f), \phi_Y(g) , 0) $ 
-(by $i \in X$) 
-$\phi_X(\phi_Y(f)) = \phi_X(\phi_Y(t_1)) = \phi_{X \cup Y}(t_1)$, 
-as we wished to show.
+Suppose $t = t_0 = \ap_i(\lambda x.u,v) \reduces u[v/x] = t_1$ is a $\beta$-redex,
+for some $X$-terms $u,v$. By definition of $\phi$ and $i \in X$, $i \not \in Y$ we deduce 
+$
+\phi_X(\phi_Y(t)) = 
+$ (by $i \not \in Y$) $
+\phi_X(\ap_i(  \lambda x.\phi_Y(u),  \phi_Y(v)  )) = 
+$ (by $i \in X$) $
+\phi_X( \phi_Y(u)[\phi_Y(v)/x]  )) =
+$ (by commutation of $\phi$ and substitution, point \ref{lemma-phi-composition-union-02} above) $
+\phi_X( \phi_Y(u[v/x])  ) = 
+\phi_{X \cup Y}(t_1)
+$, 
 
-Suppose $t = t_0 = \ap_i(\cond(f,g),\Succ(h)) \reduces g(h) = t_1$, 
-with $i \in X \cup Y$. Suppose $i \in Y$. Then $\phi_X(\phi_Y(t)) = \phi_X(\phi_Y(t_1))$
-By induction on $k$ we deduce that
-$\phi_{X \cup Y}(t) = \phi_X(\phi_Y(t_1)) = \phi_{X \cup Y}(t_1) = \phi_{X \cup Y}(t)$.
-Suppose $i \not \in Y$, hence $i \in X$. Then 
-$ \phi_X(\phi_Y(t)) = \phi_X(\ap_i( \cond(\phi_Y(f), \phi_Y(g) , \Succ(\phi_Y(h)) $ (by $i \in X$) 
-$\phi_X(\ap_0(\phi_Y(g), \phi_Y(h) ) ) = $ (by $0 \not \in X \cup Y$)
-$\ap_0(\phi_X(\phi_Y(g)), \phi_X(\phi_Y(h)) )$,
+By induction on $k$ we deduce our thesis:
+that any two immediate subterms in the same position of 
+$\phi_{X}(\phi_{Y}(t_1)) $ and $\phi_{X \cup Y}(t_1)$ 
+are of the form $\phi_{X}(\phi_{Y}(t')) $ and $\phi_{X \cup Y}(t')$, 
+for some $X$-term $t' \in \CTlambda$.
+\\
+
+Suppose $t = t_0 = \ap_i(\cond(f,g),0) \reduces f = t_1$ is a $\cond,0$-redex, 
+for some $X$-terms $f,g$. From $i \not \in Y$, $i \in X$ and definition of $\phi$ we deduce 
+$ \phi_X(\phi_Y(t)) = 
+$ (by $i \not \in Y$) $
+\phi_X(\ap_i( \cond(\phi_Y(f), \phi_Y(g) , 0) 
+$ (by $i \in X$) $
+\phi_X(\phi_Y(f)) = 
+\phi_X(\phi_Y(t_1))$..
+
+By induction on $k$ we deduce our thesis:
+that any two immediate subterms in the same position of 
+$\phi_{X}(\phi_{Y}(t_1)) $ and $\phi_{X \cup Y}(t_1)$ 
+are of the form $\phi_{X}(\phi_{Y}(t')) $ and $\phi_{X \cup Y}(t')$, 
+for some $X$-term $t' \in \CTlambda$.
+\\
+
+Suppose $t = t_0 = \ap_i(\cond(f,g),\Succ(h)) \reduces g(h) = t_1$  is a $\cond,\Succ$-redex,  
+with $i \in X \cup Y$. By $0 \not \in X \cup Y$ (one of our assumptions),
+by $i \not \in Y$, $i \in X$ and definition of $\phi$ we deduce
+$ 
+\phi_X(\phi_Y(t)) = 
+\phi_X(\ap_i( \cond(\phi_Y(f), \phi_Y(g)), \Succ(\phi_Y(h)) =
+$ (by $i \in X$) $
+\phi_X(\ap_0(\phi_Y(g), \phi_Y(h) ) ) = 
+$ (by $0 \not \in X \cup Y$) $
+\ap_0(\phi_X(\phi_Y(g)), \phi_X(\phi_Y(h)) )
+$,
 and  
 $\phi_{X \cup Y}(t_1) = \ap_0( \phi_{X \cup Y}(g), \phi_{X \cup Y}(h) )$
-as we wished to show.
+
+By induction on $k$ we deduce our thesis:
+that any two immediate subterms in the same position of 
+$\phi_{X}(\phi_{Y}(t_1)) $ and $\phi_{X \cup Y}(t_1)$ 
+are of the form $\phi_{X}(\phi_{Y}(t')) $ and $\phi_{X \cup Y}(t')$, 
+for some $X$-term $t' \in \CTlambda$.
 
 %13:13 18/09/2024
 
@@ -852,6 +928,7 @@ as we wished to show.
 We conclude Church-Rosser for set of reductions on $\CTlambdaLabelled$.
 
 \begin{lemma}[Church-Rosser for the reduction set $\phi_X(t)$]
+\label{lemma-churchrosser-infinite-reduction}
 Assume that all $i$-applications of $t$ are redexes for all $i \in X \cup Y$,
 and $0 \not \in X \cup Y$.
 Then $\phi_{X}(\phi_{Y}(t)) =\phi_{Y}(\phi_{X}(t))$, for all $t \in \CTlambdaLabelled$.
@@ -859,17 +936,23 @@ Then $\phi_{X}(\phi_{Y}(t)) =\phi_{Y}(\phi_{X}(t))$, for all $t \in \CTlambdaLab
 
 \begin{proof}
 Assume $t \in \CTlambdaLabelled$.
-From $Y \cup X = X \cup Y$ we deduce that all $i$-applications of $t$ are redexes for all $i \in X \cup Y$,
-and $0 \not \in X \cup Y$.
+From $Y \cup X = X \cup Y$ we deduce that $t$ is a $Y \cup X$-term and $0 \not \in X \cup Y$.
 We conclude that
-$\phi_{X}(\phi_{Y}(t)) = \phi_{X \cup Y}(t) = \phi_{Y \cup X}(t) = \phi_{Y}(\phi_{X}(t))$, 
+$\phi_{X}(\phi_{Y}(t)) = 
+$ (by Lemma \ref{lemma-phi-composition-union-0}.\ref{lemma-phi-composition-union-03}) $
+\phi_{X \cup Y}(t) = 
+\phi_{Y \cup X}(t) = 
+$ (by Lemma \ref{lemma-phi-composition-union-0}.\ref{lemma-phi-composition-union-03}) $
+\phi_{Y}(\phi_{X}(t))
+$, 
 as we wished to show.
 \end{proof}
 
+%09:13 21/09/2024
 
 We can move the Church-Rosser result to $\CTlambda$. Assume $t, u \in \CTlambda$.
 We define $t \parallelReduces u$ as: for some $t' \in \CTlambdaLabelled$
-such that $\overline{t'} = t$, some $X \subseteq \N$, if $u' = \phi_X(t')$
+such that $\overline{t'} = t$, some $0 \not \in X \subseteq \N$, if $u' = \phi_X(t')$
 then $u = \overline{u'}$.
 
 
@@ -881,12 +964,12 @@ By definition we have:
 \begin{enumerate}
 \item
 for some $t'_1 \in \CTlambdaLabelled$
-such that $\overline{t'_1} = t$, some $X \subseteq \N$, if $u' = \phi_X(t'_1)$
+such that $\overline{t'_1} = t$, some $0 \not \in X \subseteq \N$, if $u' = \phi_X(t'_1)$
 then $u = \overline{u'}$.
 
 \item
 for some $t'_2 \in \CTlambdaLabelled$
-such that $\overline{t'_2} = t$, some $Y \subseteq \N$, if $u' = \phi_Y(t'_2)$
+such that $\overline{t'_2} = t$, some $0 \not \in Y \subseteq \N$, if $u' = \phi_Y(t'_2)$
 then $u = \overline{u'}$.
 
 \end{enumerate}
@@ -901,10 +984,12 @@ then $\overline{u''} =  \overline{\phi_{X}(t'_1)} = \overline{u'} = u$
 and and if $v''=\phi_{\{2,3\}^*}(t'_3)$
 then $\overline{v'')} = 
 \overline{\phi_{Y}(t'_2)} =\overline{v'} = v$.
+We have $0 \not \in \{1,2\} \cup \{2,3\}$.
 
-Let $w' = \phi_{\{1,2,3\}^*}(t'_3)$ be the common value of
-$\phi_{\{2,3\}^*}(\phi_{\{1,2\}^*}(t'_3)) = \phi_{\{2,3\}^*}(\phi_{\{1,2\}^*}(t'_3))$ and of $\phi_{\{1,2\}^*}(\phi_{\{2,3\}^*}(t'_3))$. 
-Let $w = \overline{w'}$. Then $u,v \parallelReduces w$ by definition , as we wished to show.
+By Lemma \ref{lemma-churchrosser-infinite-reduction}
+the term $w' = \phi_{\{1,2,3\}^*}(t'_3) \in \CTlambdaLabelled$ is the common value of
+$\phi_{\{2,3\}^*}(\phi_{\{1,2\}^*}(t'_3))$ and of $\phi_{\{1,2\}^*}(\phi_{\{2,3\}^*}(t'_3))$. 
+Let $w = \overline{w'}$. Then $u,v \parallelReduces w$ by definition, as we wished to show.
 
 %18:48 18/09/2024
 
