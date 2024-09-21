@@ -2,9 +2,9 @@
 \label{section-n-safe-church-rosser}
 
 In this section we prove a result for the $n$-safe part of a term, which we call 
-\quotationMarks{\emph{unicity of the $n$-safe part of the safe normal form up to $\nequal{n}$}}. By this we mean:
-for all $t, u, v \in \GTC$, if $t \nsafeReduces{n} u$ and $t \nsafeReduces{n} v$ and $u$, $v$ are $n$-safe-normal 
-then $u \nequal{n} v$ holds. 
+\quotationMarks{\emph{unicity of the $n$-safe part of the safe normal form up to $\nequal{n,\cond}$}}. By this we mean:
+for all $t, u, v \in \GTC$, if $t \nsafeReduces{n,\cond} u$ and $t \nsafeReduces{n,\cond} v$ and $u$, $v$ are $n$-safe-normal 
+then $u \nequal{n,\cond} v$ holds. 
 
 Our first idea (wrong) is to prove a full Church-Rosser property for $\LAMBDA$: 
 for all $t,u,v \in \LAMBDA$, if $t \reduces u$ and $t \reduces v$ then for some $w \in \LAMBDA$
@@ -157,11 +157,11 @@ two terms are approximately equal excepting for deeper safe levels more than $n$
 
 \begin{definition}[$n$-safe equality]
   Let $\Gamma\vdash t_1:A$ and $\Gamma\vdash t_2:A$. 
-  The terms $t_1$ and $t_2$ are \quotationMarks{$n$-safe equal} (written $\Gamma \vdash t_1 \nequal{n} t_2 : A$)
+  The terms $t_1$ and $t_2$ are \quotationMarks{$n$-safe equal} (written $\Gamma \vdash t_1 \nequal{n,\cond} t_2 : A$)
   is defined by after possibly renaming the bound variables of $t_1$ and $t_2$, 
   they have the forms $\Lctx{n}[\vec{u}_1]$ and $\Lctx{n}[\vec{u}_2]$
   with some terms $\vec{u}_1$ and $\vec{u}_2$.
-  We sometimes write $t_1 \nequal{n} t_2$ instead of $\Gamma \vdash t_1\nequal{n} t_2:A$
+  We sometimes write $t_1 \nequal{n,\cond} t_2$ instead of $\Gamma \vdash t_1\nequal{n,\cond} t_2:A$
   when $\Gamma$ and $A$ are clear from the context. 
 \end{definition}
 
@@ -174,30 +174,30 @@ $t \nsafeReducesAst{0} \Cond{0}{S}$ and $t \nsafeReducesAst{0} \Cond{0}{IS}$,
 we have $\Cond{0}{IS} \nequal{0} \Cond{0}{S}$
 since $\Cond{0}{IS} \nsafeReduces{0} \Cond{0}{S}$ does not hold. 
 
-Note that $\nequal{n}$ is an equivalence relation. Moreover it is closed under substitution. 
+Note that $\nequal{n,\cond}$ is an equivalence relation. Moreover it is closed under substitution. 
 \begin{lemma}\label{lem:nequal_subst}
-  If $\Gamma \vdash u_1 \nequal{n} u_2:A$ and $\Gamma, x^A:A \vdash t_1 \nequal{n} t_2:B$, then
-  $\Gamma \vdash t_1[u_1/x^A] \nequal{n} t_2[u_2/x^A] :B$. 
+  If $\Gamma \vdash u_1 \nequal{n,\cond} u_2:A$ and $\Gamma, x^A:A \vdash t_1 \nequal{n,\cond} t_2:B$, then
+  $\Gamma \vdash t_1[u_1/x^A] \nequal{n,\cond} t_2[u_2/x^A] :B$. 
 \end{lemma}
 \begin{proof}
   By the substitution lemma, we have $\Gamma \vdash t_i[u_i/x^A]: B$ for $i\in\{1,2\}$.
   Thus we need to show the equality part. 
   It is easily checked that $t_1[u_1/x^A] \nequal{-1} t_2[u_2/x^A]$ by the definition of the safe equality.
-  For $n\ge 0$, by $t_1\nequal{n} t_2$, there exists $(\Lctx{n},\vec{u_1},\vec{u_2})$ such that
+  For $n\ge 0$, by $t_1\nequal{n,\cond} t_2$, there exists $(\Lctx{n},\vec{u_1},\vec{u_2})$ such that
   $t_1 = \Lctx{n}[\vec{v_1}]$ and $t_2 = \Lctx{n}[\vec{v_2}]$.
-  We show $\Lctx{n}[\vec{v_1}][u_1/x^A] \nequal{n} \Lctx{n}[\vec{v_2}][u_2/x^A]$ by induction on $\Lctx{n}$. 
+  We show $\Lctx{n}[\vec{v_1}][u_1/x^A] \nequal{n,\cond} \Lctx{n}[\vec{v_2}][u_2/x^A]$ by induction on $\Lctx{n}$. 
 
-  The case of $\Lctx{n}=x^A$ is shown by $x^A[u_1/x^A] = u_1 \nequal{n} u_2 = x^A[u_2/x^A]$.
+  The case of $\Lctx{n}=x^A$ is shown by $x^A[u_1/x^A] = u_1 \nequal{n,\cond} u_2 = x^A[u_2/x^A]$.
   The cases of $\Lctx{n}=0$ and $\Lctx{n}=z^C \neq x^A$
-  are shown by $t_1[u_1/x^A] = t_1 \nequal{n} t_2 = t_2[u_2/x^A]$.
+  are shown by $t_1[u_1/x^A] = t_1 \nequal{n,\cond} t_2 = t_2[u_2/x^A]$.
   The case of $\Lctx{n}=\lambda z^C.\Lctx{n}'$ with $z^C\not\in\FV(\vec{u_1,u_2})$ by renaming
   is shown by
-  $(\lambda z^C.\Lctx{n}'[\vec{v_1}])[u_1/x^A] = \lambda z^C.(\Lctx{n}'[\vec{v_1}][u_1/x^A]) \nequal{n} \lambda z^C.(\Lctx{n}'[\vec{v_2}][u_2/x^A]) = (\lambda z^C.\Lctx{n}'[\vec{v_2}])[u_2/x^A]$ by the induction hypothesis.
+  $(\lambda z^C.\Lctx{n}'[\vec{v_1}])[u_1/x^A] = \lambda z^C.(\Lctx{n}'[\vec{v_1}][u_1/x^A]) \nequal{n,\cond} \lambda z^C.(\Lctx{n}'[\vec{v_2}][u_2/x^A]) = (\lambda z^C.\Lctx{n}'[\vec{v_2}])[u_2/x^A]$ by the induction hypothesis.
   The cases of $\Lctx{n}=\Lctx{n}'\Lctx{n}''$ and $\Lctx{n}=\Suc{\Lctx{n}'}$
   are also shown by the induction hypothesis.
   We show the case of $\Lctx{n}=\Cond{\Lctx{n}'}{\Lctx{n-1}'}$.
   If $n=0$, by induction hypothesis, we have $\Lctx{0}[\vec{v_1}][u_1/x^A] = \Cond{\Lctx{0}'[\vec{v_1}][u_1/x^A]}{\Lctx{-1}'[\vec{v_1}][u_1/x^A]} \nequal{0} \Cond{\Lctx{0}'[\vec{v_2}][u_2/x^A]}{\Lctx{-1}'[\vec{v_2}][u_2/x^A]} = \Lctx{0}[\vec{v_2}][u_2/x^A]$ since we do not care the right-hand side of $\cond$ at the $0$-safe level. 
-  If $n>0$, by induction hypothesis, we have $\Lctx{n}[\vec{v_1}][u_1/x^A] = \Cond{\Lctx{n}'[\vec{v_1}][u_1/x^A]}{\Lctx{n-1}'[\vec{v_1}][u_1/x^A]} \nequal{n} \Cond{\Lctx{n}'[\vec{v_2}][u_2/x^A]}{\Lctx{n-1}'[\vec{v_2}][u_2/x^A]} = \Lctx{n}[\vec{v_2}][u_2/x^A]$.
+  If $n>0$, by induction hypothesis, we have $\Lctx{n}[\vec{v_1}][u_1/x^A] = \Cond{\Lctx{n}'[\vec{v_1}][u_1/x^A]}{\Lctx{n-1}'[\vec{v_1}][u_1/x^A]} \nequal{n,\cond} \Cond{\Lctx{n}'[\vec{v_2}][u_2/x^A]}{\Lctx{n-1}'[\vec{v_2}][u_2/x^A]} = \Lctx{n}[\vec{v_2}][u_2/x^A]$.
   Hence we obtain the result as we wished. 
 \end{proof}
 
@@ -209,7 +209,7 @@ of the $n$-safe reductions that holds up to the $n$-equalities.
   Let $t\in \GTC$.
   If $t_1 \nsafeReducesAstL{n} t \nsafeReducesAst{n} t_2$, 
   then there exist $t'_1$ and $t'_2$ such that
-  $t_1 \nsafeReducesAst{n} t'_1 \nequal{n} t'_2 \nsafeReducesAstL{n} t_2$. 
+  $t_1 \nsafeReducesAst{n} t'_1 \nequal{n,\cond} t'_2 \nsafeReducesAstL{n} t_2$. 
 \end{theorem}
 
 This theorem will be proved by a variant of the parallel reduction technique. 
@@ -260,7 +260,7 @@ The relation $\nsafePReduces{n}$ satisfies the following basic properties.
   \item\label{lem:parallel_basic1}
     $n < n'$ and $t \nsafePReduces{n} t'$ implies $t \nsafePReduces{n'} t'$ (monotonicity). 
   \item\label{lem:parallel_basic2}
-    If $t \nsafeReduces{n} t'$, then $t \nsafePReduces{n} t'$. 
+    If $t \nsafeReduces{n,\cond} t'$, then $t \nsafePReduces{n} t'$. 
   \item\label{lem:parallel_basic3}
     If $t \nsafePReduces{n} t'$, then $t \nsafeReducesAst{n} t'$.
   \item\label{lem:parallel_basic4}
@@ -272,7 +272,7 @@ The relation $\nsafePReduces{n}$ satisfies the following basic properties.
   The point~\ref{lem:parallel_basic1} is shown by induction on $\nsafePReduces{n}$.
   
   We show the point~\ref{lem:parallel_basic2}.
-  For $t$ and $t'$ such as $t\nsafeReduces{n} t'$
+  For $t$ and $t'$ such as $t\nsafeReduces{n,\cond} t'$
   that reduces a redex $t_R$ occuring in $t$, 
   define $r(t,t')$ as the length of the path from $t$ to $t_R$.
   The proof is done by induction of $r(t,t')$.
@@ -281,13 +281,13 @@ The relation $\nsafePReduces{n}$ satisfies the following basic properties.
   or $(\cond\,\Succ)$. 
   The case of $r(t,t') > 0$ is shown by the case analysis of the form of $t$.
   The case of $t=\Suc{t_1}$ and $t_R$ appears in $t_1$.
-  The reduction is $\Suc{t_1} \nsafeReduces{n} \Suc{t'_1} = t'$ with $t_1 \nsafeReduces{n} t'_1$. 
+  The reduction is $\Suc{t_1} \nsafeReduces{n,\cond} \Suc{t'_1} = t'$ with $t_1 \nsafeReduces{n,\cond} t'_1$. 
   Then we have $t_1 \nsafePReduces{n} t'_1$ by the induction hypothesis with $r(t_1,t'_1) < r(t,t')$.
   Hence $\Suc{t_1} \nsafePReduces{n} \Suc{t'_1}$ by $(\Succ)$. 
   The cases of $t=t_1t_2$ and $t=\lambda x^A.t_1$ are also shown by the induction hypothesis. 
   The case of $t=\Cond{a}{f}$ and $t_R$ appears in $a$ is shown by the induction hypothesis.
   The case of $t=\Cond{a}{f}$ and $t_R$ appears in $f$.
-  The reduction is $\Cond{a}{f} \nsafeReduces{n} \Cond{a}{f'} = t'$ with $f \nsafeReduces{n-1} f'$. 
+  The reduction is $\Cond{a}{f} \nsafeReduces{n,\cond} \Cond{a}{f'} = t'$ with $f \nsafeReduces{n-1} f'$. 
   Then we have $f \nsafePReduces{n-1} f'$ by the induction hypothesis with $r(f,f') < r(t,t')$.
   Hence $\Cond{a}{f} \nsafePReduces{n} \Cond{a}{f'}$ by ($\cond$).
 
@@ -321,8 +321,8 @@ The relation $\nsafePReduces{n}$ satisfies the following basic properties.
 The next lemma says that the $n$-equality simulates 
 \begin{lemma}\label{lem:parallel_eq}
   Let $t_1, t_2 \in \GTC$ and $n\ge 0$.
-  If $t_1 \nequal{n} t_2 \nsafePReduces{n} t_2'$,
-  then there exists $t_1'\in \GTC$ such that $t_1 \nsafePReduces{n} t_1' \nequal{n} t_2'$.
+  If $t_1 \nequal{n,\cond} t_2 \nsafePReduces{n} t_2'$,
+  then there exists $t_1'\in \GTC$ such that $t_1 \nsafePReduces{n} t_1' \nequal{n,\cond} t_2'$.
 \end{lemma}
 \begin{proof}
   The proof is done be induction on $t_2 \nsafePReduces{n} t_2'$.
@@ -331,34 +331,34 @@ The next lemma says that the $n$-equality simulates
   
   The case of $(\Succ)$, namely $t_2=\Suc{u_2} \nsafePReduces{n} \Suc{u_2'}=t_2'$ that is obtained
   from $u_2\nsafePReduces{n} u_2'$. 
-  There is $u_1$ such that $t_1 = \Suc{u_1}$ and $u_1\nequal{n} u_2$ by $t_1 \nequal{n} \Suc{u_2}$ with $n\ge 0$.
+  There is $u_1$ such that $t_1 = \Suc{u_1}$ and $u_1\nequal{n,\cond} u_2$ by $t_1 \nequal{n,\cond} \Suc{u_2}$ with $n\ge 0$.
   Then, by the induction hypothesis,
-  there exists $u_1'\in\GTC$ such that $u_1 \nsafePReduces{n} u_1' \nequal{n} u_2'$.  
+  there exists $u_1'\in\GTC$ such that $u_1 \nsafePReduces{n} u_1' \nequal{n,\cond} u_2'$.  
   This case is shown by taking $\Suc{u_1'}$ as $t_1'$,
-  since $\Suc{u_1} \nsafePReduces{n} \Suc{u_1'} \nequal{n} \Suc{u_2'}$.
+  since $\Suc{u_1} \nsafePReduces{n} \Suc{u_1'} \nequal{n,\cond} \Suc{u_2'}$.
   
   The cases of $(\lambda)$, $(ap)$, and $(\cond)$ are shown similarly by using the induction hypothesis.
   
   The case of $(\cond\,0)$, namely $t_2 = \Cond{a_2}{f_2}(0) \nsafePReduces{n} a_2'$ that is
   obtained from $a_2 \nsafePReduces{n} a_2'$.
-  There are $a_1$, $f_1$ such that $t_1 = \Cond{a_1}{f_1}(0)$ and $a_1 \nequal{n} a_2$
-  by $t_1 \nequal{n} \Cond{a_2}{f_2}(0)$ with $n\ge 0$.
+  There are $a_1$, $f_1$ such that $t_1 = \Cond{a_1}{f_1}(0)$ and $a_1 \nequal{n,\cond} a_2$
+  by $t_1 \nequal{n,\cond} \Cond{a_2}{f_2}(0)$ with $n\ge 0$.
   Then, by the induction hypothesis,
-  there exists $a_1'\in\GTC$ such that $a_1 \nsafePReduces{n} a_1' \nequal{n} a_2'$.  
+  there exists $a_1'\in\GTC$ such that $a_1 \nsafePReduces{n} a_1' \nequal{n,\cond} a_2'$.  
   This case is shown by taking $a_1'$ as $t_1'$,
-  since $\Cond{a_1}{f_1}(0) \nsafePReduces{n} a_1' \nequal{n} a_2'$.  
+  since $\Cond{a_1}{f_1}(0) \nsafePReduces{n} a_1' \nequal{n,\cond} a_2'$.  
 
   The case of $(\cond\,\Succ)$ is also shown by the induction hypothesis in a similar way to the case $(\cond\,0)$.
   
   The case of $(\beta)$, namely $t_2 = (\lambda x^A.u_2)v_2 \nsafePReduces{n} u_2'[v_2'/x^A]$ that is 
   obtained from $u_2 \nsafePReduces{n} u_2'$ and $v_2 \nsafePReduces{n} v_2'$.
-  There are $u_1$, $v_1$ such that $t_1 = (\lambda x^A.u_1)v_1$, $u_1 \nequal{n} u_2$, and $v_1 \nequal{n} v_2$
-  by $t_1 \nequal{n} (\lambda x^A.u_2)v_2$ with $n\ge 0$.
+  There are $u_1$, $v_1$ such that $t_1 = (\lambda x^A.u_1)v_1$, $u_1 \nequal{n,\cond} u_2$, and $v_1 \nequal{n,\cond} v_2$
+  by $t_1 \nequal{n,\cond} (\lambda x^A.u_2)v_2$ with $n\ge 0$.
   Then, by the induction hypothesis,
-  there exist $u_1',v_1'\in\GTC$ such that $u_1 \nsafePReduces{n} u_1' \nequal{n} u_2'$ and
-  $v_1 \nsafePReduces{n} v_1' \nequal{n} v_2'$.
+  there exist $u_1',v_1'\in\GTC$ such that $u_1 \nsafePReduces{n} u_1' \nequal{n,\cond} u_2'$ and
+  $v_1 \nsafePReduces{n} v_1' \nequal{n,\cond} v_2'$.
   Hence this case is shown by taking $u_1'[v_1'/x^A]$ as $t_1'$,
-  since $(\lambda x^A.u_1)v_1 \nsafePReduces{n} u_1'[v_1'/x^A] \nequal{n} u_2'[v_2'/x^A]$ by Lemma~\ref{lem:nequal_subst}.
+  since $(\lambda x^A.u_1)v_1 \nsafePReduces{n} u_1'[v_1'/x^A] \nequal{n,\cond} u_2'[v_2'/x^A]$ by Lemma~\ref{lem:nequal_subst}.
   
   Therefore we obtain the expected result. 
 \end{proof}
@@ -367,7 +367,7 @@ The $n$-safe parallel reduction satisfies the following \quotationMarks{pentagon
 \begin{lemma}[Pentagon property]\label{lem:parallel_pentagon}
   Let $t \in \GTC$.
   If $t_1 \nsafePReducesL{n} t \nsafePReduces{n} t_2$,
-  then there exists $t_1',t_2'\in \GTC$ such that $t_1 \nsafePReduces{n} t_1' \nequal{n} t_2' \nsafePReducesL{n} t_2$.
+  then there exists $t_1',t_2'\in \GTC$ such that $t_1 \nsafePReduces{n} t_1' \nequal{n,\cond} t_2' \nsafePReducesL{n} t_2$.
 \end{lemma}
 \begin{proof}
   The lemma is shown by induction on $t \nsafePReduces{n} t_1$. 
@@ -381,9 +381,9 @@ The $n$-safe parallel reduction satisfies the following \quotationMarks{pentagon
   The subcase of $(id)$ is immediately shown by taking $t_1$ as both $t_1'$ and $t_2'$. 
   We show the subcase of $(\Succ)$.
   By the induction hypothesis, there are $u_1', u_2' \in \GTC$ such that
-  $u_1 \nsafePReduces{n} u_1' \nequal{n} u_2' \nsafePReducesL{n} u_2$.
+  $u_1 \nsafePReduces{n} u_1' \nequal{n,\cond} u_2' \nsafePReducesL{n} u_2$.
   Hence this case is shown by taking $(\Suc{u_1'},\Suc{u_2'})$ as $(t_1',t_2')$, 
-  since $t_1 = \Suc{u_1} \nsafePReduces{n} \Suc{u_1'} \nequal{n} \Suc{u_2'} \nsafePReducesL{n} \Suc{u_2} = t_2$.
+  since $t_1 = \Suc{u_1} \nsafePReduces{n} \Suc{u_1'} \nequal{n,\cond} \Suc{u_2'} \nsafePReducesL{n} \Suc{u_2} = t_2$.
   
   The cases of $(\lambda)$ and $(\cond)$ are shown similarly by using the induction hypothesis.  
 
@@ -395,11 +395,11 @@ The $n$-safe parallel reduction satisfies the following \quotationMarks{pentagon
   (ii) $t=\Cond{a}{f}(0) \nsafePReduces{n} t_2$ with $a \nsafePReduces{n} t_2$, which is $(\cond\,0)$. 
   We first show the subcase (i).
   By the induction hypothesis, there are $a_1', a_2' \in \GTC$ such that
-  $t_1 \nsafePReduces{n} a_1' \nequal{n} a_2' \nsafePReducesL{n} a_2$.
+  $t_1 \nsafePReduces{n} a_1' \nequal{n,\cond} a_2' \nsafePReducesL{n} a_2$.
   Then the subcase (i) is shown by taking $(a_1',a_2')$ as $(t_1',t_2')$. 
   Next we show the subcase (ii). 
   By the induction hypothesis, there are $a_1', a_2' \in \GTC$ such that
-  $t_1 \nsafePReduces{n} a_1' \nequal{n} a_2' \nsafePReducesL{n} t_2$.
+  $t_1 \nsafePReduces{n} a_1' \nequal{n,\cond} a_2' \nsafePReducesL{n} t_2$.
   Then the subcase (ii) is shown by taking $(a_1',a_2')$ as $(t_1',t_2')$. 
 
   The case of $(\cond\,\Succ)$ is also shown by the induction hypothesis in a similar way to the case $(\cond\,0)$.
@@ -414,9 +414,9 @@ The $n$-safe parallel reduction satisfies the following \quotationMarks{pentagon
   The first subcase (i) is shown by the induction hypothesis.
   We show the second subcase (ii).
   By the induction hypothesis, there are $u_1', u_2',v_1',v_2' \in \GTC$ such that  
-  $u_1 \nsafePReduces{n} u_1' \nequal{n} u_2' \nsafePReducesL{n} u_2$ and
-  $v_1 \nsafePReduces{n} v_1' \nequal{n} v_2' \nsafePReducesL{n} v_2$.
-  Then we have $u_1[v_1/x^A] \nsafePReduces{n} u_1'[v_1'/x^A] \nequal{n} u_2'[v_2'/x^A] \nsafePReducesL{n} u_2[v_2/x^A]$ by Lemma~\ref{lem:parallel_basic}.\ref{lem:parallel_basic4} and Lemma~\ref{lem:nequal_subst}. 
+  $u_1 \nsafePReduces{n} u_1' \nequal{n,\cond} u_2' \nsafePReducesL{n} u_2$ and
+  $v_1 \nsafePReduces{n} v_1' \nequal{n,\cond} v_2' \nsafePReducesL{n} v_2$.
+  Then we have $u_1[v_1/x^A] \nsafePReduces{n} u_1'[v_1'/x^A] \nequal{n,\cond} u_2'[v_2'/x^A] \nsafePReducesL{n} u_2[v_2/x^A]$ by Lemma~\ref{lem:parallel_basic}.\ref{lem:parallel_basic4} and Lemma~\ref{lem:nequal_subst}. 
   Then the subcase (ii) is shown by taking $(u_1'[v_1'/x^A],u_2'[v_2'/x^A])$ as $(t_1',t_2')$. 
   
   Finally we check the case of $(ap)$.
@@ -436,11 +436,11 @@ The pentagon property also holds for the $k$-step safe parallel reduction.
   \item\label{lem:parallel_pentagon_many1}
     If $t_1 \nsafePReducesL{n} t \nsafePReducesMany{n}{k} t_2$,
     then there exist $u_1',u_2'\in \GTC$
-    such that $t_1 \nsafePReducesMany{n}{k} t_1' \nequal{n} t_2' \nsafePReducesL{n} t_2$.
+    such that $t_1 \nsafePReducesMany{n}{k} t_1' \nequal{n,\cond} t_2' \nsafePReducesL{n} t_2$.
   \item\label{lem:parallel_pentagon_many2}
     If $t_1 \nsafePReducesManyL{n}{k_1} t \nsafePReducesMany{n}{k_2} t_2$,
     then there exist $t_1',t_2'\in \GTC$
-    such that $t_1 \nsafePReducesMany{n}{k_2} t_1' \nequal{n} t_2' \nsafePReducesManyL{n}{k_1} t_2$.
+    such that $t_1 \nsafePReducesMany{n}{k_2} t_1' \nequal{n,\cond} t_2' \nsafePReducesManyL{n}{k_1} t_2$.
   \end{enumerate}
 \end{lemma}
 \begin{proof}
@@ -449,27 +449,27 @@ The pentagon property also holds for the $k$-step safe parallel reduction.
   We show the case $k>0$.
   Let $t \nsafePReducesMany{n}{k-1} t_* \nsafePReduces{n} t_2$.
   By the induction hypothesis, there are $t_1'$ and $t_*'$ such that 
-  $t_1 \nsafePReducesMany{n}{k-1} t_1' \nequal{n} t_*' \nsafePReducesL{n} t_*$.
+  $t_1 \nsafePReducesMany{n}{k-1} t_1' \nequal{n,\cond} t_*' \nsafePReducesL{n} t_*$.
   Then, by $t_*' \nsafePReducesL{n} t_* \nsafePReduces{n} t_2$ and the pentagon property,
-  we have $t_*' \nsafePReduces{n} t_*'' \nequal{n} t_2'' \nsafePReducesL{n} t_2$ for some $t_*''$ and $t_2''$. 
-  Hence, by $t_1' \nequal{n} t_*' \nsafePReduces{n} t_*''$ and Lemma~\ref{lem:parallel_eq},
-  we have $t_1' \nsafePReduces{n} t_1'' \nequal{n} t_*''$ for some $t_1''$.
-  Therefore, using the transitivity of $\nequal{n}$,
-  we obtain $t_1 \nsafePReducesMany{n}{k} t_1'' \nequal{n} t_2'' \nsafePReducesL{n} t_2$ as we wished. 
+  we have $t_*' \nsafePReduces{n} t_*'' \nequal{n,\cond} t_2'' \nsafePReducesL{n} t_2$ for some $t_*''$ and $t_2''$. 
+  Hence, by $t_1' \nequal{n,\cond} t_*' \nsafePReduces{n} t_*''$ and Lemma~\ref{lem:parallel_eq},
+  we have $t_1' \nsafePReduces{n} t_1'' \nequal{n,\cond} t_*''$ for some $t_1''$.
+  Therefore, using the transitivity of $\nequal{n,\cond}$,
+  we obtain $t_1 \nsafePReducesMany{n}{k} t_1'' \nequal{n,\cond} t_2'' \nsafePReducesL{n} t_2$ as we wished. 
   
   The point~\ref{lem:parallel_pentagon_many2} is shown by induction on $k_1$.  
   The base case $k_1=0$ is immediately shown by taking $t_2$ as both $t_1'$ and $t_2'$.
   To show the inductive case $k>0$, let $t \nsafePReducesMany{n}{k_1-1} t_* \nsafePReduces{n} t_1$.
   Then, by the induction hypothesis,
-  $t_* \nsafePReducesMany{n}{k_2} t_*' \nequal{n} t_2' \nsafePReducesManyL{n}{k_1-1} t_2$ holds
+  $t_* \nsafePReducesMany{n}{k_2} t_*' \nequal{n,\cond} t_2' \nsafePReducesManyL{n}{k_1-1} t_2$ holds
   for some $t_*'$ and $t_2'$. 
   By $t_1 \nsafePReducesL{n} t_* \nsafePReducesMany{n}{k_2} t_*'$ and the point~\ref{lem:parallel_pentagon_many1},
-  we have $t_1 \nsafePReducesMany{n}{k_2} t_1'' \nequal{n} t_*'' \nsafePReducesL{n} t_*'$
+  we have $t_1 \nsafePReducesMany{n}{k_2} t_1'' \nequal{n,\cond} t_*'' \nsafePReducesL{n} t_*'$
   for some $t_1''$ and $t_*''$. 
-  Then, by $t_2' \nequal{n} t_*' \nsafePReduces{n} t_*''$ and Lemma~\ref{lem:parallel_eq},
-  $t_2' \nsafePReduces{n} t_2'' \nequal{n} t_*''$ for some $t_2''$.
-  Hence, using the transitivity of $\nequal{n}$, we have
-  $t_1 \nsafePReducesMany{n}{k_2} t_1'' \nequal{n} t_2'' \nsafePReducesManyL{n}{k_1} t_2$ as we wished.
+  Then, by $t_2' \nequal{n,\cond} t_*' \nsafePReduces{n} t_*''$ and Lemma~\ref{lem:parallel_eq},
+  $t_2' \nsafePReduces{n} t_2'' \nequal{n,\cond} t_*''$ for some $t_2''$.
+  Hence, using the transitivity of $\nequal{n,\cond}$, we have
+  $t_1 \nsafePReducesMany{n}{k_2} t_1'' \nequal{n,\cond} t_2'' \nsafePReducesManyL{n}{k_1} t_2$ as we wished.
 \end{proof}
 
 \noindent\textbf{Proof of the weak Church-Rosser of $n$-safe reduction.}
@@ -478,8 +478,8 @@ Assume that $t\in \GTC$ and $t_1 \nsafeReducesAstL{n} t \nsafeReducesAst{n} t_2$
 By Lemma~\ref{lem:parallel_basic}.\ref{lem:parallel_basic2},
 we have $t_1 \nsafePReducesManyL{n}{k_1} t \nsafePReducesMany{n}{k_2} t_2$ for some $k_1$ and $k_2$.
 Then there exist $t_1', t_2' \in \GTC$ such that
-$t_1 \nsafePReducesMany{n}{k_2} t_1' \nequal{n} t_2' \nsafePReducesManyL{n}{k_1} t_2$.
+$t_1 \nsafePReducesMany{n}{k_2} t_1' \nequal{n,\cond} t_2' \nsafePReducesManyL{n}{k_1} t_2$.
 By Lemma~\ref{lem:parallel_basic}.\ref{lem:parallel_basic3},
-$t_1 \nsafeReducesAst{n} t'_1 \nequal{n} t'_2 \nsafeReducesAstL{n} t_2$ holds as we wished.
+$t_1 \nsafeReducesAst{n} t'_1 \nequal{n,\cond} t'_2 \nsafeReducesAstL{n} t_2$ holds as we wished.
 
 

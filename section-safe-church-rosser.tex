@@ -15,11 +15,11 @@ In this section prove the corresponding uniqueness results,  namely:
 \item
 \emph{\bf\quotationMarks{Uniqueness of the safe normal form}}.
 For all $t,u,v \in \CTlambda$, if $t \reduces u$ and $t \reduces v$ and $u$, $v$ are safe-normal 
-then $u =_{0,\cond} v$. That is: $u$, $v$ are equal outside the right-hand side of all $\cond$-sub-terms.
+then $u \nequal{0,\cond} v$. That is: $u$, $v$ are equal outside the right-hand side of all $\cond$-sub-terms.
 \item
 \emph{\bf\quotationMarks{Uniqueness of the $n$-safe normal form}}.
 For all $t,u,v \in \CTlambda$, if $t \reduces u$ and $t \reduces v$ and $u$, $v$ are $n$-safe-normal 
-then $u =_{n,\cond} v$. That is: $u$, $v$ are equal outside the right-hand side of all $\cond$-sub-terms
+then $u \nequal{n,\cond} v$. That is: $u$, $v$ are equal outside the right-hand side of all $\cond$-sub-terms
 of $\cond$-depth equal to $n$.
 \item
 \emph{\bf\quotationMarks{Uniqueness of the limit normal form}}.
@@ -118,7 +118,7 @@ of $\reduces$ on terms of $\CTlambda$.
 Then: 
 \begin{enumerate}
 \item
-Safe-normal forms and $n$-safe normal forms for any $n \in \N$ are unique up to $=_{n,\cond}$.
+Safe-normal forms and $n$-safe normal forms for any $n \in \N$ are unique up to $\nequal{n,\cond}$.
 \item
 Limit normal form are unique.
 \end{enumerate}
@@ -137,9 +137,9 @@ Now we prove:
 \begin{enumerate}
 
 \item
-\emph{Unicity of $n$-safe normal forms up to $=_{n,\cond}$.}
+\emph{Unicity of $n$-safe normal forms up to $\nequal{n,\cond}$.}
 Suppose  $t \reduces^* u,v$ and $u$, $v$ are $n$-safe normal, 
-in order to prove that $u=_{n,\cond}  v$.
+in order to prove that $u\nequal{n,\cond}  v$.
 From $\reduces^* \subseteq \parallelReduces^*$ we have 
 $t \parallelReduces^* u,v$. From confluence of $\parallelReduces^*$
 we deduce that for some $w \in \CTlambda$ we have $u,v \parallelReduces^* w$. 
@@ -147,19 +147,19 @@ From $\parallelReduces^* \subseteq \reduces_{\lim}^*$
 we deduce that $u,v \reduces_{\lim}^* w$. From $u,v$ $n$-safe normal we deduce that
 all reductions on $u$, $v$ take place in the rigth-hand-side of some depth-$n$ $\cond$.
 Thus, for all $z \in \CTlambda$ we have
- $u \reduces z$ implies $u=_{n,\cond} z$. 
+ $u \reduces z$ implies $u\nequal{n,\cond} z$. 
 \begin{enumerate} 
 \item
 By induction on the reduction
-length we deduce that $u \reduces^* z$ implies $u=_{n,\cond} z$. 
+length we deduce that $u \reduces^* z$ implies $u\nequal{n,\cond} z$. 
 \item
 By taking the limit
-we obtain that $u \reduces_{\lim} z$ implies $u=_{n,\cond} z$. 
+we obtain that $u \reduces_{\lim} z$ implies $u\nequal{n,\cond} z$. 
 \item
-By induction on the reduction length again we get  that $u \reduces_{\lim}^* z$ implies $u=_{n,\cond} z$.
+By induction on the reduction length again we get  that $u \reduces_{\lim}^* z$ implies $u\nequal{n,\cond} z$.
 \end{enumerate}
-By switching the role of $u$ and $v$ we deduce that $v \reduces_{\lim}^* z$ implies $v =_{n,\cond} z$.
-Eventually, from $u,v \reduces_{\lim}^* w$ we conclude that $u=_{n,\cond} w =_{n,\cond} v$,
+By switching the role of $u$ and $v$ we deduce that $v \reduces_{\lim}^* z$ implies $v \nequal{n,\cond} z$.
+Eventually, from $u,v \reduces_{\lim}^* w$ we conclude that $u\nequal{n,\cond} w \nequal{n,\cond} v$,
 as we wished to show.
 
 \item
@@ -168,14 +168,14 @@ Suppose  $t \reduces_{\lim} u,v$ and $u$, $v$ are normal, in order to prove that
 Let $n \in \N$.
 From the finiteness of $n$-safe reduction we deduce that $t \reduces^* u' \reduces_{\lim} u$
 for some $u' \in \CTlambda$ such that there are no $n$-safe reductions from
-$u'$ to $u$, that is: $u' =_{n,\cond} u$. 
+$u'$ to $u$, that is: $u' \nequal{n,\cond} u$. 
 From $u$ $n$-safe normal we deduce that $u'$ is \emph{$n$-safe normal}.
 By switching the role of $u$ and $v$ we deduce that 
 $t \reduces^* v' \reduces_{\lim} v$ for some \emph{$n$-safe normal} $v' \in \CTlambda$ 
-such that $v'=_{n,\cond} v$.
+such that $v'\nequal{n,\cond} v$.
 
-From unicity of $n$-safe normal form we deduce that $u'=_{n,\cond} v'$.
-From $u' =_{n,\cond} u$ and $v' =_{n,\cond} v$ we obtain that $u =_{n,\cond} v $, for all $n \in \N$.
+From unicity of $n$-safe normal form we deduce that $u'\nequal{n,\cond} v'$.
+From $u' \nequal{n,\cond} u$ and $v' \nequal{n,\cond} v$ we obtain that $u \nequal{n,\cond} v $, for all $n \in \N$.
 By definition of equality on infinite terms we conclude that $u=v$, as we wished to show.
 \end{enumerate}
 \end{proof}
@@ -385,16 +385,16 @@ $a=_0 a'$ for all $a,a' \in \CTlambda$.
 \item
 If $n>0$ and
 $$
-u=_{n-1} u' \ \ \ v=_{n-1} v' \ \ \ w=_{n-1} w' \ \ \ z=_{n-1} z' \ \ \ f=_{n-1} f' \ \ \ g=_{n-1} g'
+u\nequal{n-1} u' \ \ \ v\nequal{n-1} v' \ \ \ w\nequal{n-1} w' \ \ \ z\nequal{n-1} z' \ \ \ f\nequal{n-1} f' \ \ \ g\nequal{n-1} g'
 $$
 then:
 $$
-x=_{n} x, \ \ \  
-0=_{n} 0, \ \ \   
-\Succ(u)=_{n} \Succ(u'), \ \ \ 
-\ap_i(u,v) =_{n} \ap_i(u',v') \ \ \  
-\lambda x.z =_{n} \lambda x.z', \ \ \ 
-\cond(f,g) =_{n} \cond(f',g')
+x\nequal{n} x, \ \ \  
+0\nequal{n} 0, \ \ \   
+\Succ(u)\nequal{n} \Succ(u'), \ \ \ 
+\ap_i(u,v) \nequal{n} \ap_i(u',v') \ \ \  
+\lambda x.z \nequal{n} \lambda x.z', \ \ \ 
+\cond(f,g) \nequal{n} \cond(f',g')
 $$
 
 \end{enumerate}
@@ -403,7 +403,7 @@ $$
 Then $t=u$ if and only if $t=_n u$ for all $n \in N$.
 Both $\phi_{n,X}$ and $\phi_X$ are continuous maps, w.r.t. the topology on $\CTlambdaLabelled$
 whose basic opens are all sets 
-$O_{n,t} = \{u \in \CTlambdaLabelled | u =_{n} t\}$  for $t \in \CTlambdaLabelled$.
+$O_{n,t} = \{u \in \CTlambdaLabelled | u \nequal{n} t\}$  for $t \in \CTlambdaLabelled$.
 Usually,  the basic open $O_{n,t}$ is much smaller than the $n$-safe-level of $t$. 
 
 %14:26 15/09/2024
@@ -697,7 +697,7 @@ We argue by cases on the condition: \emph{\quotationMarks{$t$ $X$-redex}}.
 \begin{enumerate}
 
 \item
-%\label{lemma-phi-composition-union-02a}
+\label{lemma-phi-composition-union-02a}
 \emph{First sub-case}.
 We first assume that $t$ is \emph{no} $X$-redex. Then $t$ is
 
@@ -745,7 +745,7 @@ in the same position in $\phi_{X}(t)\sigma$ and $\phi_{X}(t\tau)$
 are of the form $\phi_{X}(t')\sigma$ and $\phi_{X}(t'\tau)$ for some $t'$, as we wished to show.
 
 \item
-%\label{lemma-phi-composition-union-02b}
+\label{lemma-phi-composition-union-02b}
 \emph{Second sub-case}.
 We assume that $t$ is \emph{some $X$-redex} with $X$-form $t'$, with some maximal $X$-reduction
 $t \rightarrow^* t'$: all terms in the path but $t'$ are $X$-redexes, while $t'$ is no $X$-redex. 
@@ -780,7 +780,7 @@ We argue by cases on the condition \emph{\quotationMarks{$t$ $X$-redex}}.
 
 \begin{enumerate}
 \item
-%\label{lemma-phi-composition-union-03a}
+\label{lemma-phi-composition-union-03a}
 \emph{First Sub-case}.
 We first assume that $t$ is \emph{no} $X$-redex. Then $t$ is
 
@@ -838,7 +838,7 @@ are of the form $\phi_{X}(\phi_{Y}(t')) $ and $\phi_{X \cup Y}(t')$,
 for some $X$-term $t' \in \CTlambda$, as we wished to show.
 
 \item
-%\label{lemma-phi-composition-union-03b}
+\label{lemma-phi-composition-union-03b}
 \emph{Second Sub-case}.
 
 We assume that $t$ is \emph{some $X \cup Y$-redex} with $X \cup Y$-form $t'$, 
@@ -939,10 +939,10 @@ Assume $t \in \CTlambdaLabelled$.
 From $Y \cup X = X \cup Y$ we deduce that $t$ is a $Y \cup X$-term and $0 \not \in X \cup Y$.
 We conclude that
 $\phi_{X}(\phi_{Y}(t)) = 
-$ (by Lemma \ref{lemma-phi-composition-union-0}.\ref{lemma-phi-composition-union-03}) $
+$ (by Lemma \ref{lemma-phi-composition-union}.\ref{lemma-phi-composition-union-03}) $
 \phi_{X \cup Y}(t) = 
 \phi_{Y \cup X}(t) = 
-$ (by Lemma \ref{lemma-phi-composition-union-0}.\ref{lemma-phi-composition-union-03}) $
+$ (by Lemma \ref{lemma-phi-composition-union}.\ref{lemma-phi-composition-union-03}) $
 \phi_{Y}(\phi_{X}(t))
 $, 
 as we wished to show.
