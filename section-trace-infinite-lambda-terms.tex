@@ -67,8 +67,8 @@ We draw in the same color two $\N$-argument which are in connection.
 An example of  atom connection for some instance of the $\weak$-rule.
 \[
 \infer[(\weak)]{
-        {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}, x_3:\bfColor{oldgold}{\N}
-		\prove t : \bfColor{orange}{\N} \rightarrow \N
+  {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}, x_3:\bfColor{oldgold}{\N}
+  \prove t : \bfColor{orange}{\N} \rightarrow \N
 }{
   {x_1} : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N} 
   \prove t : \bfColor{orange}{\N} \rightarrow \N
@@ -89,8 +89,6 @@ We assume that $a$ is \emph{not} a variable.
 }{
   x_1 : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N}
   \prove f : \bfColor{oldgold}{\N}, \bfColor{orange}{\N} \rightarrow \N
-  &
-  \quad
   &
   x_1 : \bfColor{red}{\N}, x_2: \bfColor{blue}{\N} \prove a : \N
 }
@@ -115,22 +113,20 @@ An example of  atom connection for the rule $\cond$.
 }{
   x_1 : \bfColor{red}{\N},{x_2} : \bfColor{blue}{\N} \prove f : \N
   &
-  \quad
-  &
-  x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N}, x:\bfColor{oldgold}{\N} \prove g:\N
+  x_1:\bfColor{red}{\N}, x_2:\bfColor{blue}{\N} \prove g:\bfColor{oldgold}{\N} \rightarrow \N
 }
 \]
 \end{Eg}
-Remark that the first unnamed argument of $f$ (colored in \bfColor{oldgold}{old gold}) 
-is in connection the type of the free variable $x$ in the second premise (the premise with $g$),
-but it is in connection with no argument in the first premise (the premise with $f$).
+Remark that the first unnamed argument of $\cond(f,g)$ (colored in \bfColor{oldgold}{old gold}) 
+is in connection the type of the first unnamed one of $g$ in the second premise,
+but it has no connection with the first premise. 
 
 
 \subsection{A formal definition of connection}
 The definition of connection requires to define an injection 
-$$
+\[
 \ins:\N,\N \rightarrow\N
-$$
+\]
 We set $\ins(p,x)=x+1$ if $x \ge p+1$, and $\ins(p,x)=x$ if $x\le p$.
 The role of $\ins$ is inserting one fresh index $p+1$ for a new argument type higher in the proof
 connected to no argument in the conclusion.
