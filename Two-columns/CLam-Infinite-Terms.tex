@@ -1,0 +1,28 @@
+%!TEX root = CLam-2col-main.tex
+\section{Infinite $\lambda$-terms}\label{sec:infinite-terms}
+
+Let $\Pos = \set{1, 2}^*$ be the set of {\em positions}; 
+we denote by $\epsilon$ the empty string in $\Pos$ 
+and by $\sigma\cdot\tau$ (or just $\sigma\tau$) the concatenation of $\sigma$ with
+$\tau$. We say that $\sigma$ is a {\em perfix} of $\tau$,
+written $\sigma \leq \tau$, if $\tau = \sigma\cdot \tau'$ for some 
+$\tau' \in \Pos$; it is a {\em strict prefix}, written $\sigma < \tau$
+if $\tau' \neq \epsilon$.
+
+A {\em binary tree} $T$ is a prefix-closed subset of the set
+$\Pos$. The position $\epsilon$ is the {\em root} of $T$; 
+for $i = 1,2$, the position $\sigma \cdot i$ is an {\em immediate descendant} of $\sigma$;
+if $\sigma \in T$ has no immediate descendant then it is a {\em leaf}. 
+If $\sigma \in T$ then the {\em subtree of $T$ rooted at $\sigma$}, written 
+$\SubTree{T}{\sigma}$ is the set $\set{\tau \mid \sigma \cdot \tau \in T}$, which is
+itself a binary tree.
+
+A {\em $2$-ranked alphabet}
+$\Sigma$ is a set of symbols together with a map $\rank:\Sigma \to \nat$
+such that $\rank(\sigma) \leq 2$ for all $\sigma \in \Sigma$; a {\em binary tree labelled over
+the $2$-ranked alphabet} $\Sigma$ is a pair $\BTree = (T, \phi)$, where $T$ is a binary tree, 
+also denoted by $|\BTree|$  and called the {\em carrier} of $\BTree$, and
+$\LabelFun : T \to \Sigma$ is a mapping labelling the positions of $T$ with symbols in $\Sigma$, 
+which is consistent with the ranks,
+namely $\rank(\LabelFun(\sigma)) = |\set{\sigma\cdot i \mid \sigma\cdot i \in T}|$.
+
