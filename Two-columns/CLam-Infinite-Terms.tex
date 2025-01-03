@@ -19,7 +19,7 @@ a binary tree. Binary trees are finitary, but possibly infinite trees. %; ... (b
 
 A {\em $2$-ranked alphabet}
 $\Sigma$ is a set of symbols together with a map $\rank:\Sigma \to \nat$
-such that $\rank(\sigma) \leq 2$ for all $\sigma \in \Sigma$; a {\em binary tree labelled over
+such that $\rank(\sigma) \leq 2$ for all $\sigma \in \Sigma$; a {\em binary tree which is labeled over
 the $2$-ranked alphabet} $\Sigma$ is a pair $\BTree = (T, \phi)$, where $T$ is a binary tree, 
 also denoted by $|\BTree|$  and called the {\em carrier} of $\BTree$, and
 $\LabelFun : T \to \Sigma$ is a mapping labelling the positions of $T$ to symbols in $\Sigma$, 
@@ -33,7 +33,7 @@ $\tau \in \SubTree{T}{\sigma}$; clearly $\SubTree{\BTree}{\epsilon} = \BTree$.
 The tree $\BTree = (T, \LabelFun)$ is {\em regular}
 if the set $\set{\SubTree{\BTree}{\sigma} \mid \sigma \in |\BTree|}$ is finite.
 
-We define infinite $\lambda$-terms as certain binary trees.
+We define infinite $\lambda$-terms as certain labeled binary trees.
 \medskip
 
 \begin{definition}[Types and Tree Terms]\label{def:terms}
@@ -49,7 +49,7 @@ call $\Term$ the set of (finite and infinite) tree terms.
 
 \medskip
 
-Alternatively, the set of infinite $\lambda$-terms can be defined as the subset of {\em regular coterms}; the latter are
+Alternatively, the set $\Term$ can be defined as the subset of {\em regular coterms}; the latter are
 coinductively defined by the grammar:
 \[ t, u ::= x^A \mid 0 \mid \lambda x^A.t \mid \ap(t,u) \mid \Succ (t) \mid \cond(t, u) \]
 where $x^A$ ranges over a denumerable set of variables for each $A \in \Type$.
@@ -64,7 +64,7 @@ Tree terms in the sense of Definition \ref{def:terms} are exactly the syntactica
 We write $\BTree_t$ for the syntactic tree of the coterm $t$, then we set $|t| = |\BTree_t|$ and for
 a position $\sigma \in |t|$ we set $\SubTree{t}{\sigma} = u$ if $u \in \SubTerm(t)$ is the unique 
 coterm such that $\BTree_u = \SubTree{\BTree_t}{\sigma}$. By abusing terminology, we shall 
-identify tree trems and coterms, and call them just terms.
+identify tree terms and coterms, and call them just terms.
 
 Free and bound variables of a term $t$, noted $\FV(t)$ and $\BV(t)$ respectively, are defined as for the ordinary
 $\lambda$-calculus: by regularity both 
@@ -76,7 +76,7 @@ A type $(A_1 \to (\cdots (A_n \to B) \cdots))$ is abbreviated by $(A_1, \ldots, 
 omitting external braces when clear from the context.
 We write $tu$ as the infix notation of the application $\ap(t,u)$; application associates to the left.
 Observe that terms are untyped since types occur just as decorations of variables, without any constraint
-to terms formation.
+to term formation.
 
 %For this reason we abuse notation and write $|t|$ for set carrier of 
 
