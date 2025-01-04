@@ -64,7 +64,8 @@ $\SubTerm(\cond(t,u)) = \set{\cond(t,u)} \cup \SubTerm(t) \cup \SubTerm(u)$.
 Tree terms in the sense of Definition \ref{def:terms} are exactly the syntactical trees of regular coterms. 
 We write $\BTree_t$ for the syntactic tree of the coterm $t$, then we set $|t| = |\BTree_t|$ and for
 a position $\sigma \in |t|$ we set $\SubTree{t}{\sigma} = u$ if $u \in \SubTerm(t)$ is the unique 
-coterm such that $\BTree_u = \SubTree{\BTree_t}{\sigma}$. By abusing terminology, we shall 
+coterm such that $\BTree_u = \SubTree{\BTree_t}{\sigma}$; hence $t$ is regular if and only if $\BTree_t$
+is a regular tree. By abusing terminology, we shall 
 identify tree terms and coterms, and call them just terms.
 
 Free and bound variables of a term $t$, noted $\FV(t)$ and $\BV(t)$ respectively, are defined in a similar 
