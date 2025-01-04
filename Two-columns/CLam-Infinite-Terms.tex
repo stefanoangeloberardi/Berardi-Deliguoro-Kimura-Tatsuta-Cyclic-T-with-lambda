@@ -66,8 +66,8 @@ a position $\sigma \in |t|$ we set $\SubTree{t}{\sigma} = u$ if $u \in \SubTerm(
 coterm such that $\BTree_u = \SubTree{\BTree_t}{\sigma}$. By abusing terminology, we shall 
 identify tree terms and coterms, and call them just terms.
 
-Free and bound variables of a term $t$, noted $\FV(t)$ and $\BV(t)$ respectively, are defined as for the ordinary
-$\lambda$-calculus: by regularity both 
+Free and bound variables of a term $t$, noted $\FV(t)$ and $\BV(t)$ respectively, are defined in a similar 
+way than for the ordinary $\lambda$-calculus, but using coinduction instead of induction; by regularity both 
 $\FV(t)$ and $\BV(t)$ are finite for any term $t$.
 
 \medskip
@@ -77,6 +77,4 @@ omitting external braces when clear from the context.
 We write $tu$ as the infix notation of the application $\ap(t,u)$; application associates to the left.
 Observe that terms are untyped since types occur just as decorations of variables, without any constraint
 to term formation.
-
-%For this reason we abuse notation and write $|t|$ for set carrier of 
 
