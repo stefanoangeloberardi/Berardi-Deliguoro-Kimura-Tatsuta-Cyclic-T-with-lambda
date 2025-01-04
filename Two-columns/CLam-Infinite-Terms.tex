@@ -50,8 +50,9 @@ call $\Term$ the set of (finite and infinite) tree terms.
 \medskip
 
 Alternatively, the set $\Term$ can be defined as the subset of {\em regular coterms}; the latter are
-coinductively defined by the grammar:
-\[ t, u ::= x^A \mid 0 \mid \lambda x^A.t \mid \ap(t,u) \mid \Succ (t) \mid \cond(t, u) \]
+{\em coinductively defined} by the grammar:
+\[ t, u ::= x^A \Par 0 \Par \lambda x^A.t \Par \ap(t,u) \Par \Succ (t) \Par \cond(t, u) \]
+using the symbol $\Par$ to mean the coinductive reading of the productions,
 where $x^A$ ranges over a denumerable set of variables for each $A \in \Type$.
 A coterm $t$ is {\em regular} if the set of its subexpressions $\SubTerm(t)$ is finite,
 where the mappimg $\SubTerm$ is corecursively defined by $\SubTerm(t) = \set{t}$ if $t = x^A, 0$, 
@@ -75,6 +76,6 @@ $\FV(t)$ and $\BV(t)$ are finite for any term $t$.
 A type $(A_1 \to (\cdots (A_n \to B) \cdots))$ is abbreviated by $(A_1, \ldots, A_n \to B)$,
 omitting external braces when clear from the context.
 We write $tu$ as the infix notation of the application $\ap(t,u)$; application associates to the left.
-Observe that terms are untyped since types occur just as decorations of variables, without any constraint
+Observe that in Definition \ref{def:terms} terms are untyped since types occur just as decorations of variables, without any constraint
 to term formation.
 
