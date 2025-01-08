@@ -51,7 +51,7 @@ call $\Term$ the set of (finite and infinite) tree terms.
 
 Alternatively, the set $\Term$ can be defined as the subset of {\em regular coterms}; the latter are
 {\em coinductively defined} by the grammar:
-\[ t, u ::= x^A \Par 0 \Par \lambda x^A.t \Par \ap(t,u) \Par \Succ (t) \Par \cond(t, u) \]
+\[ t, u ::= x^A \Par \lambda x^A.t \Par \ap(t,u) \Par 0 \Par \Succ (t) \Par \cond(t, u) \]
 using the symbol $\Par$ to mean the coinductive reading of the productions,
 where $x^A$ ranges over a denumerable set of variables for each $A \in \Type$.
 A coterm $t$ is {\em regular} if the set of its subexpressions $\SubTerm(t)$ is finite,
@@ -70,7 +70,8 @@ identify tree terms and coterms, and call them just terms.
 
 Free and bound variables of a term $t$, noted $\FV(t)$ and $\BV(t)$ respectively, are defined in a similar 
 way than for the ordinary $\lambda$-calculus, but using coinduction instead of induction; by regularity both 
-$\FV(t)$ and $\BV(t)$ are finite for any term $t$.
+$\FV(t)$ and $\BV(t)$ are finite for any term $t$. Finally if $\vec{t} = t_1, \ldots , t_n$ then $\FV(\vec{t})$ abbreviates
+$\bigcup_i \FV(t_i)$, and similarly $\BV(\vec{t})$.
 
 \medskip
 {\em Abbreviations.} Types in $\Type$ are just simple types with the only atom $N$.

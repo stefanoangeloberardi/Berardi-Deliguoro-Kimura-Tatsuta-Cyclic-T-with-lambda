@@ -1,0 +1,60 @@
+\newtheorem{definition}{Definition}[section]
+\newtheorem{fact}[definition]{Fact}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{corollary}[definition]{Corollary}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{remark}[definition]{Remark}
+%\newtheorem{claim}[definition]{Claim}
+
+
+\newenvironment{newenumerate}{%
+  \begin{enumerate}%
+    \renewcommand{\labelenumi}{(\roman{enumi})}%
+    }{\end{enumerate}}
+
+\newcommand{\qedblack}{\hfill\blacksquare}
+\newcommand{\qed}{\hfill \ensuremath{\Box}}
+
+\newenvironment{proof}{\bigskip \noindent {\em Proof.} \rm }
+                     % {\begin{flushright} $\qed$ \end{flushright}}
+
+%comandi per l'esempio
+\newcounter{esemconta}
+\newcommand{\iniese}
+                    {
+                                \refstepcounter{esemconta}
+                                \medskip
+    \noindent {\bf Example \theesemconta}
+                        }
+                \newcommand{\finese}
+                        {
+            \smallskip
+                        }
+
+%comandi per l'osservazione
+\newcounter{remconta}
+\newcommand{\inirem}
+                        {
+                                \refstepcounter{remconta}
+                                \bigskip
+    \noindent {\bf Remark \theremconta}
+                        }
+                \newcommand{\finrem}
+                        {
+            \smallskip
+                        }
+
+% nieuwe enumerate: parts
+\def\parts{
+\ifnum \@enumdepth >3 \@toodeep
+\else
+   \advance\@enumdepth \@ne
+   \edef\@enumctr{enum\romannumeral\the\@enumdepth}
+   \list {\csname label\@enumctr\endcsname} {\usecounter{\@enumctr}
+    \itemsep 1pt \topsep 2pt \itemindent 0.5em
+   \ifnum \@enumdepth < 2 \topsep 4pt plus 1pt \itemsep 5pt plus 1pt \fi
+   \parsep 0pt plus 1pt \def\makelabel##1{\hss\llap{##1}}}
+\fi}
+\let\endparts =\endlist
+% einde parts
