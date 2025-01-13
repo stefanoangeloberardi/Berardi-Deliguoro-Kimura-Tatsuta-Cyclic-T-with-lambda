@@ -11,3 +11,5 @@ main.log
 *.gz
 *.pdf
 *.gz
+main.pdf
+main.synctex.gz
