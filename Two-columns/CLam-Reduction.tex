@@ -38,47 +38,30 @@ because the set of variables of type $A$ is denumerable for all $A$.
 \begin{lemma}\label{lem:substitution-composition} 
 If $x\neq y$ and $x \not \in \FV(v)$ then 
 \[t[u/x][v/y] = t[v/y][u[v/y]/x].\]
-
-%\hfill
-%\begin{enumerate}
-%\item \label{lem:substitution-composition-1}
-%	If $x \not \in \FV(t)$ then $t[u/x] = t$
-%\item \label{lem:substitution-composition-2}
-%	if $x\neq y$ and $x \not \in \FV(v)$ then \\
-%	$(t[u/x])[v/y] = (t[v/y])[u[v/y]/x]$ 
-%\end{enumerate}
 \end{lemma}
 
 \begin{proof} By coinduction and cases of $t$: the only interesting one is when
 $t = \lambda z.t'$. There are four subcases:
 
 \noindent
-$z \not\in \FV(u,v)$: this implies that $z \not\in \FV(u[v/y],v)$ since substitution
+$z \not\in \FV(u,v)$: this implies that $(*)$ $z \not\in \FV(u[v/y],v)$ since substitution
 does not generate new free variables. Then
 \[\begin{array}{lll}
 & (\lambda z.t') [u/x][v/y] \\
-= & 
+= & \lambda z. \ t' [\Restrict{(u/x)}{\overline{z}}][\Restrict{(v/y)}{\overline{z}}] \\
+= & \lambda z. \ t' [\Restrict{(v/y)}{\overline{z}}] [\Restrict{(u[v/y]/x)}{\overline{z}}] & \mbox{by $(*)$ and coinduction} \\
+= &  (\lambda z.t') [v/y][u[v/y]/x]
 \end{array}\]
+\noindent
+$z \in \FV(u) \cap \FV(v)$: in this case we have
+\[ (\lambda z.t') [u/x][v/y] = \lambda z_2. \ t' [\Restrict{(u/x)}{\overline{z}}, z_1/z][\Restrict{(v/y)}{\overline{z}}, z_2/z_1]  \]
+and 
+\[ (\lambda z.t') [v/y][u[v/y]/x] = \lambda z_4. \ t' [\Restrict{(v/y)}{\overline{z}}, z_3/z] [\Restrict{(u[v/y]/x)}{\overline{z}}, z_4/z_3] \]
+But even if coinduction is applicable, nothing guarantees that $z_1, z_2$ are the same as $z_3,z_4$ respectively, since 
+in the second equation above the substitution
+$u[v/y]$ might have been creeping in the process and some variables might have been chosen before $z_3$ or $z_4$ (say if
+$u = \lambda z'.u'$ with $z' \in \FV(v)$), which doesn't happen with the first equation of this subcase.
 
-
-%To prove (\ref{lem:substitution-composition-1}), 
-%all cases are trivial but when $t = \lambda y.t'$. 
-%%If $x \not \in \FV(t) \supseteq \FV(t')$, then $t'[u/x] = t'$ by coinduction.
-%If $y \not\in \FV(u)$ then $(\lambda y.t')[u/x] = \lambda y. t'[\Restrict{(u/x)}{\overline{y}}]$;
-%in case $x = y$, $[\Restrict{(u/x)}{\overline{y}}]$ is the empty substitution, so that 
-%$t'[\Restrict{(u/x)}{\overline{y}}] = t'$. Otherwise $[\Restrict{(u/x)}{\overline{y}}]  = [u/x]$, but
-%then $x \not \in \FV(t) \supseteq \FV(t')$, so that $t'[u/x] = t'$ by coinduction.
-%
-%If $y \in \FV(u)$ then $(\lambda y.t')[u/x] = \lambda z. t' [\Restrict{(u/x)}{\overline{y}}, z/y]$ for
-%some fresh $z \not \in \FV(t', u)$. Again, if $x = y$ then $[\Restrict{(u/x)}{\overline{y}}, z/y] = [z/x]$,
-
-
-%\noindent
-%\ref{lem:substitution-composition-1}) The only interesting
-%
-%\noindent
-%\ref{lem:substitution-composition-2})
-
-  
- \qed
+ %\qed
+(CRASH!)
 \end{proof}
