@@ -13,3 +13,6 @@ main.log
 *.gz
 main.pdf
 main.synctex.gz
+main.pdf
+*.gz
+*.pdf
