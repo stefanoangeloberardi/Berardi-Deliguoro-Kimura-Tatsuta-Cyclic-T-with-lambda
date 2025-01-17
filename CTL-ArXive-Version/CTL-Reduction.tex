@@ -1,7 +1,9 @@
-%!TEX root = CLam-2col-main.tex
+%!TEX root = CTL-main.tex
 \section{Substitution and reduction}\label{sec:reduction}
 
-For reasons that will be apparent in the definition of the type system, we do not identify $\alpha$-equivalent terms (a delicate issue in the case of infinitary $\lambda$-calculi). In the following definition we forget about the types of variables when immaterial or they can be understood from the context.
+As for finitary $\lambda$-calculus, we identify $\alpha$-equivalent terms, namely terms that can be obtained by renaming of their bound variables, to avoid capture of free variables under substitution.
+
+
 
 \medskip
 \begin{definition}[Substitution]\label{def:substitution}
