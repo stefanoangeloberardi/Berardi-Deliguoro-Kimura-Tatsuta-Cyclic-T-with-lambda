@@ -1,0 +1,83 @@
+%!TEX root = CLam-2col-main.tex
+\section{Infinite $\lambda$-terms}\label{sec:infinite-terms}
+
+Let $\Pos = \set{1, 2}^*$ be the set of {\em positions}; 
+we denote by $\epsilon$ the empty string in $\Pos$ 
+and by $\sigma\cdot\tau$ (or just $\sigma\tau$) the concatenation of $\sigma$ with
+$\tau$; concatenation is associative with  $\epsilon$ as unit. We say that $\sigma$ is a {\em perfix} of $\tau$,
+written $\sigma \leq \tau$, if $\tau = \sigma \tau'$ for some 
+$\tau' \in \Pos$; it is a {\em strict prefix}, written $\sigma < \tau$
+if $\tau' \neq \epsilon$.
+
+A {\em binary tree} $T$ is a non-empty prefix-closed subset of the set
+$\Pos$. The position $\epsilon$ is the {\em root} of $T$; 
+for $i = 1,2$, the position $\sigma i \in T$ is an {\em immediate descendant} of $\sigma$;
+$\sigma \in T$ is a {\em leaf} if it has no immediate descendant in $T$. 
+If $\sigma \in T$ then the {\em subtree of $T$ rooted at $\sigma$} is the set 
+$\SubTree{T}{\sigma} = \set{\tau \mid \sigma \tau \in T}$, which is
+a binary tree. Binary trees are finitary, but possibly infinite trees. %; ... (branches, paths etc.)
+
+A {\em $2$-ranked alphabet}
+$\Sigma$ is a set of symbols together with a map $\rank:\Sigma \to \nat$
+such that $\rank(\sigma) \leq 2$ for all $\sigma \in \Sigma$; a {\em binary tree which is labeled over
+the $2$-ranked alphabet} $\Sigma$ is a pair $\BTree = (T, \phi)$, where $T$ is a binary tree, 
+also denoted by $|\BTree|$  and called the {\em carrier} of $\BTree$, and
+$\LabelFun : T \to \Sigma$ is a mapping labelling the positions of $T$ to symbols in $\Sigma$, 
+which is consistent with their ranks,
+namely $\rank(\LabelFun(\sigma)) = |\set{\sigma i \mid \sigma i \in T}|$.
+
+The {\em subtree of $\BTree = (T, \LabelFun)$ rooted at $\sigma \in T$} is the tree 
+$\SubTree{\BTree}{\sigma} = (\SubTree{T}{\sigma}, \SubTree{\LabelFun}{\sigma})$
+where $(\SubTree{\LabelFun}{\sigma}) (\tau) = \LabelFun(\sigma \tau)$ for all
+$\tau \in \SubTree{T}{\sigma}$; clearly $\SubTree{\BTree}{\epsilon} = \BTree$.
+The tree $\BTree = (T, \LabelFun)$ is {\em regular}
+if the set $\set{\SubTree{\BTree}{\sigma} \mid \sigma \in |\BTree|}$ is finite.
+
+We define infinite $\lambda$-terms as certain labeled binary trees.
+\medskip
+
+\begin{definition}[Types and Tree Terms]\label{def:terms}
+Let $\Type$ be the least
+set such that $N \in \Type$ and $(A \to B) \in \Type$ if $A,B \in \Type$.
+Define the $2$-ranked alphabet $\SigmaTerm$ by
+\[\SigmaTerm = \set{x_i^A, \lambda x_i^A \mid i \in \nat \And A\in \Type} \cup \set{\ap, 0, \Succ, \cond}\]
+with $\rank(0) = \rank(x^A) = 0$, $\rank( \lambda x^A) = \rank(\Succ) = 1$, and
+$\rank(\ap) = \rank(\cond) = 2$.
+Then a {\em tree term} is a regular binary tree $\BTree = (T, \phi)$ labeled over $\SigmaTerm$; we
+call $\Term$ the set of (finite and infinite) tree terms.
+\end{definition}
+
+\medskip
+
+Alternatively, the set $\Term$ can be defined as the subset of {\em regular coterms}; the latter are
+{\em coinductively defined} by the grammar:
+\[ t, u ::= x^A \Par \lambda x^A.t \Par \ap(t,u) \Par 0 \Par \Succ (t) \Par \cond(t, u) \]
+using the symbol $\Par$ to mean the coinductive reading of the productions,
+where $x^A$ ranges over a denumerable set of variables for each $A \in \Type$.
+A coterm $t$ is {\em regular} if the set of its subexpressions $\SubTerm(t)$ is finite,
+where the mappimg $\SubTerm$ is corecursively defined by $\SubTerm(t) = \set{t}$ if $t = x^A, 0$, 
+$\SubTerm(\lambda x^A.t) = \set{\lambda x^A.t} \cup \SubTerm(t)$, 
+$\SubTerm(\Succ(t)) = \set{\Succ(t)} \cup \SubTerm(t)$,
+$\SubTerm(\ap(t,u)) = \set{\ap(t,u)} \cup \SubTerm(t) \cup \SubTerm(u)$,
+$\SubTerm(\cond(t,u)) = \set{\cond(t,u)} \cup \SubTerm(t) \cup \SubTerm(u)$.
+
+Tree terms in the sense of Definition \ref{def:terms} are exactly the syntactical trees of regular coterms. 
+We write $\BTree_t$ for the syntactic tree of the coterm $t$, then we set $|t| = |\BTree_t|$ and for
+a position $\sigma \in |t|$ we set $\SubTree{t}{\sigma} = u$ if $u \in \SubTerm(t)$ is the unique 
+coterm such that $\BTree_u = \SubTree{\BTree_t}{\sigma}$; hence $t$ is regular if and only if $\BTree_t$
+is a regular tree. By abusing terminology, we shall 
+identify tree terms and coterms, and call them just terms.
+
+Free and bound variables of a term $t$, noted $\FV(t)$ and $\BV(t)$ respectively, are defined in a similar 
+way than for the ordinary $\lambda$-calculus, but using coinduction instead of induction; by regularity both 
+$\FV(t)$ and $\BV(t)$ are finite for any term $t$. Finally if $\vec{t} = t_1, \ldots , t_n$ then $\FV(\vec{t})$ abbreviates
+$\bigcup_i \FV(t_i)$, and similarly $\BV(\vec{t})$.
+
+\medskip
+{\em Abbreviations.} Types in $\Type$ are just simple types with the only atom $N$.
+A type $(A_1 \to (\cdots (A_n \to B) \cdots))$ is abbreviated by $(A_1, \ldots, A_n \to B)$,
+omitting external braces when clear from the context.
+We write $tu$ as the infix notation of the application $\ap(t,u)$; application associates to the left.
+Observe that in Definition \ref{def:terms} terms are untyped since types occur just as decoration of variables, without any constraint
+to term formation.
+

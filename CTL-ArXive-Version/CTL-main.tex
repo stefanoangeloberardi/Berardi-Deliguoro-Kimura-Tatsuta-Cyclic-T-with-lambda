@@ -1,0 +1,46 @@
+\documentclass{article}[24pt]
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{mymath,proof,latexsym}
+\usepackage{xcolor}
+\usepackage[pdftex,outline]{contour}
+\usepackage{dsfont}
+\usepackage{mystyle}
+\A4page
+
+%\input{ambienti}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+
+\newenvironment{proof}[1][Proof]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{example}[1][Example]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{remark}[1][Remark]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+
+\input{macro}
+
+\title{\bf Infinite Lambda-terms for Cyclic System {\em T}}
+\author{}
+
+\begin{document}
+
+\sloppy 
+\hbadness=10000
+\vbadness=10000
+
+\maketitle
+\begin{abstract}
+bla
+\end{abstract}
+
+\input{CTL-Infinite-Terms}
+\input{CTL-Reduction}
+
+
+\end{document}
