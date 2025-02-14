@@ -1,0 +1,70 @@
+%!TEX root = CTL-main.tex
+\section{Substitution and reduction}\label{sec:reduction}
+
+As for finitary $\lambda$-calculus, we identify $\alpha$-equivalent terms, namely terms that can be obtained by renaming of their bound variables, to avoid capture of free variables under substitution.
+
+
+
+\medskip
+\begin{definition}[Substitution]\label{def:substitution}
+Let $\vec{x} = x_1, \ldots , x_n$ be pairwise distinct variables, and $\vec{u} = u_1, \ldots u_n$ terms in $\Term$. 
+Define the {\em simultaneous substitution} $t[u_1/x_1,\ldots,u_n/x_n]$, also written $t[\vec{u}/{\vec{x}}]$, of the $x_i$ by $u_i$ in $t$
+by corecursion on $t$:
+\begin{enumerate}
+\item $x_i [\vec{u}/{\vec{x}}] = u_i$, $y [\vec{u}/{\vec{x}}] = y$ if $y \not\in \vec{x}$
+\item $(t v)[\vec{u}/{\vec{x}}] = (t [\vec{u}/{\vec{x}}])(v [\vec{u}/{\vec{x}}])$  \vspace{1mm}
+\item \label{def:substitution-lambda}
+         $(\lambda y^A.t) [\vec{u}/{\vec{x}}] = % \lambda z^A. (t [z/y])  [\vec{u}/{\vec{x}}]$ for some $z \not \in \FV(\vec{u}) \cup \vec{x}$
+		\left\{ \begin{array}{ll}
+		\lambda y^A. (t [\Restrict{(\vec{u}/\vec{x})}{\overline{y}}]) & \mbox{if $y \not \in \FV(\vec{u})$} \\
+												     % & \mbox{$\vec{x} \cap \FV(t) = \emptyset$} \\
+		\lambda z^A. t [\Restrict{(\vec{u}/\vec{x})}{\overline{y}}, z/y] & \mbox{otherwise}
+		\end{array}\right.$
+	where $z \not \in \FV(t,\vec{u})$ is a fresh variable and $\Restrict{(\vec{u}/\vec{x})}{\overline{y}}$ 
+	is obtained by removing the pair $u'/y$ from $\vec{u}/{\vec{x}}$ for if any
+\item $0  [\vec{u}/{\vec{x}}] = 0$
+\item $(\Succ(t)) [\vec{u}/{\vec{x}}] = \Succ (t [\vec{u}/{\vec{x}}])$
+\item $(\cond(t,v)) [\vec{u}/{\vec{x}}] = \cond(t [\vec{u}/{\vec{x}}], v [\vec{u}/{\vec{x}}])$
+\end{enumerate}
+A {\em substitution} $\theta$ is a mapping over $\Term$ defined by $\theta(t) = t[\vec{u}/{\vec{x}}]$; $\theta$ is a {\em renaming} if all
+the terms in $\vec{u}$ are pairwise distinct variables.
+\end{definition}
+
+It is straightforward to show that $t[\vec{u}/{\vec{x}}]$ is well defined and uniquely determined if the
+fresh $z$ in (\ref{def:substitution-lambda}) is the least variable not in $\FV(t,\vec{u})$ w.r.t. some fixed and
+well-founded order of the variables of type $A$; such a $z$ exists since $\FV(t,\vec{u})$ is finite by the regularity of $t$ and of the $u_i$ and
+because the set of variables of type $A$ is denumerable for all $A$. 
+
+%\medskip
+\vspace{1mm}
+\begin{lemma}\label{lem:substitution-composition} 
+If $x\neq y$ and $x \not \in \FV(v)$ then 
+\[t[u/x][v/y] = t[v/y][u[v/y]/x].\]
+\end{lemma}
+
+\begin{proof} By coinduction and cases of $t$: the only interesting one is when
+$t = \lambda z.t'$. There are four subcases:
+
+\noindent
+$z \not\in \FV(u,v)$: this implies that $(*)$ $z \not\in \FV(u[v/y],v)$ since substitution
+does not generate new free variables. Then
+\[\begin{array}{lll}
+& (\lambda z.t') [u/x][v/y] \\
+= & \lambda z. \ t' [\Restrict{(u/x)}{\overline{z}}][\Restrict{(v/y)}{\overline{z}}] \\
+= & \lambda z. \ t' [\Restrict{(v/y)}{\overline{z}}] [\Restrict{(u[v/y]/x)}{\overline{z}}] & \mbox{by $(*)$ and coinduction} \\
+= &  (\lambda z.t') [v/y][u[v/y]/x]
+\end{array}\]
+\noindent
+$z \in \FV(u) \cap \FV(v)$: in this case we have
+\[ (\lambda z.t') [u/x][v/y] = \lambda z_2. \ t' [\Restrict{(u/x)}{\overline{z}}, z_1/z][\Restrict{(v/y)}{\overline{z}}, z_2/z_1]  \]
+and 
+\[ (\lambda z.t') [v/y][u[v/y]/x] = \lambda z_4. \ t' [\Restrict{(v/y)}{\overline{z}}, z_3/z] [\Restrict{(u[v/y]/x)}{\overline{z}}, z_4/z_3] \]
+But even if coinduction is applicable, nothing guarantees that $z_1, z_2$ are the same as $z_3,z_4$ respectively, since 
+in the second equation above the substitution
+$u[v/y]$ might have been creeping in the process and some variables might have been chosen before $z_3$ or $z_4$ (say if
+$u = \lambda z'.u'$ with $z' \in \FV(v)$), which doesn't happen with the first equation of this subcase.
+
+The remaining cases when $z \in \FV(u,v)$ but not in $ \FV(u) \cap \FV(v)$ are equally problematic.
+ %\qed
+(CRASH!)
+\end{proof}

@@ -56,7 +56,7 @@ In this article, we sometimes abbreviate $f(x)(y)$ with $f(x,y)$, in this way we
 \begin{definition}[$\AckA$]
   We define $\AckA \in \LAMBDA$ by the following infinite regular term .
   \[
-  \AckA = \lambda \redM\bluen.\Cond{\Suc{\bluen}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(\bluen)}(\redM)
+  \AckA = \lambda \redN\bluen.\Cond{\Suc{\bluen}}{\lambda m'.\Cond{\AckA(m',1)}{\lambda n'.\AckA(m',\AckA(\Suc{m'},n'))}(\bluen)}(\redm)
   \]
 \end{definition}
 
@@ -117,7 +117,7 @@ different: $\underline{\Suc{m}}$ is decomposed into $\underline{m}$ by the $\tex
 then $\Suc{\underline{m}}$ is constructed by substituting $m'$ of $\Suc{m'}$ by $\underline{m}$. 
 When we loop from the rightmost occurrence of $\AckA$ 
 in the picture above back to the root of $\AckA$, the input $\Suc{m}$ of $\AckA$ is sent without any change to the first argument of $\AckA$. The globale trace algorithm fails to notice this: 
-in order to notice it, the two terms $\Suc{m}$ should have the same local name $\redM$.
+in order to notice it, the two terms $\Suc{m}$ should have the same local name $\redm$.
 As a consequence, the trace of $\Suc{m}$ is cut in this point and some infinitely progressing trace
 disappears.
 
@@ -254,8 +254,8 @@ by writing $m$ in the place of $\Suc{m'}$.
 \begin{definition}[$\AckB$]
   We define $\AckB$ by the following infinite regular term of $\LAMBDA$.
   \[
-  \AckB = \lambda \redM\bluen.
-\Cond{\Suc{\bluen}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(\redM,n'))}(\bluen)}(\redM)
+  \AckB = \lambda \redm\bluen.
+\Cond{\Suc{\bluen}}{\lambda m'.\Cond{\AckB(m',1)}{\lambda n'.\AckB(m',\AckB(\redm,n'))}(\bluen)}(\redm)
   \]
 \end{definition}
 
