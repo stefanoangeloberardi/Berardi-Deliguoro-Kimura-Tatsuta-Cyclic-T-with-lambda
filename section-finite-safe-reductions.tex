@@ -128,7 +128,11 @@ $t_k = u[\cond(f_1,g_1), \ldots, \cond(f_m,g_m)]$ and all reductions from $t_k$ 
 some $g_1, \ldots, g_m$. This means for all $h \in \N$, $h \ge k$ we  have
 $\Succ^{h}(t_{h}) =  u[\cond(f_1,g'_1), \ldots, \cond(f_n,g'_m)]$ for some 
 $g'_1, \ldots, g'_m$. This implies that first $h$ symbols of $u$ are $\Succ$.
-This is a contradiction when $h$ is larger than $k$, which is the number of symbols in $u$.
+This is a contradiction when $h$ is larger than 
+%%%%%%%%%%%%%%%%%%%%%
+% 12:40 14/02/2025 REMOVED: ``$k$, which is''
+%%%%%%%%%%%%%%%%%%%%%
+the number of symbols in $u$.
 
 \item
 %\label{lemma-prec-order-02}
@@ -1039,13 +1043,28 @@ and for all terms which satisfy the global trace condition.
 %{\color{red} Kimura}
 Note that $\CTlambda$ is {\bf \emph{not} closed under infinite reductions}:
 the limit of any infinite reduction of any term of $\CTlambda$
-exists and it is unique in $\LAMBDA$, yet it is often not in $\CTlambda$.
+exists and it is unique in $\LAMBDA$, yet it is often not in $\CTlambda$
+because it is often not regular.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%MODIFIED 11/02/2025 to make precise the infinitely progressing trace
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
 As an example, 
 consider a term $f = \lambda x^\N.\cond(x,f(\Succ x))$, which actually 
-implements the addition. $f$ has a type 
-$\N,\N\rightarrow\N$. $f$ is regular, and it is in $\GTC$ because
-the unique infinite branch crosses the right-hand-side of a $\cond$
+implements the addition. $f$ is regular. $f$ has a type 
+$\N,\N\rightarrow\N$ and we trace the second argument 
+$\bfColor{red}{\N}$ of $f$. 
+The unique infinite branch of $f$ is 
+$$
+f : \N,\bfColor{red}{\N}\rightarrow\N, \ \ \ 
+\cond(x,f(\Succ x)) : \bfColor{red}{\N}\rightarrow\N, \ \ \ 
+f(\Succ x) : \bfColor{red}{\N}\rightarrow\N, \ \ \ 
+f : \N,\bfColor{red}{\N}\rightarrow\N, \ \ \ 
+\ldots
+$$
+$f$ is in $\GTC$ because in this unique infinite branch 
+the trace of the second argument crosses the right-hand-side of a $\cond$
 infinitely many times.
 Hence $f\in\CTlambda$.
 From $f(x) \reduces \cond(n,f(\Succ n))$ we deduce that
@@ -1064,17 +1083,28 @@ From $f(x) \reduces \cond(n,f(\Succ n))$ we deduce that
   because 
   
   $$
-  f(\Succ^n(0))(\Succ^m(0)) \reduces \cond(n,\cond(\Succ(n),\cond(\Succ^2(n),\cdots)))(\Succ^m(0)) \reduces\Succ^{n+m})(0)
+  f(\Succ^n(0))(\Succ^m(0)) \reduces \cond(n,\cond(\Succ(n),\cond(\Succ^2(n),\cdots)))(\Succ^m(0)) \reduces (\Succ^{n+m})(0)
   $$
   
 This is an unfortunate but common situation for the limit of a sequence
-in a topology:
-finiteness (which in our case is expressed by \emph{regulary}) is easily lost
-under limit.
+in a topology: finiteness (which in our case is expressed by \emph{regularity} 
+for trees) is easily lost under limit.
+
 An example: suppose $T_{n}$ is the complete binary tree of height $n$ and
 $T_{\infty}$ is the complete infinite binary tree. Then
 $\lim_{n \rightarrow \infty} T_{n} = T_{\infty}$ and all $T_{n}$ are finite,
 yet $T_{\infty}$ is not finite.
+
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END MODIFICATION 11/02/2025 for the infinitely progressing trace
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+%
+
 
 \subsection
 {Closed Safe-Normal terms of $\CTlambda$ of type $\N$ are Numeral}

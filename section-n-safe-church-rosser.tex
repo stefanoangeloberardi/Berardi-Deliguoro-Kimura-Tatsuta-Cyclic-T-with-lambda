@@ -96,9 +96,9 @@ as stated in the next lemma.
   \begin{enumerate}
   \item\label{lem:split_context1}
     For any $\Lctx{n}$, there uniquely exists
-    $(\Lctx{0},\Lctx{n-1}^{1},\ldots,\Lctx{n-1}^{k})$ such that
+    $(\Lctx{0},\Lctx{n-1,1},\ldots,\Lctx{n-1,k})$ such that
     $\Lctx{0}$ has $k$-holes and
-    $\Lctx{n} = \Lctx{0}[\Lctx{n-1}^1,\ldots,\Lctx{n-1}^k]$, namely $\Lctx{n}[\vec{t_1},\ldots,\vec{t_k}] = \Lctx{0}[\Lctx{n-1}^1[\vec{t_1}],\ldots,\Lctx{n-1}^k[\vec{t_k}]]$ holds for any $\vec{t_1},\ldots,\vec{t_k}$. 
+    $\Lctx{n} = \Lctx{0}[\Lctx{n-1,1},\ldots,\Lctx{n-1,k}]$, namely $\Lctx{n}[\vec{t_1},\ldots,\vec{t_k}] = \Lctx{0}[\Lctx{n-1,1}[\vec{t_1}],\ldots,\Lctx{n-1,k}[\vec{t_k}]]$ holds for any $\vec{t_1},\ldots,\vec{t_k}$. 
   \item\label{lem:split_context2}
     Let $t\in\GTC$ and $n\ge 0$.
     There uniquely exists $(\Lctx{n},t_1,\ldots,t_k)$
@@ -143,12 +143,12 @@ as stated in the next lemma.
   that satisfies $t = \Lctx{0}[t_1,\ldots,t_k]$ and
   each $t_i$ appears at the $1$-safe level of $t$.
   For each $i$, by applying the induction hypothesis to $t_i$,
-  we have unique $(\Lctx{0}^i,\vec{t'_i})$
-  satisfies $t_i = \Lctx{0}^i[\vec{t'_i}]$ and $\vec{t'_i}$ appear
+  we have unique $(\Lctx{0,i},\vec{t'_i})$
+  satisfies $t_i = \Lctx{0,i}[\vec{t'_i}]$ and $\vec{t'_i}$ appear
   at the $(n-1)$-safe level of $t_i$. 
-  Then $(\Lctx{0}[\Lctx{n-1}^1,\ldots,\Lctx{n-1}^k],\vec{t'_1},\ldots,\vec{t'_k})$
+  Then $(\Lctx{0}[\Lctx{n-1,1},\ldots,\Lctx{n-1,k}],\vec{t'_1},\ldots,\vec{t'_k})$
   satisfies the expected condition for $t$.
-  Its uniqueness is obtained by using the uniqueness of $\Lctx{0}$ and $\Lctx{n-1}^i$,
+  Its uniqueness is obtained by using the uniqueness of $\Lctx{0}$ and $\Lctx{n-1,i}$,
   and the point \ref{lem:split_context1}. 
 \end{proof}
 
@@ -260,7 +260,7 @@ The relation $\nsafePReduces{n}$ satisfies the following basic properties.
   \item\label{lem:parallel_basic1}
     $n < n'$ and $t \nsafePReduces{n} t'$ implies $t \nsafePReduces{n'} t'$ (monotonicity). 
   \item\label{lem:parallel_basic2}
-    If $t \nsafeReduces{n,\cond} t'$, then $t \nsafePReduces{n} t'$. 
+    If $t \nsafeReduces{n} t'$, then $t \nsafePReduces{n} t'$. 
   \item\label{lem:parallel_basic3}
     If $t \nsafePReduces{n} t'$, then $t \nsafeReducesAst{n} t'$.
   \item\label{lem:parallel_basic4}
@@ -272,7 +272,7 @@ The relation $\nsafePReduces{n}$ satisfies the following basic properties.
   The point~\ref{lem:parallel_basic1} is shown by induction on $\nsafePReduces{n}$.
   
   We show the point~\ref{lem:parallel_basic2}.
-  For $t$ and $t'$ such as $t\nsafeReduces{n,\cond} t'$
+  For $t$ and $t'$ such as $t\nsafeReduces{n} t'$
   that reduces a redex $t_R$ occuring in $t$, 
   define $r(t,t')$ as the length of the path from $t$ to $t_R$.
   The proof is done by induction of $r(t,t')$.
@@ -281,13 +281,13 @@ The relation $\nsafePReduces{n}$ satisfies the following basic properties.
   or $(\cond\,\Succ)$. 
   The case of $r(t,t') > 0$ is shown by the case analysis of the form of $t$.
   The case of $t=\Suc{t_1}$ and $t_R$ appears in $t_1$.
-  The reduction is $\Suc{t_1} \nsafeReduces{n,\cond} \Suc{t'_1} = t'$ with $t_1 \nsafeReduces{n,\cond} t'_1$. 
+  The reduction is $\Suc{t_1} \nsafeReduces{n} \Suc{t'_1} = t'$ with $t_1 \nsafeReduces{n} t'_1$. 
   Then we have $t_1 \nsafePReduces{n} t'_1$ by the induction hypothesis with $r(t_1,t'_1) < r(t,t')$.
   Hence $\Suc{t_1} \nsafePReduces{n} \Suc{t'_1}$ by $(\Succ)$. 
   The cases of $t=t_1t_2$ and $t=\lambda x^A.t_1$ are also shown by the induction hypothesis. 
   The case of $t=\Cond{a}{f}$ and $t_R$ appears in $a$ is shown by the induction hypothesis.
   The case of $t=\Cond{a}{f}$ and $t_R$ appears in $f$.
-  The reduction is $\Cond{a}{f} \nsafeReduces{n,\cond} \Cond{a}{f'} = t'$ with $f \nsafeReduces{n-1} f'$. 
+  The reduction is $\Cond{a}{f} \nsafeReduces{n} \Cond{a}{f'} = t'$ with $f \nsafeReduces{n-1} f'$. 
   Then we have $f \nsafePReduces{n-1} f'$ by the induction hypothesis with $r(f,f') < r(t,t')$.
   Hence $\Cond{a}{f} \nsafePReduces{n} \Cond{a}{f'}$ by ($\cond$).
 
@@ -318,7 +318,7 @@ The relation $\nsafePReduces{n}$ satisfies the following basic properties.
   $((\lambda y^B.t_1)t_2)[u/x^A] = (\lambda y^B.(t_1[u/x^A]))t_2[u/x^A] \nsafePReduces{n} t_1[u/x^A][t_2[u/x^A]/y^B] = t_1[t_2/y^B][u/x^A]$ as we wished. 
 \end{proof}
 
-The next lemma says that the $n$-equality simulates 
+The next lemma says that the $n$-equality simulates $\nsafePReduces{n}$.
 \begin{lemma}\label{lem:parallel_eq}
   Let $t_1, t_2 \in \GTC$ and $n\ge 0$.
   If $t_1 \nequal{n,\cond} t_2 \nsafePReduces{n} t_2'$,
