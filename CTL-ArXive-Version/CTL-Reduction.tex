@@ -1,9 +1,6 @@
 %!TEX root = CTL-main.tex
 \section{Substitution and reduction}\label{sec:reduction}
 
-As for finitary $\lambda$-calculus, we identify $\alpha$-equivalent terms, namely terms that can be obtained by renaming of their bound variables, to avoid capture of free variables under substitution.
-
-
 
 \medskip
 \begin{definition}[Substitution]\label{def:substitution}
@@ -31,40 +28,56 @@ the terms in $\vec{u}$ are pairwise distinct variables.
 \end{definition}
 
 It is straightforward to show that $t[\vec{u}/{\vec{x}}]$ is well defined and uniquely determined if the
-fresh $z$ in (\ref{def:substitution-lambda}) is the least variable not in $\FV(t,\vec{u})$ w.r.t. some fixed and
+fresh $z$ in (\ref{def:substitution}.\ref{def:substitution-lambda}) is the least variable not in $\FV(t,\vec{u})$ w.r.t. some fixed and
 well-founded order of the variables of type $A$; such a $z$ exists since $\FV(t,\vec{u})$ is finite by the regularity of $t$ and of the $u_i$ and
 because the set of variables of type $A$ is denumerable for all $A$. 
+
+As for finitary $\lambda$-calculus, we identify $\alpha$-equivalent terms, namely terms that can be obtained by renaming of their bound variables, to avoid capture of free variables under substitution. This is achieved via the following coinductive definition, where double lines are used in the rules to stress that we take the greatest fixed point of the endo-function of binary relations over $\Term$ associated to the them.
+
+\begin{definition}[$\alpha$-equivalence]\label{def:alpha-equivalence}
+The binary relation $=_\alpha$ over $\Term$ is coinductively defined by the rules:
+\[\begin{array}{ccc}
+ \infer=[]{x =_\alpha x}{x \in \Var} &
+ \infer=[]{tu =_\alpha t'u'}{t =_\alpha t' \quad s =_\alpha s'} &
+ \infer=[]{\lambda x.t =_\alpha \lambda y. s[y/x]}{t =_\alpha s \quad y \not \in \FV(t,s)} \\[2mm]
+ \infer=[]{0 =_\alpha 0}{} & 
+ \infer=[]{\Succ(t) =_\alpha \Succ(s)}{t =_\alpha s} &
+ \infer=[]{\cond(t, s) =_\alpha \cond(t', s')}{t =_\alpha t' \quad s =_\alpha s'}
+\end{array}\]
+and their symmetric.
+\end{definition}
 
 %\medskip
 \vspace{1mm}
 \begin{lemma}\label{lem:substitution-composition} 
 If $x\neq y$ and $x \not \in \FV(v)$ then 
-\[t[u/x][v/y] = t[v/y][u[v/y]/x].\]
+\[t[u/x][v/y] =_\alpha t[v/y][u[v/y]/x].\]
 \end{lemma}
 
 \begin{proof} By coinduction and cases of $t$: the only interesting one is when
-$t = \lambda z.t'$. There are four subcases:
-
-\noindent
-$z \not\in \FV(u,v)$: this implies that $(*)$ $z \not\in \FV(u[v/y],v)$ since substitution
+$t = \lambda z.t'$: by Definition \ref{def:alpha-equivalence} we can freely assume
+that $z \not\in \FV(u,v)$, since otherwise it can be replaced by some fresh $z'$ in $t'$ yielding
+the term $\lambda z'.t'[z'/z] =_\alpha \lambda z.t'$. That $z \not\in \FV(u,v)$ implies 
+$(*)$ $z \not\in \FV(u[v/y],v)$ since substitution
 does not generate new free variables. Then
 \[\begin{array}{lll}
 & (\lambda z.t') [u/x][v/y] \\
 = & \lambda z. \ t' [\Restrict{(u/x)}{\overline{z}}][\Restrict{(v/y)}{\overline{z}}] \\
-= & \lambda z. \ t' [\Restrict{(v/y)}{\overline{z}}] [\Restrict{(u[v/y]/x)}{\overline{z}}] & \mbox{by $(*)$ and coinduction} \\
+=_\alpha & \lambda z. \ t' [\Restrict{(v/y)}{\overline{z}}] [\Restrict{(u[v/y]/x)}{\overline{z}}] & \mbox{by $(*)$ and coinduction} \\
 = &  (\lambda z.t') [v/y][u[v/y]/x]
 \end{array}\]
-\noindent
-$z \in \FV(u) \cap \FV(v)$: in this case we have
-\[ (\lambda z.t') [u/x][v/y] = \lambda z_2. \ t' [\Restrict{(u/x)}{\overline{z}}, z_1/z][\Restrict{(v/y)}{\overline{z}}, z_2/z_1]  \]
-and 
-\[ (\lambda z.t') [v/y][u[v/y]/x] = \lambda z_4. \ t' [\Restrict{(v/y)}{\overline{z}}, z_3/z] [\Restrict{(u[v/y]/x)}{\overline{z}}, z_4/z_3] \]
-But even if coinduction is applicable, nothing guarantees that $z_1, z_2$ are the same as $z_3,z_4$ respectively, since 
-in the second equation above the substitution
-$u[v/y]$ might have been creeping in the process and some variables might have been chosen before $z_3$ or $z_4$ (say if
-$u = \lambda z'.u'$ with $z' \in \FV(v)$), which doesn't happen with the first equation of this subcase.
-
-The remaining cases when $z \in \FV(u,v)$ but not in $ \FV(u) \cap \FV(v)$ are equally problematic.
- %\qed
-(CRASH!)
+%\noindent
+%$z \in \FV(u) \cap \FV(v)$: in this case we have
+%\[ (\lambda z.t') [u/x][v/y] = \lambda z_2. \ t' [\Restrict{(u/x)}{\overline{z}}, z_1/z][\Restrict{(v/y)}{\overline{z}}, z_2/z_1]  \]
+%and 
+%\[ (\lambda z.t') [v/y][u[v/y]/x] = \lambda z_4. \ t' [\Restrict{(v/y)}{\overline{z}}, z_3/z] [\Restrict{(u[v/y]/x)}{\overline{z}}, z_4/z_3] \]
+%where $z_1, z_2$ and $z_3,z_4$ are fresh variables.
+%
+%But even if coinduction is applicable, nothing guarantees that $z_1, z_2$ are the same as $z_3,z_4$ respectively, since 
+%in the second equation above the substitution
+%$u[v/y]$ might have been creeping in the process and some variables might have been chosen before $z_3$ or $z_4$ (say if
+%$u = \lambda z'.u'$ with $z' \in \FV(v)$), which doesn't happen with the first equation of this subcase.
+%
+%The remaining two cases when $z \in \FV(u,v)$ but not in $ \FV(u) \cap \FV(v)$ are similar and easier.
+\qed
 \end{proof}
