@@ -74,16 +74,27 @@ does not generate new free variables. Then
 Let $\reduces_\beta$ and $\reduces_\cond$ be binary relations over $\Term$ that are the compatible closure of the rules:
 
 \begin{enumerate}
-\item $(\lambda x.t)u \reduces_\beta t[u/x]$
-\item $\cond(f,g)(0) \reduces_\cond f$
-\item $\cond(f,g)(\Succ (t)) \reduces_\cond g(t)$
+\item \label{def:reduction-1} $(\lambda x.t)u \reduces_\beta t[u/x]$
+\item \label{def:reduction-2} $\cond(f,g)(0) \reduces_\cond f$
+\item \label{def:reduction-3} $\cond(f,g)(\Succ (t)) \reduces_\cond g(t)$
 \end{enumerate}
 We define $\reduces = \reduces_\beta \cup \reduces_\cond$, $\reduces^+$ and $\reduces^*$ as the transitive, and reflexive and transitive
 closures of $\reduces$ respectively.
 \end{definition}
 
-The {\em $\cond$-depth} of a position $\sigma \in \BTree_t$, the syntactic tree of $t$, is the number of prefixes $\tau 2 \leq \sigma$ such that
-the label of $\tau$ is $\cond$. In words, it is the number of occurrences of $\cond$ in the branch from the root of $\BTree_t$ to $\sigma$
-where the branch traverses the second argument of $\cond$ and includes its root.
+The left-han-sides in (\ref{def:reduction-1})-(\ref{def:reduction-3}) above are called {\em redexes}.
+Let $(\BTree_t, \varphi_t)$ be the syntactic tree of $t\in \Term$;
+the {\em $\cond$-depth} of a position $\sigma \in \BTree_t$ is the number of occurrences of $\cond$ 
+in the branch from the root of $\BTree_t$ to $\sigma$ when it traverses the second argument of $\cond$ and includes its root.
+Formally
+\[\condDepth{\sigma} = |\set{\tau 2 \leq \sigma \mid \varphi_t(\tau) = \cond}|\]
+The {\em $n$-safe level} of $t$ is the set of nodes $\set{\sigma \in \BTree_t \mid \condDepth{\sigma} \leq n}$.
+%\newcommand{\condDepth}[1]{\textit{$\cond$-depth}(#1)}
 
+\begin{definition}[$n$-Safe Reduction and Normal Forml]\label{def:n-safe}
+Let $(\BTree_t, \varphi_t)$ be the syntactic tree of $t\in \Term$, and $\sigma \in \BTree_t$; the {\em $\cond$-depth} of
+$\sigma$ is $\condDepth{\sigma} = |\set{\tau 2 \leq \sigma \mid \varphi_t(\tau) = \cond}|$. 
+
+The $n$-safe level of $t$ is the set of nodes $\set{\sigma \in \BTree_t \mid \condDepth{\sigma} \leq n}$.
+\end{definition}
 
