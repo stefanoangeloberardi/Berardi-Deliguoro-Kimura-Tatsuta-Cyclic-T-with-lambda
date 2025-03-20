@@ -69,16 +69,18 @@ is a regular tree. By abusing terminology, we shall
 identify tree terms and coterms, and call them just terms.
 
 \medskip
-{\em Abbreviations.} 
-Free and bound variables of a term $t$, noted $\FV(t)$ and $\BV(t)$ respectively, are defined in a similar 
-way than for the ordinary $\lambda$-calculus, but using coinduction instead of induction; by regularity both 
-$\FV(t)$ and $\BV(t)$ are finite for any term $t$. Finally if $\vec{t} = t_1, \ldots , t_n$ then $\FV(\vec{t})$ abbreviates
-$\bigcup_i \FV(t_i)$, and similarly $\BV(\vec{t})$.
-
-Types in $\Type$ are just simple types with the only atom $N$.
+{\em Abbreviations.} Types in $\Type$ are just simple types with the only atom $N$.
 A type $(A_1 \to (\cdots (A_n \to B) \cdots))$ is abbreviated by $(A_1, \ldots, A_n \to B)$,
 omitting external braces when clear from the context.
 We write $tu$ as the infix notation of the application $\ap(t,u)$; application associates to the left.
 Observe that in Definition \ref{def:terms} terms are untyped since types occur just as decoration of variables, without any constraint
 to term formation.
 
+The superscript $A$ of $x^A$ is omitted when unnecessary.
+Free and bound variables of a term $t$, noted $\FV(t)$ and $\BV(t)$ respectively, are defined in a similar 
+way than for the ordinary $\lambda$-calculus, but using coinduction instead of induction; by regularity both 
+$\FV(t)$ and $\BV(t)$ are finite for any term $t$. Finally if $\vec{t} = t_1, \ldots , t_n$ then $\FV(\vec{t})$ abbreviates
+$\bigcup_i \FV(t_i)$, and similarly $\BV(\vec{t})$.
+
+A {\em numeral} is either $0$ or $\Succ(n)$ where $n$ is a numeral. In the examples, we informally write $1, 2, \ldots$ as well as
+$n + 1, n + 2, \ldots$ and $n - 1, n - 2, \ldots$ with the obvious meanings.

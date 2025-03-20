@@ -66,18 +66,24 @@ does not generate new free variables. Then
 =_\alpha & \lambda z. \ t' [\Restrict{(v/y)}{\overline{z}}] [\Restrict{(u[v/y]/x)}{\overline{z}}] & \mbox{by $(*)$ and coinduction} \\
 = &  (\lambda z.t') [v/y][u[v/y]/x]
 \end{array}\]
-%\noindent
-%$z \in \FV(u) \cap \FV(v)$: in this case we have
-%\[ (\lambda z.t') [u/x][v/y] = \lambda z_2. \ t' [\Restrict{(u/x)}{\overline{z}}, z_1/z][\Restrict{(v/y)}{\overline{z}}, z_2/z_1]  \]
-%and 
-%\[ (\lambda z.t') [v/y][u[v/y]/x] = \lambda z_4. \ t' [\Restrict{(v/y)}{\overline{z}}, z_3/z] [\Restrict{(u[v/y]/x)}{\overline{z}}, z_4/z_3] \]
-%where $z_1, z_2$ and $z_3,z_4$ are fresh variables.
-%
-%But even if coinduction is applicable, nothing guarantees that $z_1, z_2$ are the same as $z_3,z_4$ respectively, since 
-%in the second equation above the substitution
-%$u[v/y]$ might have been creeping in the process and some variables might have been chosen before $z_3$ or $z_4$ (say if
-%$u = \lambda z'.u'$ with $z' \in \FV(v)$), which doesn't happen with the first equation of this subcase.
-%
-%The remaining two cases when $z \in \FV(u,v)$ but not in $ \FV(u) \cap \FV(v)$ are similar and easier.
 \qed
 \end{proof}
+
+\begin{definition}[Reductions $\reduces_\beta$, $\reduces_\cond$]\label{def:reduction}
+%\hfill 
+Let $\reduces_\beta$ and $\reduces_\cond$ be binary relations over $\Term$ that are the compatible closure of the rules:
+
+\begin{enumerate}
+\item $(\lambda x.t)u \reduces_\beta t[u/x]$
+\item $\cond(f,g)(0) \reduces_\cond f$
+\item $\cond(f,g)(\Succ (t)) \reduces_\cond g(t)$
+\end{enumerate}
+We define $\reduces = \reduces_\beta \cup \reduces_\cond$, $\reduces^+$ and $\reduces^*$ as the transitive, and reflexive and transitive
+closures of $\reduces$ respectively.
+\end{definition}
+
+The {\em $\cond$-depth} of a position $\sigma \in \BTree_t$, the syntactic tree of $t$, is the number of prefixes $\tau 2 \leq \sigma$ such that
+the label of $\tau$ is $\cond$. In words, it is the number of occurrences of $\cond$ in the branch from the root of $\BTree_t$ to $\sigma$
+where the branch traverses the second argument of $\cond$ and includes its root.
+
+
