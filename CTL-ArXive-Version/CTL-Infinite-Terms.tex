@@ -1,4 +1,4 @@
-%!TEX root = CLam-2col-main.tex
+%!TEX root = CTL-main.tex
 \section{Infinite $\lambda$-terms}\label{sec:infinite-terms}
 
 Let $\Pos = \set{1, 2}^*$ be the set of {\em positions}; 
@@ -68,13 +68,14 @@ coterm such that $\BTree_u = \SubTree{\BTree_t}{\sigma}$; hence $t$ is regular i
 is a regular tree. By abusing terminology, we shall 
 identify tree terms and coterms, and call them just terms.
 
+\medskip
+{\em Abbreviations.} 
 Free and bound variables of a term $t$, noted $\FV(t)$ and $\BV(t)$ respectively, are defined in a similar 
 way than for the ordinary $\lambda$-calculus, but using coinduction instead of induction; by regularity both 
 $\FV(t)$ and $\BV(t)$ are finite for any term $t$. Finally if $\vec{t} = t_1, \ldots , t_n$ then $\FV(\vec{t})$ abbreviates
 $\bigcup_i \FV(t_i)$, and similarly $\BV(\vec{t})$.
 
-\medskip
-{\em Abbreviations.} Types in $\Type$ are just simple types with the only atom $N$.
+Types in $\Type$ are just simple types with the only atom $N$.
 A type $(A_1 \to (\cdots (A_n \to B) \cdots))$ is abbreviated by $(A_1, \ldots, A_n \to B)$,
 omitting external braces when clear from the context.
 We write $tu$ as the infix notation of the application $\ap(t,u)$; application associates to the left.
