@@ -1,0 +1,145 @@
+\documentclass{article}
+
+\usepackage{amssymb,amsmath,proof,graphicx,color}
+\usepackage[pdftex,outline]{contour}
+
+\newcommand{\bfColor}[2]{{\bf \color{#1}{#2}}}
+\definecolor{oldgold}{rgb}{0.81, 0.71, 0.23}
+\definecolor{purple}{rgb}{0.8, 0.2, 0.8}
+
+\newcommand\Lim[1]{{\tt Lim}(#1)}
+\newcommand{\GTC}{{\tt GTC}}
+\newcommand{\Cond}[2]{{\tt cond}(#1,#2)}
+\newcommand{\Suc}[1]{{\tt S}(#1)}
+\newcommand{\safe}{ {\hbox{\scriptsize \tt safe}} }
+\newcommand{\reduces}{\mathbin{\mapsto}}
+\newcommand{\safeReduces} {\mathbin{\reduces_\safe}}
+\newcommand{\nsafeReduces}[1] {\mathbin{\reduces_{#1,\safe}}}
+\newcommand{\nsafeReducesL}[1] {\mathbin{\mapsfrom_{#1,\safe}}}
+\newcommand{\nsafeReducesAstL}[1] {\mathbin{\mapsfrom_{#1,\safe}^*}}
+\newcommand{\safeReducesAst} {\mathbin{\reduces_\safe^*}}
+\newcommand{\nsafeReducesAst}[1] {\mathbin{\reduces_{#1,\safe}^*}}
+\newcommand{\NFZ}{{\tt NF}_0}
+
+\newcommand\outline[1]{{\contour{black}{\textcolor{white}{#1}}}}
+\newcommand{\LAMBDA}{{\outline{$\Lambda$}}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+
+\newenvironment{proof}[1][Proof]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{example}[1][Example]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{remark}[1][Remark]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{claim}[1][Claim]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+
+\begin{document}
+
+{\Large\bf About equality on infinite terms}
+
+\vspace{10pt}
+
+\begin{remark}
+  We assume the following (not formally shown yet):
+  \begin{center}
+    Any $t\in \GTC$ has a unique normal form $\Lim{t}$ (limit of safe-reductions).
+  \end{center}
+\end{remark}
+
+\noindent{\bf Purpose of this article}\quad
+We want to characterlize the limit equivalence of terms in $\GTC$, 
+which means two terms have the same limit: $\Lim{t} = \Lim{u}$. 
+More formally, we try to coinductively define a binary relation $\approx$ that satisfies:
+\[
+t \approx u \quad \Longleftrightarrow \quad \Lim{t} = \Lim{u}. 
+\]
+
+A {\em 1-context} is a finite context with several number of distinguished holes $[-]$.
+
+\begin{definition}[0-context]
+  \begin{center}
+    $C ::= x \mid \lambda x.C \mid CC \mid 0 \mid \Suc{C} \mid \Cond{C}{[-]}$
+  \end{center}
+\end{definition}
+
+We write $C[-,-,-]$ if $C$ has three holes, and write $C[t,u,v]$ for the resulting term
+obtained by filling terms $t,u,v$ for the holes. 
+
+A term can be divided into the 0-context part and the terms part filling the holes of the 0-context,
+namely the following lemma holds. 
+\begin{lemma}
+  For any $t\in \LAMBDA$, there uniquely exists $(C,\vec{u})$ such that $t = C[\vec{u}]$. 
+\end{lemma}
+
+For a binary relation $R$ on terms,
+we write $(t_1,\ldots,t_n)R(u_1,\ldots,u_n)$ if $t_iRu_i$ holds for all $i$. 
+
+Let $\NFZ$ be the set of $0$-safe normal forms. 
+Note that if both $C_1[\vec{t_1}]$ and $C_2[\vec{t_2}]$ are $0$-safe normal forms of $t$, then $C_1=C_2$.
+  
+\begin{definition}[0-bisimulation]\rm
+  A binary relation $R$ on $\LAMBDA$ is said to be a {\em 0-bisimulation} if it satisfies the following:
+  \begin{center}
+    $tRu$ and $t \nsafeReducesAst{0} C_t[\vec{t}] \in \NFZ$ and $u \nsafeReducesAst{0} C_u[\vec{u}] \in \NFZ$
+    \\
+    \quad
+    implies
+    \quad
+    $C_t = C_u$ and $\vec{t}R\vec{u}$. 
+  \end{center}
+  
+  We define $\approx$ by the largest $0$-bisimulation.
+\end{definition}
+
+\begin{lemma}
+  $\approx$ is an equivalence relation.
+\end{lemma}
+\begin{proof}
+  Reflexivity for $\approx$ holds by $=\,\subseteq\,\approx$, since $=$ is a $0$-bisimulation.
+  Symmetricty holds by $\approx^{-1}\,\subseteq\,\approx$, since $\approx^{-1}$ is a $0$-bisimulation.
+  Transitivity holds by $(\approx\circ\approx)\,\subseteq\,\approx$, since $\approx\circ\approx$ is a $0$-bisimulation.
+  \hfill$\Box$
+\end{proof}
+
+Finally we show the relation $\approx$ characterizes the limit equivalence. 
+\begin{proposition}
+  $t \approx u$ and $\Lim{t} = \Lim{u}$ are equivalent. 
+\end{proposition}
+\begin{proof}
+  $(\Leftarrow)$: Let $R$ be the limit equivalence relation, namely $tRu \Leftrightarrow \Lim{t}=\Lim{u}$. 
+  Then $R$ is a $0$-bisimulation.
+  Hence $\Lim{t} = \Lim{u}$ implies $t \approx u$ by $R \subseteq \approx$. 
+  
+  $(\Rightarrow)$:
+  We show this direction by proof by contradiction.
+  Define
+  \[
+  X = \{(t,u) \mid \text{$t \approx u$ and $\Lim{t} \neq \Lim{u}$}\,\}.
+  \]
+  Assume that $X \neq \emptyset$ (there is a counter example of the $(\Rightarrow)$-direction). 
+  For $(t,u)\in X$, we define the difference depth $\sharp(t,u)$
+  by $\min\{\,|\pi| \mid (\Lim{t})_{\pi} \neq (\Lim{u})_{\pi}\,\}$. 
+  Fix a $(t_0,u_0) \in X$ that has the least difference depth.
+  Take $0$-safe normal forms $C_t[\vec{t'}]$ and $C_u[\vec{u'}]$ of $t_0$ and $u_0$, respectively. 
+  Then, by $t_0\approx u_0$, we have $C_t = C_u$ and $\vec{t'} \approx \vec{u'}$. 
+  Also we have $C_t[\overrightarrow{\Lim{t'}}] = \Lim{t_0}$ and $C_u[\overrightarrow{\Lim{u'}}] = \Lim{u_0}$. 
+  By $\Lim{t_0}\neq \Lim{u_0}$ and $C_t=C_u$,
+  there is $j$ such that $\Lim{t'_j} \neq \Lim{u'_j}$. 
+  Hence we have $(t'_j,u'_j) \in X$. 
+  However we also have $\sharp(t'_j,u'_j) < \sharp(t_0,u_0)$,
+  since, when we consider the path to $t'_j$ from the root of $t_0$,
+  there must be at least one ${\tt cond}$ on the path.
+  This contradicts the leastness of $(t_0,u_0)$.
+  Therefore we have $X = \emptyset$, namely the $(\Rightarrow)$-direction holds.
+  \hfill$\Box$
+\end{proof}
+  
+\end{document}
+
