@@ -7,23 +7,25 @@ In this section we formally define the notion of limit of a reduction on a cycli
 $\lambda$-term and we prove its main properties. The notion is akin to the notion
 of B\"{o}hm tree. However, there is some important difference with B\"{o}hm trees,
 due to the fact that we are modeling equality of functions and functionals over $\N$. 
-For this reason the maximal consistent equational theory of limits not equating two 
-unsolvable has a higher arithmetical complexity than in the case of B\"{o}hm trees.
 
 
 \subsection{Solvable Terms of LAMBDA}
       Let us define a main path as the unique path moving left except in $\cond(a,b)(t)$, where it 
-moves right. We define a head redex as the first redex in the main path. We say that t is in head 
-normal form if the main path is finite and with no head redex. t is solvable if some redex of t is in 
-head normal form. t is unsolvable if t is not solvable. The main path is non-progressing,
-because in $\cond(a,b)$ it moves to $a$. Thus, if a term satisfies GTC then its main path is finite,
+moves right. We define a head redex as the first redex in the main path, if any. 
+We say that $t$ is in head normal form if the main path is finite and with no head redex. 
+$t$ is solvable if some redex of $t$ is in 
+head normal form. $t$ is unsolvable if $t$ is not solvable. The main path is non-progressing,
+because in $\cond(a,b)$ the path moves to $a$. 
+Thus, if a term satisfies GTC then its main path is finite,
 and the term is head normal if and only if it has no head redex.
  
-      Solvability is related to the notion of limit. The limit of $t$ is bottom (undefined) if $t$ is unsolvable, otherwise the limit is obtained by reducing $t$ to some head normal form, taking the first symbol of the head normal form and then taking the limit of all immediate subterms, cyclically. Limit is not unique because we can reduce infinitely many times a term while avoiding to contract one particular redex. However, as remarked by Klop, at least one limit is normal. Infinite Church-rosser implies that the normal limit is unique. 
-      Having the same normal limit can be expressed by your maximal bisimulation (see later
+The limit normal form of $t$ is bottom (undefined) if $t$ is unsolvable, otherwise the limit is obtained by reducing $t$ to some head normal form, taking the first symbol of the head normal form and then taking the limit of all immediate subterms, cyclically. 
+
+%Limit is not unique because we can reduce infinitely many times a term while avoiding to contract one particular redex. However, as remarked by Klop, at least one limit is normal. Infinite Church-rosser implies that the normal limit is unique. 
+Having the same normal limit can be expressed by your maximal bisimulation (see later
       in this section).
  
-      Without GTC, the limit can be bottom, or can include some bottom subterms, as it happens for B\"{o}hm trees in lambda calculus.  In our paper, we can prove that all limit of all terms with GTC include no bottom. This is a corollary of our normalization result: head-reduction is 0-safe and therefore it always terminates in a head-normal form. GTC is preserved by reductions and subterms. If we recursively head-normalize immediate subterms of a head-normal form we always reduce terms with GTC, therefore we always obtain solvable subterms.
+      Without GTC, the limit normal form can be bottom, or can include some bottom subterms, as it happens for B\"{o}hm trees in $\lambda $-calculus.  In our paper, we can prove that all limit of all terms with GTC include no bottom. This is a corollary of our normalization result: head-reduction is 0-safe and therefore it always terminates in a head-normal form. GTC is preserved by reductions and subterms. If we recursively head-normalize immediate subterms of a head-normal form we always reduce terms with GTC, therefore we always obtain solvable subterms.
  
  
  
@@ -40,7 +42,7 @@ and the term is head normal if and only if it has no head redex.
 
 \noindent{\bf Purpose of this sub-section}\quad
 We want to characterize the limit equivalence of terms in $\GTC$, 
-which means two terms have the same limit: $\Lim{t} = \Lim{u}$. 
+which means two terms have the same limit normal form: $\Lim{t} = \Lim{u}$. 
 More formally, we try to coinductively define a binary relation $\approx$ that satisfies:
 \[
 t \approx u \quad \Longleftrightarrow \quad \Lim{t} = \Lim{u}. 
