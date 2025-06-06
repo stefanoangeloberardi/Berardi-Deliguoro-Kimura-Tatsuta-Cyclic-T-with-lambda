@@ -1,116 +1,45 @@
+\newcommand\Lim[1]{{\tt Lim}(#1)}
+\newcommand{\NFZ}{{\tt NF}_0}
+
 \section{Solvable terms and Limits}
 
+In this section we formally define the notion of limit of a reduction on a cyclic 
+$\lambda$-term and we prove its main properties. The notion is akin to the notion
+of B\"{o}hm tree. However, there is some important difference with B\"{o}hm trees,
+due to the fact that we are modeling equality of functions and functionals over $\N$. 
+For this reason the maximal consistent equational theory of limits not equating two 
+unsolvable has a higher arithmetical complexity than in the case of B\"{o}hm trees.
 
 
-
-    Dear Daisuke,
-
-    I have a simpler example of different limits we can equate:
-
-lambda x.S(x)    =    cond(1,cond(2,cond(3, ...)))
-    Now I have the impression that no computable set of reductions can equate two limits representing the same map in system T.
-
-    Best, Stefano
-
-
-
-Il 05/06/2025 23:33, Stefano Berardi ha scritto:
->
->
-> Il 04/06/2025 06:57, Daisuke Kimura ha scritto:
->>
->>>  are they 6?
->> yes.
->>
->>
->>> a question:
->> ..
->>> if we equate terms with the same limit normal forms?
->>
->> Maybe I got an answer to this question.
->> I wrote a note for it, put it in a new directory "discussion-equality",
->> and git-pushed to the first repo (the same repo as the 6 papers).
->> Please check it.
->
->     I think that you formally defined the notion of normal limit as largest bisimulation. A formal definition of normal limit is something we should do, but my question was different: if we equate two different limits, do we get an inconsistency?
->
->     In lambda-calculus we have the problem that eta-convertible terms have different limits (in lambda-calculus, limits are bohm trees), and yet they can be consistenty equated. This is the case for y and lambda x.y(x). If I remember correctly, two solvable lambda terms can be equated if and only if have the same eta-bohm-tree, that is, have two limits equal but for eta-expansion.
->
->     My guess is that we have many more limits we may consistently equate in our calculus. Say, we may equate :
->
->  S( cond(x,lambda x.y(x)) (z) )    =    cond(S(x),lambda x.S(y(x)) (z)
->
->     So my initial guess was wrong.
->> > my guess is that we get the maximal equality among
->> > cyclic lambda terms equating all unsolvable.
->>
->> I don't see what is unsolvable. Is it non-terminating terms in finite reductions?
->> If so, I think it's a weak condition because, for example,
->> f = cond(I0,f)
->> g = cond(I0,cond(1,g))
->> are non-terminating, where I = λx.x. But their limit terms are different.
->
->     No, unsolvability is not non-termination. In fact several formal definitions are missing here.
->
->     Let us define a main path as the unique path moving left except in cond(a,b)(t), where it moves right. We define a head redex as the first redex in the main path. We say that t is in head normal form if the main path is finite and with no head redex. t is solvable if some redex of t is in head normal form. t is unsolvable if t is not solvable.
->
->     Solvability is related to the notion of limit, definition which is in fact a missing point in our paper. the limit of t is bottom (undefined) if t is unsolvable, otherwise the limit is obtained by reducing t to some head normal form, taking the first symbol of the head normal form and then taking the limit of all immediate subterms, cyclically. Limit is not unique because we can reduce infinitely many times a term while avoiding to contract one particular redex. However, as remarked by Klop, at least one limit is normal. Infinite Church-rosser implies that the normal limit is unique. Normal limit is what you expressed by your maximal bisimulation.
->
->     Without GTC, the limit can be bottom, or can include some bottom subterms, as it happens for bohm trees in lambda calculus.  In our paper, we can prove that all limit of all terms with GTC include no bottom. This is a corollary of our normalization result: head-reduction is 0-safe and therefore it always terminates in a head-normal form. GTC is preserved by reductions and subterms. If we recursively head-normalize immediate subterms of a head-normal form we always reduce terms with GTC, therefore we always have solvable subterms.
->
->     As an example, your terms f and g are non-terminating but solvable terms with different limits. The limit normal form of f is cond(0,cond(0, cond(0, ...))) and the limit normal form of g is cond(0,cond(1, cond(1, ...))).
->
->     Best Regards Stefano
->
->
->> Best regards,
->> Daisuke
->>
->>
->> On 5/27/25 18:57, Stefano Berardi wrote:
->>>     ok I downloaded the 6 (are they 6?) papers you added. the 3 papers about letrec look tangent to our work, even if we should quote them. the 3 papers about klop infinitary lambda calculus should indeed be quoted as the main motivation for our paper. in fact, we study a sufficient convergence condition for infinitary klop terms.
->>>
->>>      a question: which kind of equality we have for our circular lambda terms, if we equate terms with the same limit normal forms? this is a question we could expect for our paper and that we should anticipate. my guess is that we get the maximal equality among cyclic lambda terms equating all unsolvable. I think we should be able to prove this fact from the corresponding result for pure lambda calculus. what do you think? we do not have to prove this for CSL 2026 yet.
->>>
->>>      best, stefano
->>>
->>>
->>> Il 17/05/2025 09:55, Daisuke Kimura ha scritto:
->>>>
->>>> Perhaps you checked the MFPS25 repo.
->>>>
->>>> I put the files on the first repo:
->>>> https://github.com/stefanoangeloberardi/Berardi-Deliguoro-Kimura-Tatsuta-Cyclic-T-with-lambda
->>>>
->>>>
->>>> Best,
->>>> Daisuke
->>>>
->>>>
->>>>
->>>>
->>>>
->>>> On 5/17/25 16:08, Stefano Berardi wrote:
->>>>> I cannot see it. Possibly you should invite us, or add permissions? Stefano
->>>>>
->>>>> Il 17/05/2025 06:24, Daisuke Kimura ha scritto:
->>>>>> I got the papers that the reviewer-1 listed that could relate to this point.
->>>>>> They are already put in the following directory on our repository:
->>>>>> 2024-03-25-Material-for-the-paper-on-cyclic-lambda/
-
-{\Large\bf About equality on infinite terms}
+\subsection{Solvable Terms of LAMBDA}
+      Let us define a main path as the unique path moving left except in $\cond(a,b)(t)$, where it 
+moves right. We define a head redex as the first redex in the main path. We say that t is in head 
+normal form if the main path is finite and with no head redex. t is solvable if some redex of t is in 
+head normal form. t is unsolvable if t is not solvable. The main path is non-progressing,
+because in $\cond(a,b)$ it moves to $a$. Thus, if a term satisfies GTC then its main path is finite,
+and the term is head normal if and only if it has no head redex.
+ 
+      Solvability is related to the notion of limit. The limit of $t$ is bottom (undefined) if $t$ is unsolvable, otherwise the limit is obtained by reducing $t$ to some head normal form, taking the first symbol of the head normal form and then taking the limit of all immediate subterms, cyclically. Limit is not unique because we can reduce infinitely many times a term while avoiding to contract one particular redex. However, as remarked by Klop, at least one limit is normal. Infinite Church-rosser implies that the normal limit is unique. 
+      Having the same normal limit can be expressed by your maximal bisimulation (see later
+      in this section).
+ 
+      Without GTC, the limit can be bottom, or can include some bottom subterms, as it happens for B\"{o}hm trees in lambda calculus.  In our paper, we can prove that all limit of all terms with GTC include no bottom. This is a corollary of our normalization result: head-reduction is 0-safe and therefore it always terminates in a head-normal form. GTC is preserved by reductions and subterms. If we recursively head-normalize immediate subterms of a head-normal form we always reduce terms with GTC, therefore we always obtain solvable subterms.
+ 
+ 
+ 
+\subsection{A co-inductive Definition of Equality between normal limits of terms}
 
 \vspace{10pt}
 
 \begin{remark}
-  We assume the following (not formally shown yet):
+  We assume the following (consequence of limit Church-Rosser):
   \begin{center}
     Any $t\in \GTC$ has a unique normal form $\Lim{t}$ (limit of safe-reductions).
   \end{center}
 \end{remark}
 
-\noindent{\bf Purpose of this article}\quad
-We want to characterlize the limit equivalence of terms in $\GTC$, 
+\noindent{\bf Purpose of this sub-section}\quad
+We want to characterize the limit equivalence of terms in $\GTC$, 
 which means two terms have the same limit: $\Lim{t} = \Lim{u}$. 
 More formally, we try to coinductively define a binary relation $\approx$ that satisfies:
 \[
@@ -196,4 +125,41 @@ Finally we show the relation $\approx$ characterizes the limit equivalence.
   Therefore we have $X = \emptyset$, namely the $(\Rightarrow)$-direction holds.
   \hfill$\Box$
 \end{proof}
+
+
+\subsection{Comparing with B\"{o}hm trees}
+
+      We only consider theories equating all unsolvable, which we consider as a unique
+      \quotationMarks{undefined} value.
+      
+      In lambda-calculus two solvable lambda terms can be equated in a consistent 
+      theory equating all unsolvable if and only if have the same  
+      $\eta$-bohm-tree, that is, have the same limit normal $\beta\eta$-form. 
+ 
+      Instead, there is no simple way to characterize the terms
+      we may consistently equate in $\CTlambda$. 
+      
+      \begin{enumerate}
+      \item
+      An example of terms we can equate:
+$\lambda x.\Succ(x) \ = \ \cond(1, \lambda \_. \cond(2, \lambda \_. \cond(3, \ldots)))$, both are
+notations for the successor map. Another example: we may 
+equate $\Succ(\ \cond(0,\lambda x.x)(z) \ ) \ = \ \cond(\Succ(0),\lambda x.\Succ(x)) \  (z)$,
+they are two notations for the successor map again.
+\item
+      As an opposite example, let $f = \cond(I0,f)$ and $g = \cond(I0,\cond(1,g))$. f and g are non-
+terminating but solvable terms with limits representing different map, which cannot be equated. 
+The limit normal form of $f$ is $\cond(0,\cond(0, \cond(0, ...)))$: the map $f$ is always $0$.
+The limit normal form of $g$ is $\cond(0,\cond(1, \cond(0, ...)))$: the map $g$ return $0$ or $1$
+according if the argument is even or odd. We cannot equate $f=g$,
+otherwise we obtain $0 = f(1) = g(1) = 1$, then the equality of all terms.
+\end{enumerate}
+ 
+Equality between maps definable in $\systemT$ is $\Pi^0_2$-complete, while equality between
+normal limits is negatively decidable, hence $\Pi^1_0$. For this reason we can design a reduction
+rule such that two $\lambda$-terms can be consistently equated if and only if 
+have the same limit normal $\beta\eta$-form. This is not possible for $\CTlambda$,
+at least if we consider computable reduction, otherwise equality on maps of $\systemT$
+would be $\Pi^1_0$ and would not be $\Pi^0_2$-complete.
+ 
   
