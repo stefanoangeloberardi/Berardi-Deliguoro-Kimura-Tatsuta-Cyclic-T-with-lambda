@@ -128,38 +128,42 @@ Finally we show the relation $\approx$ characterizes the limit equivalence.
 
 
 \subsection{Comparing with B\"{o}hm trees}
-
-      We only consider theories equating all unsolvable, which we consider as a unique
-      \quotationMarks{undefined} value.
+We only consider equational theories equating all unsolvable. We consider all unsolvable 
+denoting a unique \quotationMarks{undefined} value.
       
-      In lambda-calculus two solvable lambda terms can be equated in a consistent 
-      theory equating all unsolvable if and only if have the same  
-      $\eta$-bohm-tree, that is, have the same limit normal $\beta\eta$-form. 
+In $\lambda$-calculus two solvable lambda terms can be equated in a consistent 
+theory equating all unsolvable if and only if have the same  
+$\eta$-bohm-tree, that is, have the same limit normal $\beta\eta$-form. 
  
-      Instead, there is no simple way to characterize the terms
-      we may consistently equate in $\CTlambda$. 
-      
-      \begin{enumerate}
-      \item
-      An example of terms we can equate:
-$\lambda x.\Succ(x) \ = \ \cond(1, \lambda \_. \cond(2, \lambda \_. \cond(3, \ldots)))$, both are
-notations for the successor map. Another example: we may 
-equate $\Succ(\ \cond(0,\lambda x.x)(z) \ ) \ = \ \cond(\Succ(0),\lambda x.\Succ(x)) \  (z)$,
-they are two notations for the successor map again.
+Instead, we found no simple way to characterize the terms
+we may consistently equate in $\LAMBDA$, or in $\CTlambda$ by adding a reduction
+like $\eta$. 
+We include some example, showing that this problem is difficult.
+    
+\begin{enumerate}
 \item
-      As an opposite example, let $f = \cond(I0,f)$ and $g = \cond(I0,\cond(1,g))$. f and g are non-
-terminating but solvable terms with limits representing different map, which cannot be equated. 
+An example of terms of $\LAMBDA$ we can equate:
+$$\lambda x.\Succ(x), 
+\ \ \ 
+\cond(1, \lambda \_. \cond(2, \lambda \_. \cond(3, \ldots))), 
+\ \ \
+\cond(\Succ(0),\lambda x.\Succ^2(x)) \  (z)
+$$
+All are notations for the successor map. 
+
+\item
+As an opposite example, let $I = \lambda x.x$ and 
+$f = \cond(I(0),f)$ and $g = \cond(I(0),\cond(1,g))$. 
+$f$ and $g$ are non-terminating terms of $\CTlambda$: they include infinitely many
+disjoint redexes of the form $I(0)$. They are solvable terms with limits 
+representing different map, which cannot be equated. 
 The limit normal form of $f$ is $\cond(0,\cond(0, \cond(0, ...)))$: the map $f$ is always $0$.
 The limit normal form of $g$ is $\cond(0,\cond(1, \cond(0, ...)))$: the map $g$ return $0$ or $1$
 according if the argument is even or odd. We cannot equate $f=g$,
-otherwise we obtain $0 = f(1) = g(1) = 1$, then the equality of all terms.
+otherwise we obtain $0 = f(1) = g(1) = 1$, and from it the equality of all terms.
 \end{enumerate}
  
-Equality between maps definable in $\systemT$ is $\Pi^0_2$-complete, while equality between
-normal limits is negatively decidable, hence $\Pi^1_0$. For this reason we can design a reduction
-rule such that two $\lambda$-terms can be consistently equated if and only if 
-have the same limit normal $\beta\eta$-form. This is not possible for $\CTlambda$,
-at least if we consider computable reduction, otherwise equality on maps of $\systemT$
-would be $\Pi^1_0$ and would not be $\Pi^0_2$-complete.
+We could not find finitely many computable reduction rules such that two terms have the same
+limit normal form if and only if they represent the same map on $\N$.
  
   
