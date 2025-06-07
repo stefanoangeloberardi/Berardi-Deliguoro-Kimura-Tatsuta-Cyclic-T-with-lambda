@@ -4,26 +4,55 @@
 \section{Solvable terms and Limits}
 
 In this section we formally define the notion of limit of a reduction on a cyclic 
-$\lambda$-term and we prove its main properties. The notion is akin to the notion
+$\lambda$-term and we prove its main properties. The notion of limit is akin to the notion
 of B\"{o}hm tree. However, there is some important difference with B\"{o}hm trees,
-due to the fact that we are modeling equality of functions and functionals over $\N$. 
+due to the fact that we are modeling equality of functions and functionals over $\N$,
+instead of pure $\lambda$-terms as in the case of B\"{o}hm trees. 
 
 
-\subsection{Solvable Terms of LAMBDA}
-      Let us define a main path as the unique path moving left except in $\cond(a,b)(t)$, where it 
-moves right. We define a head redex as the first redex in the main path, if any. 
-We say that $t$ is in head normal form if the main path is finite and with no head redex. 
-$t$ is solvable if some redex of $t$ is in 
-head normal form. $t$ is unsolvable if $t$ is not solvable. The main path is non-progressing,
-because in $\cond(a,b)$ the path moves to $a$. 
-Thus, if a term satisfies GTC then its main path is finite,
+\subsection{Limit reductions of LAMBDA}
+     
+Assume $t,u \in \LAMBDA$. A finite path $\pi$ from $t$ to $u$ 
+is any finite sequence $t_0, \ldots, t_n$
+on $\LAMBDA$ such that $t_0 = t$ and $t_{i+1}$ is an immediate subterm of $t_i$ for
+all $i = 0, \ldots, n-1$ and $t_n = u$. A term is uniquely defined from the set of its paths.
+%The range of $\pi$ is the set $\universe{\pi} = \{t_0, \ldots, t_n\}$ of terms of $\LAMBDA$.
+An infinite reduction sequence from $t$ is any infinite sequence 
+$\rho : \N \rightarrow \LAMBDA$ such that $t = \rho(0)$ and $\rho(i) \reduces \rho(i+1)$
+for all $i \in \N$. A path $\beta$ is definitively in $\rho$ if and only if 
+$\exists i \in \N. \forall j \in \N. (j \ge i \implies \beta \mbox{ path of } \rho(j)$.
+We define a limit-reduction relation $t \reduces_\rho u$ if and only if
+the paths of $u$ consists exactly of all paths $\pi$ definitively in $\rho$. 
+For every $t \in \LAMBDA$ and any infinite reduction $\rho$ from $t$ there is a
+unique $u \in \LAMBDA$ such that $t \reduces_\rho u$.
+
+This is akin to the notion of infinite $\lambda$-term in Klop. 
+A term can have more than one limit-reduction, because we can reduce infinitely many times a 
+term while avoiding to contract one particular redex. However, as remarked by Klop, at least one 
+limit is normal. Infinite Church-rosser implies that the normal limit is unique. 
+
+
+\subsection{Solvable Terms and Limit Normal Forms of LAMBDA}
+An alternative and equivalent definition of Limit Normal Form for $\LAMBDA$
+can be given by adapting the notion of solvable $\lambda$-term of finite $\lambda$-calculus.
+
+We define a main path $\pi$ of a term $t \in \LAMBDA$.
+$\pi$ is the unique path of $t$ moving left except in any subterm $\cond(a,b)(u)$, 
+where it moves right. We define a head redex of $t$ as the first redex in the main path $\pi$, 
+if any. We say that $t$ is in head normal form if $\pi$ is finite and $\pi$ has no head redex. 
+$t$ is solvable if for some $u \in \LAMBDA$ we have $t \reduces^* u$ 
+and $u$ is in head normal form. 
+$t$ is unsolvable if $t$ is not solvable. 
+
+Some remark.The main path is non-progressing, because in $\cond(a,b)$ the path moves to $a$. 
+Thus, if a term satisfies GTC then its main path $\pi$ is finite, otherwise it wo
 and the term is head normal if and only if it has no head redex.
  
 The limit normal form of $t$ is bottom (undefined) if $t$ is unsolvable, otherwise the limit is obtained by reducing $t$ to some head normal form, taking the first symbol of the head normal form and then taking the limit of all immediate subterms, cyclically. 
 
 %Limit is not unique because we can reduce infinitely many times a term while avoiding to contract one particular redex. However, as remarked by Klop, at least one limit is normal. Infinite Church-rosser implies that the normal limit is unique. 
-Having the same normal limit can be expressed by your maximal bisimulation (see later
-      in this section).
+Having the same normal limit can be expressed by a maximal bisimulation 
+(see later in this section).
  
       Without GTC, the limit normal form can be bottom, or can include some bottom subterms, as it happens for B\"{o}hm trees in $\lambda $-calculus.  In our paper, we can prove that all limit of all terms with GTC include no bottom. This is a corollary of our normalization result: head-reduction is 0-safe and therefore it always terminates in a head-normal form. GTC is preserved by reductions and subterms. If we recursively head-normalize immediate subterms of a head-normal form we always reduce terms with GTC, therefore we always obtain solvable subterms.
  
@@ -141,17 +170,19 @@ Instead, we found no simple way to characterize the terms
 we may consistently equate in $\LAMBDA$, or in $\CTlambda$ by adding a reduction
 like $\eta$. 
 We include some example, showing that this problem is difficult.
+
     
 \begin{enumerate}
+
 \item
-An example of terms of $\LAMBDA$ we can equate:
+An example of a set of terms of $\LAMBDA$ we can equate:
 $$\lambda x.\Succ(x), 
 \ \ \ 
-\cond(1, \lambda \_. \cond(2, \lambda \_. \cond(3, \ldots))), 
+\cond(1,\cond(2, \cond(3, \ldots))), 
 \ \ \
-\cond(\Succ(0),\lambda x.\Succ^2(x)) \  (z)
+\cond(\Succ(0),\lambda x.\Succ^2(x))
 $$
-All are notations for the successor map. 
+All terms above are notations for the successor map, therefore they can be consistently equated. 
 
 \item
 As an opposite example, let $I = \lambda x.x$ and 
