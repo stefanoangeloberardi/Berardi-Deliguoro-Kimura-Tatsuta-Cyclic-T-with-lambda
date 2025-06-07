@@ -12,19 +12,41 @@ instead of pure $\lambda$-terms as in the case of B\"{o}hm trees.
 
 \subsection{Limit reductions of LAMBDA}
      
-Assume $t,u \in \LAMBDA$. A finite path $\pi$ from $t$ to $u$ 
-is any finite sequence $t_0, \ldots, t_n$
-on $\LAMBDA$ such that $t_0 = t$ and $t_{i+1}$ is an immediate subterm of $t_i$ for
-all $i = 0, \ldots, n-1$ and $t_n = u$. A term is uniquely defined from the set of its paths.
-%The range of $\pi$ is the set $\universe{\pi} = \{t_0, \ldots, t_n\}$ of terms of $\LAMBDA$.
+Let $S$ be the
+set of all first symbols of terms of $\LAMBDA$, namely: 
+$x^T_i, \lambda x^T_i, \ap, 0, \Succ, \cond$, for all types $T$.
+
+\begin{definition}[Finite paths of a term]
+Let $n \in \N$ and $t,u \in \LAMBDA$.  
+A finite path $\pi$ from $t$ to $u$, just a path for short, 
+is any finite sequence $\pi:[0,n] \rightarrow \{1,2\} \times S$, such that for some
+$t_0, \ldots, t_{n} \in \LAMBDA$ we have:
+
+\begin{enumerate}
+\item 
+$t_0 = t$ and $t_{n} = u$
+\item 
+for all $i \in [0,n]$, if $\pi(i)=(j,s) \in \{1,2\} \times S$, then $s$ is the first symbol of $t_i$;
+and if $i \ge 1$ then $t_{i}$ is the immediate subterm 
+number $j$ of $t_{i-1}$, otherwise $j=1$ (a dummy value). 
+\end{enumerate}
+We denote with $\universe{t}$ the set of paths of $t$.
+\end{definition}
+
+A term $t \in \LAMBDA$ is uniquely defined from the set $\universe{t}$ of its paths:
+if $\universe{t} = \universe{u}$ then $t = u$ as labeled trees.
+
 An infinite reduction sequence from $t$ is any infinite sequence 
 $\rho : \N \rightarrow \LAMBDA$ such that $t = \rho(0)$ and $\rho(i) \reduces \rho(i+1)$
-for all $i \in \N$. A path $\beta$ is definitively in $\rho$ if and only if 
-$\exists i \in \N. \forall j \in \N. (j \ge i \implies \beta \mbox{ path of } \rho(j)$.
+for all $i \in \N$. A path $\pi$ is definitively in $\rho$ if and only if 
+$\exists i \in \N. \forall j \in \N. (j \ge i \implies \pi \in \universe{\rho(j)}$.
 We define a limit-reduction relation $t \reduces_\rho u$ if and only if
-the paths of $u$ consists exactly of all paths $\pi$ definitively in $\rho$. 
+$\universe{u}$ is exactly the set of paths $\pi$ definitively in $\rho$. 
+
+\begin{proposition}
 For every $t \in \LAMBDA$ and any infinite reduction $\rho$ from $t$ there is a
 unique $u \in \LAMBDA$ such that $t \reduces_\rho u$.
+\end{proposition}
 
 This is akin to the notion of infinite $\lambda$-term in Klop. 
 A term can have more than one limit-reduction, because we can reduce infinitely many times a 
@@ -33,8 +55,9 @@ limit is normal. Infinite Church-rosser implies that the normal limit is unique.
 
 
 \subsection{Solvable Terms and Limit Normal Forms of LAMBDA}
-An alternative and equivalent definition of Limit Normal Form for $\LAMBDA$
+An alternative definition of Limit Normal Form for $\LAMBDA$
 can be given by adapting the notion of solvable $\lambda$-term of finite $\lambda$-calculus.
+This second definition is equivalent for terms satisfying GTC.
 
 We define a main path $\pi$ of a term $t \in \LAMBDA$.
 $\pi$ is the unique path of $t$ moving left except in any subterm $\cond(a,b)(u)$, 
