@@ -59,6 +59,7 @@ An alternative definition of Limit Normal Form for $\LAMBDA$
 can be given by adapting the notion of solvable $\lambda$-term of finite $\lambda$-calculus.
 This second definition is equivalent for terms satisfying GTC.
 
+
 We define a main path $\pi$ of a term $t \in \LAMBDA$.
 $\pi$ is the unique path of $t$ moving left except in any subterm $\cond(a,b)(u)$, 
 where it moves right. We define a head redex of $t$ as the first redex in the main path $\pi$, 
@@ -67,13 +68,22 @@ $t$ is solvable if for some $u \in \LAMBDA$ we have $t \reduces^* u$
 and $u$ is in head normal form. 
 $t$ is unsolvable if $t$ is not solvable. 
 
-Some remark.The main path is non-progressing, because in $\cond(a,b)$ the path moves to $a$. 
-Thus, if a term satisfies GTC then its main path $\pi$ is finite, otherwise it wo
-and the term is head normal if and only if it has no head redex.
+Some remark. The main path of any $t \in \LAMBDA$ is non-progressing, because in any 
+subterm $\cond(a,b)$ the path moves from $\cond(a,b)$ to $a$. 
+Thus, if the term $t$ satisfies GTC then its main path $\pi$ is finite, otherwise $\pi$ would
+be infinitely progressing.
+The term $t$ is head normal if and only if it has no head redex.
  
 The limit normal form of $t$ is bottom (undefined) if $t$ is unsolvable, otherwise the limit is obtained by reducing $t$ to some head normal form, taking the first symbol of the head normal form and then taking the limit of all immediate subterms, cyclically. 
 
+For instance, let us consider a term $t = (\lambda x^\N.x^\N)(\lambda x^\N.x^\N)$,
+which does not satisfy GTC and is not well-typed (the argument of $(\lambda x^\N.x^\N)$
+should have type $\N$, while it has type $\N \rightarrow \N$). The limit normal
+form of $t$ is $\bot$. The unique limit normal according to the previous section is instead $t$,
+because the unique reduction sequence from $t$ is $t \reduces t \reduces t \reduces t \ldots$.
+
 %Limit is not unique because we can reduce infinitely many times a term while avoiding to contract one particular redex. However, as remarked by Klop, at least one limit is normal. Infinite Church-rosser implies that the normal limit is unique. 
+
 Having the same normal limit can be expressed by a maximal bisimulation 
 (see later in this section).
  
