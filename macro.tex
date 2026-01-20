@@ -368,7 +368,24 @@
 \newcommand{\lexicographic} [1]   {{ <^{#1}_{\mbox{\tiny lex}}} }
 \newcommand{\trunk}                     {{\tt trunk}}
 
-
+% Syntax: \colorboxed[<color model>]{<color specification>}{<math formula>}
+\newcommand*{\colorboxed}{}
+\def\colorboxed#1#{%
+  \colorboxedAux{#1}%
+}
+\newcommand*{\colorboxedAux}[3]{%
+  % #1: optional argument for color model
+  % #2: color specification
+  % #3: formula
+  \begingroup
+    \colorlet{cb@saved}{.}%
+    \color#1{#2}%
+    \boxed{%
+      \color{cb@saved}%
+      #3%
+    }%
+  \endgroup
+}
 \newcommand\Restrict[2]{#1_{#2}}
 \newcommand\simIndex[1]{\sim^{#1}_{{\tt idx}}}
 \newcommand\mergeCtx[2]{#1\sharp#2}

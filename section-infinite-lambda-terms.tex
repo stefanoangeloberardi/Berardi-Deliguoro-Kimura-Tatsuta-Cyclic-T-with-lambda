@@ -560,7 +560,8 @@ $t_{n}:A^n \rightarrow A$ where $t_{n} = t_{n+1}(t_0)$:
   }{\ldots}
   }
   \]
-These proof trees are meaningless and should be ruled out. The Almost-Left-Finite condition will ask
+These proof trees are meaningless and should be ruled out. 
+The Almost-Left-Finite condition will ask
 that all leftmost branches in any sub-proof are finite, say, that no infinite leftmost branch made of
 $\weak$-rules or of $\apnotvar$ exists. 
 The idea is that when the main operation in a programming language is application, 
@@ -636,7 +637,7 @@ Eventually we define the well-typed terms of $\LAMBDA$ using almost-left-finite 
 $\Gamma \vdash t:A$ is true if and only if $\Pi:\Gamma \vdash t:A$ for some $\Pi$.
 \item
 $t \in \LAMBDA$ is well-typed if and only if 
-$\Pi:\Gamma \vdash t:A$ for some \emph{almost-left-finite} proof $\Pi$,
+$\Pi:\Gamma \vdash t:A$ for some $\Pi$,
 for some $A$ and some context $\Gamma \supseteqsim \FV(t)$.
 \item
 $\WTyped$ is the set of well-typed $t \in \LAMBDA$.
@@ -650,7 +651,7 @@ $\WTyped$ is the set of well-typed $t \in \LAMBDA$.
 %\end{enumerate}
 \end{definition}
 
-Well-typed terms are closed by substitution.
+We are mainly interested to typable terms \emph{almost-left-finite} terms.Well-typed terms are closed by substitution, and so are almost-left-finite terms.
 
 We prove that the type assigned to a term by an Almost-Left-Finite proof is \emph{unique}: 
 if two Almost-Left-Finite proofs assign two types $T$, $T'$ to the same possibly infinite term $t$,
