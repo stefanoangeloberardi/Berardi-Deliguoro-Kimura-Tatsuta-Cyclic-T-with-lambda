@@ -2,6 +2,7 @@
 
 
 
+
 \newif\ifdraft \draftfalse
 \drafttrue % put % for lipics
 
@@ -13,14 +14,20 @@
 \ifdraft
 
 \documentclass{article}
+\usepackage[T1]{fontenc} % Ensures proper dagger rendering
+\usepackage{amssymb,amsmath,stackengine}
+%\usepackage{amsmath}
 \usepackage{mystyle}
 \A4page
 
 \else
 
 \documentclass{lmcs}
-\usepackage{hyperref}
+\usepackage[T1]{fontenc} % Ensures proper dagger rendering
+\usepackage{amssymb,amsmath,stackengine}
+%\usepackage{amsmath}
 %\usepackage{amsmath}heoremstyle{plain}\newtheorem{satz}[thm]{Satz} %\crefname{satz}{Satz}{\Succ    atze}
+\usepackage{hyperref}
 
 \fi
 
@@ -1352,14 +1359,14 @@ Assume  $t: \Gamma\vdash A$,
 \label{section-uniqueness-normal-form}
 \bfColor{red}
 {Incomplete section: uncomment the input command (below in the source code) to make this section visible}
-%\input{section-uniqueness-normal-form}
+\input{section-uniqueness-normal-form}
 
 
 \section{Infinite reductions}
 \label{section-infinite-reductions}
 \bfColor{red}
 {Incomplete section: uncomment the input command (below in the source code) to make this section visible}
-%\input{section-infinite-reductions}
+\input{section-infinite-reductions}
 
 
 
@@ -1367,14 +1374,14 @@ Assume  $t: \Gamma\vdash A$,
 \label{section-normalization-fairness}
 \bfColor{red}
 {Incomplete section: uncomment the input command (below in the source code) to make this section visible}
-%\input{section-normalization-fairness}
+\input{section-normalization-fairness}
 
 
 \section{Relation between cyclic and non-cyclic system $T$} 
 \label{section-equivalence-cyclic-non-cyclic-T}
 \bfColor{red}
 {Incomplete section: uncomment the input command (below in the source code) to make this section visible}
-%\input{section-equivalence-cyclic-non-cyclic-T}
+\input{section-equivalence-cyclic-non-cyclic-T}
 
 \section{An example: the Ackermann function} 
 \label{section-ackermann}
