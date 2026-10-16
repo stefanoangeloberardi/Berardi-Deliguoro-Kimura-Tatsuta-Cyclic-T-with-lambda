@@ -9,8 +9,8 @@ We only maintain it as an example of proof using the global trace condition.
 \\
 
 In this section we proved a form of confluence up to $\eta$-rule: any two $\beta\cond$-normal forms $t_1, t_2$ for
-any term $t$ of $\CTlambda$, of any type and context, are equal up to $\eta$-equality: $t_1 =_\eta t_2$.
-We assume that all $\beta\cond$-reduction sequences are strongly convergent, they never have limit $u = \Succ(u)$, and they terminate after some number of steps $<\omega_1$ into some $\beta\cond$-norm.
+the same term $t$ of $\CTlambda$ are equal up to $\eta$-equality: $t_1 =_\eta t_2$.
+We assume that all $\beta\cond$-reduction sequences are strongly convergent, they never have limit $u = \Succ(u)$, and they terminate after some number of steps $<\omega_1$ into some $\beta\cond$-normal form. From these assumption we derive uniqueness up to $\eta$.
 
 We define binary relations $\sim_A$ (for each type $A$) on well-typed terms of $\CTlambda$ with type $A$.
 \begin{definition}
@@ -28,90 +28,66 @@ We define binary relations $\sim_A$ (for each type $A$) on well-typed terms of $
   We write $a_1,\ldots,a_n \sim_{A_1,\ldots,A_n} a'_1,\ldots,a'_n$ if $a_i\sim_{A_i} a'_i$ holds
   for all $i\in\{1,\ldots,n\}$. 
   
-  We also define $\vec{x}:\vec{A} \vdash  t_1[\vec{x}] \sim_{A} t_2[\vec{x}]$ for \emph{any} terms of $\CTlambda$,
-  with $\vec{x}:\vec{A}\vdash t_i[\vec{x}]:B$, where $i\in\{1,2\}$, if and only if. 
+  We also define $\vec{x}:\vec{A} \vdash  t_1 \sim_{A} t_2$ for \emph{any} terms of $\CTlambda$,
+  with $\vec{x}:\vec{A}\vdash t_i:B$ for $i\in\{1,2\}$, if and only if the following holds:
   \begin{enumerate}
-  \item[3.]
+  \item[3]
     for \emph{all} terms $\vec{a_1}:\vec{A}$ and $\vec{a_2}:\vec{A}$,
-    if $\vec{a_1}\sim_{\vec{A}}\vec{a_2}$ then $t_1[\vec{a_1}] \sim_B t_2[\vec{a_2}]$. 
+    if $\vec{a_1}\sim_{\vec{A}}\vec{a_2}$ then $t_1[\vec{a_1}/\vec{x}] \sim_B t_2[\vec{a_2}/\vec{x}]$. 
   \end{enumerate}  
 \end{definition}
 
-It is easily shown that $\sim_A$ is symmetric by the definition. 
-We will prove that, for \emph{all} terms $t$ of $\CTlambda$ with type $A$, we have $t \sim_A t$ and that this implies $t \Confl_A t$.
+It is easily shown that $\sim_A$ is symmetric by the definition. We will prove that, for \emph{all} terms $t$ of $\CTlambda$ with type $A$, we have $t \sim_A t$ and that this implies $t \Confl_A t$.
 
 %18:05 15/10/2026
 
-\begin{definition}[Confluent and U-counterexample]
-  Let $t$ be a term of $\CTlambda$. 
-  \begin{enumerate}
-  \item
-    Assume that $t$ is a closed term with type $N$. 
-    We say that $n$ is a {\em value} of $t$ if $t \safeReducesAst n$ ($t$ safely reduces to $n$). 
-  \item
-    We say that $t$ is {\em confluent} if $t \sim_A t$.
-  \item
-    Assume $\vec{x}:\vec{D}\vdash t:\vec{A}\rightarrow\N$. 
-    We say a quadraple $(\vec{d},\vec{a},\vec{d'},\vec{a'})$ is a {\em U-counterexample} to $t$
-    if and only if
-    both $(\vec{d},\vec{a})$ and $(\vec{d'},\vec{a'})$ are value assignments for $t$, 
-    $\vec{d}\sim_{\vec{D}}\vec{d'}$, $\vec{a}\sim_{\vec{A}}\vec{a'}$, and
-    $t[\vec{d}](\vec{a}) \not\sim_N t[\vec{d'}](\vec{a'})$. 
-  \end{enumerate}
-\end{definition}
-
-By the weak normalization result proved in Section~\ref{section-weak-normalization}, all 
-closed term $t$ of $\CTlambda$ of type $\N$ have a value. If $t$ is confluent, then the value is unique.
-Hence we have the following. 
-
-\begin{lemma}
-  If $t:\N$ is a confluent closed term, then $t$ has a unique normal form.
+\begin{lemma}[$\sim_A$ and Confluence]
+\label{lemma-confluence}
+Assume $t,u:A$ in $\CTlambda$.
+\begin{enumerate}
+\item
+\label{lemma-confluence-01}
+If $t \sim_A u$ then $t \Confl_A u$.
+\item
+\label{lemma-confluence-02}
+$x \sim_A x$ for any variable $x$.
+\end{enumerate}
+If $\vec{x}:\vec{A} \vdash  t_1 \sim_{A} t_2$ then $t \Confl_A u$.
 \end{lemma}
 
-By using the weak normalization result, 
-two closed terms $t$ and $u$ equivalent with respect to $\sim_\N$, namely $t \sim_\N u$,
-have a common numeral as their unique normal form. 
-
-\begin{lemma}\label{lem:uniq_NF}
-  Let $t_1$ and $t_2$ be closed terms in $\CTlambda$. 
-  Assume $t_1 \sim_\N t_2$. 
-  \begin{enumerate}
-  \item\label{lem:uniq_NF1}
-    There exists $n \in \Num$ such that $t_1 \safeReducesAst n$ and $t_2 \safeReducesAst n$.
-    Moreover, for each $i\in \{1,2\}$, if $t_i \safeReducesAst u$ and $u$ is a normal form, then $u = n$. 
-  \item\label{lem:uniq_NF2}
-    If $t_1 \safeReduces t'_1$ and $t_2 \safeReduces t'_2$, then $t'_1 \sim_\N t'_2$. 
-  \end{enumerate}
-  
-\end{lemma}
 \begin{proof}
-  We show point~\ref{lem:uniq_NF1}. 
-  By Corollary~\ref{cor:WN_typeN}, there are $n_1,n_2 \in \Num$ such that
-  $t_1 \safeReducesAst n_1$ and $t_2\safeReducesAst n_2$.
-  Then $n_1=n_2$ holds by $t_1\sim_\N t_2$. 
-  If $t_i \safeReducesAst u$ and $u$ is a normal form, then $u = n_2$ by $t_1\sim_\N t_2$.
+Assume $A = (\vec{A} \rightarrow N)$. 
+We prove points \ref{lemma-confluence-01} and \ref{lemma-confluence-02} by simultaneous induction on $A$.
+\begin{enumerate}
+\item
+Assume $A=N$. Then $t \sim_N u$ is defined as $t \Confl_N u$ and $x \Confl_N x$ holds because $x$ is a normal form and $x = x$.
+\item
+Assume the thesis for $A$ in order to prove it for $C \rightarrow A$.
+%14:37 16/10/2026
 
-  Next we show point~\ref{lem:uniq_NF2}.
-  It is enough to show the statement: $t_1\sim_\N t_2$ and $t_1 \safeReduces t'_1$ implies $t'_1 \sim_\N t_2$,
-  because we can prove point~\ref{lem:uniq_NF2} by using the statement twice with the symmetricity of $\sim_\N$. 
-  For showing the statement, assume that $t_1\sim_\N t_2$ and $t_1 \safeReduces t'_1$. Our goal is $t'_1 \sim_\N t_2$. 
-  To show it, take arbitrary normal forms $v'_1$ and $v_2$ such that $t'_1 \safeReducesAst v'_1$ and $t_2 \safeReducesAst v_2$.
-  By point~\ref{lem:uniq_NF1}, there is $n\in\Num$ for $t_1$ and $t_2$ that satisfies the properties as described.
-  Hence we have $v'_1 = n = v_2$ by using the property with $t_1 \safeReduces t'_1 \safeReducesAst v'_1$ and $t_2 \safeReducesAst v_2$. 
-  Therefore $t'_1 \sim_\N t_2$ is obtained. 
+\end{enumerate}
+
 \end{proof}
 
-%For confluent closed term $t$ of $\CTlambda$ of type $\N$, "safe" reduction preserves the value. Indeed,
-%if $t \reduces u$ then $u$ is a closed term of $\CTlambda$ of type $\N$, therefore $u$ has a value
-%$m$, which is also a value of $t$. By confluence of $t$ we conclude that $n=m$.
+\begin{definition}[U-counterexample]
+  Let $t$ be a term of $\CTlambda$. 
+    Assume $\vec{x}:\vec{D}\vdash t:\vec{A}\rightarrow\N$ in $\CTlambda$. 
+    We say a quadruple $(\vec{d},\vec{a},\vec{d'},\vec{a'})$ is a {\em U-counterexample} to $t$
+    if and only if
+    \begin{enumerate}
+    \item
+    $\vec{d}\sim_{\vec{D}}\vec{d'}$ and $\vec{a}\sim_{\vec{A}}\vec{a'}$
+    \item
+    $t[\vec{d}](\vec{a}) \not\sim_N t[\vec{d'}](\vec{a'})$. 
+    \end{enumerate}
+\end{definition}
 
-%If $t$ is as above, with value $n$, and $t \reduces \Succ (u)$, then $n>0$, 
-%$u$ is a confluent closed term $t$ of $\CTlambda$ of type $\N$, and the value of $u$ is $n-1$.
-%Indeed,if $u \reduces u'$ and $u'$ is normal, then $t \reduces \Succ (u')$, therefore $\Succ (u')=n$ 
-%by confluence of $t$, and we conclude that $n>0$ and $u'=n-1$. Thus, the normal form of $u$ is unique.
 
 We have $t \sim_A t$ if and only if there is no U-counterexample for $t$.
 This is shown by the following lemma.
+
+%20:34 15/10/2026
+
 \begin{lemma}\label{lem:uniq_value}
   Let $t$ be a term of $\vec{x}:\vec{D} \vdash t[\vec{x}]:\vec{A}\rightarrow\N$. 
   Let $\vec{d},\vec{a},\vec{d'},\vec{a'}$ be vectors of closed terms.
